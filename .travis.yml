@@ -1,0 +1,15 @@
+language: text
+
+jdk:
+  - oraclejdk8
+
+env:
+  - URL=https://github.com/redpen-cc/redpen/releases/download/redpen-1.5.2
+
+install:
+  - wget $URL/redpen-1.5.2.tar.gz
+  - tar xvf redpen-1.5.2.tar.gz
+  - export PATH=$PATH:$PWD/redpen-distribution-1.5.2/bin
+
+script:
+  - redpen -f markdown src/*.md
