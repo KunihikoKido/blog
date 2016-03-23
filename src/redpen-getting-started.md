@@ -163,5 +163,35 @@ script:
   - redpen -f markdown src/*.md
 ```
 
+### RedPen 設定ファイル例
+今回使用した RedPen の設定ファイルです。
+
+```xml
+<redpen-conf lang="ja">
+    <validators>
+        <validator name="SentenceLength">
+            <property name="max_len" value="120"/>
+        </validator>
+        <validator name="InvalidSymbol"/>
+        <validator name="KatakanaEndHyphen"/>
+        <validator name="KatakanaSpellCheck"/>
+        <validator name="SectionLength">
+            <property name="max_num" value="1500"/>
+        </validator>
+        <validator name="ParagraphNumber"/>
+        <validator name="SpaceBetweenAlphabeticalWord" />
+        <validator name="CommaNumber" />
+        <validator name="SuccessiveWord" />
+        <validator name="JavaScript" />
+        <validator name="JapaneseStyle" />
+        <validator name="DoubleNegative" />
+    </validators>
+</redpen-conf>
+```
+
 ## まとめ
 この記事も RedPen で校正しています。
+
+## 参考
+* [RedPen](http://redpen.cc/)
+* [RedPenを使って技術文書を手軽に校正しよう](http://gihyo.jp/lifestyle/serial/01/redpen/0001)
