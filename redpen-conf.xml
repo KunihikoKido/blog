@@ -16,8 +16,5 @@
         <validator name="JavaScript" />
         <validator name="JapaneseStyle" />
         <validator name="DoubleNegative" />
-        <validator name="DoubledWord">
-          <property name="list" value="redpen,文書,規約"/>
-        </validator>
     </validators>
 </redpen-conf>
