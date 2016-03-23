@@ -122,8 +122,11 @@ redpen -c redpen-conf.xml sample.md
 2. フォークしてもらう
 3. プルリクもらう
 4. Travis CI で規約自動チェック
+5. 規約沿った文書になっていればマージ
 
 という流れです。
+
+
 
 **Github のファイル構成例**
 
@@ -158,5 +161,3 @@ script:
 ```
 
 ## まとめ
-まとめまとめ
-redpen redpen
