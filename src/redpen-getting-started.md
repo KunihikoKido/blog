@@ -1,4 +1,4 @@
-# RedPenでわかりやすい技術文書を書こう
+# RedPen でわかりやすい技術文書を書こう
 
 最近はブログを始めマニュアルや仕様書など技術文書を書く機会が多くなってきました。
 技術文書はわかりやすさが重要だと思うのですが実際は書けていません。
@@ -113,4 +113,46 @@ sample.md:7: ValidationError[DoubledWord], 一文に二回以上利用されて�
 redpen -c redpen-conf.xml sample.md
 ```
 
-## RedPen と Github と Travis CI で共同作業
+## RedPen と Github と Travis CI でレビュを効率化
+一人で技術文書を書いている場合は、コマンドラインで RedPen を実行して規約に沿っているか確認する。
+複数人で作業している場合は Travis CI との連携が便利そうです。
+規約（redpen-conf）を文書と一緒に Github で共有して、Travis CI と連携することで、基本的な規約のレビュが自動化できますね。
+
+1. Github で文書管理
+2. フォークしてもらう
+3. プルリクもらう
+4. Travis CI で規約自動チェック
+
+という流れです。
+
+**Github のファイル構成例**
+
+```
+blog
+├── .gitignore
+├── .travis.yml                     # Travis CI ファイル
+├── README.md
+├── redpen-conf.xml                 # RedPen 規約ファイル
+└── src                             # コンテンツファイル
+    └── redpen-getting-started.md
+```
+
+**Travis 設定ファイル例**
+
+```
+language: text
+
+jdk:
+  - oraclejdk8
+
+env:
+  - URL=https://github.com/redpen-cc/redpen/releases/download/redpen-1.5.2
+
+install:
+  - wget $URL/redpen-1.5.2.tar.gz
+  - tar xvf redpen-1.5.2.tar.gz
+  - export PATH=$PWD/redpen-distribution-1.5.2/bin:$PATH
+
+script:
+  - redpen -f markdown src/*.md
+```
