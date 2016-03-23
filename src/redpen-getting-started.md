@@ -156,3 +156,5 @@ install:
 script:
   - redpen -f markdown src/*.md
 ```
+
+## まとめ
