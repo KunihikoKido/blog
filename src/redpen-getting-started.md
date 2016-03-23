@@ -126,9 +126,13 @@ redpen -c redpen-conf.xml sample.md
 
 という流れです。
 
+プルリクエストをもらって、規約に従っていなければ、以下のようにエラーが表示されます。
+![github_all_checks_have_failed.png](https://raw.githubusercontent.com/KunihikoKido/blog/master/src/images/github_all_checks_have_failed.png)
 
+規約に従った文書であれば、 All checks have passed となって安全にマージすることができます。
+![github_all_checks_have_passed.png](https://raw.githubusercontent.com/KunihikoKido/blog/master/src/images/github_all_checks_have_passed.png)
 
-**Github のファイル構成例**
+### Github のファイル構成例
 
 ```
 blog
@@ -140,7 +144,7 @@ blog
     └── redpen-getting-started.md
 ```
 
-**Travis 設定ファイル例**
+### Travis 設定ファイル例
 
 ```
 language: text
