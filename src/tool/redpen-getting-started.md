@@ -143,7 +143,7 @@ myblog
     └── redpen-getting-started.md
 ```
 
-### Travis 設定ファイル例
+### Travis の設定ファイル例
 Travis CI 用の設定ファイルです。
 
 ```yaml
