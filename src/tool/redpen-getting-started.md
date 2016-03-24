@@ -194,4 +194,4 @@ script:
 
 ## 参考
 * [RedPen](http://redpen.cc/)
-* [RedPenを使って技術文書を手軽に校正しよう](http://gihyo.jp/lifestyle/serial/01/redpen/0001)
+* [RedPen を使って技術文書を手軽に校正しよう](http://gihyo.jp/lifestyle/serial/01/redpen/0001)
