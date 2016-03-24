@@ -18,7 +18,7 @@
 
 ## RedPen のインストール
 RedPen はコマンドラインベースのツールとして提供されています。
-Homebrew インストールできるので導入はとても簡単です。（ for Mac ）
+Homebrew 経由でインストールできるので、導入はとても簡単です。（for Mac）
 
 ```
 brew install redpen
@@ -134,16 +134,17 @@ redpen -c redpen-conf.xml sample.md
 以下のファイル構成では、src ディレクトリ配下に Markdown 形式の文章を管理する構成です。
 
 ```
-blog
+myblog
 ├── .gitignore
 ├── .travis.yml                     # Travis CI ファイル
 ├── README.md
-├── redpen-conf.xml                 # RedPen 規約ファイル
+├── redpen-conf-ja.xml                 # RedPen 規約ファイル
 └── src                             # コンテンツファイル
     └── redpen-getting-started.md
 ```
 
 ### Travis 設定ファイル例
+Travis CI 用の設定ファイルです。
 
 ```
 language: text
@@ -160,7 +161,7 @@ install:
   - export PATH=$PWD/redpen-distribution-1.5.2/bin:$PATH
 
 script:
-  - redpen -f markdown src/*.md
+  - redpen -c redpen-conf-ja.xml -f markdown -l 0 src/*.md
 ```
 
 ### RedPen 設定ファイル例
@@ -190,7 +191,8 @@ script:
 ```
 
 ## まとめ
-この記事も RedPen で校正しています。
+この記事も RedPen で校正しています。さすがに一文内の同一単語の規約（DoubledWord）は素人には厳しかったので外しました。
+RedPen はセットアップも簡単なため、まずは個人的にブログから使っていこうかと思っています。（そのうち社内の仕様書や製品マニュアルでも使っていきたい。）
 
 ## 参考
 * [RedPen](http://redpen.cc/)
