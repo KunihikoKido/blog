@@ -81,7 +81,7 @@ curl -XPUT 'http://localhost:9200/_license?acknowledge=true' -d @license.json
 
 Basic License では、マルチクラスター をサポートしていないため、Cluster 一覧ではなく 以下のように Overview のページが表示されます。
 
-￼<a href="http://cdn.dev.classmethod.jp/wp-content/uploads/2016/02/20160203-3.png"><img src="http://cdn.dev.classmethod.jp/wp-content/uploads/2016/02/20160203-3-640x460.png" alt="20160203-3" width="640" height="460" class="alignnone size-medium wp-image-181387" /></a>
+![marvel](https://raw.githubusercontent.com/KunihikoKido/blog/master/src/elastic/images/20160203-3-640x460.png)
 
 これでめでたくMarvelを使い続けられます。
 
