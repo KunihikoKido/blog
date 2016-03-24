@@ -1,0 +1,11 @@
+{
+  "title": "My Blog",
+  "description": "",
+  "language": "ja",
+  "structure": {
+    "readme": "INTRO.md"
+  },
+  "pdf": {
+    "fontSize": 6
+  }
+}

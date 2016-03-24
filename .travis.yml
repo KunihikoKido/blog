@@ -12,4 +12,4 @@ install:
   - export PATH=$PWD/redpen-distribution-1.5.2/bin:$PATH
 
 script:
-  - redpen -c redpen-conf.xml -f markdown src/*.md
+  - redpen -c redpen-conf-ja.xml -f markdown -l 0 src/*.md
