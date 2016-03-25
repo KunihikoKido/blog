@@ -8,6 +8,7 @@ env:
 
 install:
   - npm install -g gitbook-cli
+  - gitbook install
   - wget $URL/redpen-1.5.2.tar.gz
   - tar xvf redpen-1.5.2.tar.gz
   - export PATH=$PWD/redpen-distribution-1.5.2/bin:$PATH
