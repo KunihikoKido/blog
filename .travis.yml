@@ -5,6 +5,7 @@ env:
 - URL=https://github.com/redpen-cc/redpen/releases/download/redpen-1.5.2
 install:
 - npm install -g gitbook-cli
+- npm install -g gitbook-pdf
 - gitbook install
 - wget $URL/redpen-1.5.2.tar.gz
 - tar xvf redpen-1.5.2.tar.gz
@@ -12,13 +13,13 @@ install:
 script:
 - make check
 before_deploy:
-- make html
-- zip -q html.zip -r _build/html
+- make pdf
+- zip -q pdf.zip -r _build/docs.pdf
 deploy:
   provider: releases
   api_key:
     secure: 16280cqDv/i9T9Tsm/SrCVmEu8NvCkmw1IqLMF9gSnYXMQL7klBARycCPYETezrYPw5czWbWJLKyFoFyc6DNWKJih52lZpxz7vN5WqCFdFE1gEm6PDIROvQTbwo+8HZj8Rb/IWJta83eac1pt2oUZanTnwqtZRcTifVhUGNzeUV7pB2AW87XwFBAsmdbHiTjiPWtPXGYEmE7bk26PM/hSTuoWnexVpASUbqtnYz+O9e6kID1kB9+qsyw/8T/jHe/Z2rKr7rI/IagNM0f77L9STg+56lLhbaWeZN7h0TxRKJnKUFnsYWulidnIXZy1uBw6MqACy0bLU2o0LAhrJsoGyYe7YCdawrZa4JL89EATfUrZiKnjEzpXr9skTJFIBKZJYDUfzLRaA70Ua1tE7S5Q8x+kQ5noS3v5wuSPX6AnNgtsQ96PWUp9fJsVd1n3YZIIzAxcz4uyfVi0kRG7YdDmCzwVomCgt1RdwXdiq/3mfcnPs0fSCgvnP4rMyerlcyHWQUohEqju+wtlz8JjGWpCUeoQ2dRbfUBVsiViVHY9a5VRGNxgkhaDzS84SqLKrDZUzQ4BURDS/HNMTP4ubt0vCKa77BzBsMuj8PX2tuXsSLqQVd7PVyUdjX/34eNXsgxFumfS5WQxlWyfsSOtCPum/tlGsCK/9i78KjvfqKGzCQ=
-  file: html.zip
+  file: pdf.zip
   skip_cleanup: true
   on:
     repo: KunihikoKido/docs

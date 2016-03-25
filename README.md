@@ -19,7 +19,10 @@
 # 1. install gitbook cli
 npm install -g gitbook-cli
 
-# 2. install redpen
+# 2. install gitbook-pdf
+npm install -g gitbook-pdf
+
+# 3. install redpen
 brew install redpen
 ```
 
