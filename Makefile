@@ -1,5 +1,6 @@
 BUILDDIR = _build
-
+DOCS = $(wildcard src/*)
+REDPEN = redpen -c redpen-conf-ja.xml -f markdown -l 0
 .PHONY: help clean check html
 
 help:
@@ -9,8 +10,9 @@ help:
 	@echo "  pdf        to make pdf file"
 
 
+
 check:
-	redpen -c redpen-conf-ja.xml -f markdown -l 0 src/*.md
+	@$(foreach doc,$(DOCS),echo "$(REDPEN) $(doc)"; REDPEN $(doc);)
 
 clean:
 	-rm -rf $(BUILDDIR)/
