@@ -9,6 +9,7 @@ Elastic{ON}16 で発表された Elastic Stack の最新情報が気になりつ
 
 ## 発表資料
 発表した資料はこちら↓
+
 <script async class="speakerdeck-embed" data-id="cfec697160474a40853fc7f9db0088f4" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
 
 [Developers.IO 2016 C-2 「Elasticsearchで自由自在に検索・分析できるようになるためのヒント」](https://speakerdeck.com/kunihikokido/developers-dot-io-2016-c-2-elasticsearchdezi-you-zi-zai-nijian-suo-fen-xi-dekiruyouninarutamefalsehinto)

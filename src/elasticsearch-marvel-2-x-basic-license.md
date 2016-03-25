@@ -46,11 +46,11 @@ bin/kibana
 ### 3.  Marvel のインストールの確認
 ブラウザで、http://0.0.0.0:5601/app/marvel へアクセスして、Marvel が正しくインストールされているか確認してください。正しくインストールされていれば、Elasticsearch の Cluster が認識され、以下のような画面が表示されます。
 
-![marvel](https://raw.githubusercontent.com/KunihikoKido/blog/master/src/elastic/images/20160203-1-640x396.png)
+![marvel](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/elasticsearch-marvel-2-x-basic-license-1.png)
 
 よく見ると、Cluster 一覧の License が **Trial** になっています！
 
-![marvel](https://raw.githubusercontent.com/KunihikoKido/blog/master/src/elastic/images/20160203-2-640x134.png)
+![marvel](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/elasticsearch-marvel-2-x-basic-license-2.png)
 
 このままでは、３０日で使えなくなってしまいますので、次の手順でライセンスの申請と更新をします。
 
@@ -81,7 +81,7 @@ curl -XPUT 'http://localhost:9200/_license?acknowledge=true' -d @license.json
 
 Basic License では、マルチクラスター をサポートしていないため、Cluster 一覧ではなく 以下のように Overview のページが表示されます。
 
-![marvel](https://raw.githubusercontent.com/KunihikoKido/blog/master/src/elastic/images/20160203-3-640x460.png)
+![marvel](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/elasticsearch-marvel-2-x-basic-license-3.png)
 
 これでめでたくMarvelを使い続けられます。
 
