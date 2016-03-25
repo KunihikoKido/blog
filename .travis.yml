@@ -14,4 +14,4 @@ install:
   - export PATH=$PWD/redpen-distribution-1.5.2/bin:$PATH
 
 script:
-  - make check html
+  - make check
