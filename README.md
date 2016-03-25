@@ -43,7 +43,7 @@ cd docs
 make html
 
 # 3. open html in brawser
-open build/html/index.html
+open _build/html/index.html
 ```
 
 ### Make pdf file
@@ -57,7 +57,7 @@ cd docs
 make html
 
 # 3. open pdf in preview app.
-open build/book.pdf
+open _build/docs.pdf
 ```
 
 ### Check document

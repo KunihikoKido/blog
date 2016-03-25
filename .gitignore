@@ -29,5 +29,5 @@ Temporary Items
 .apdisk
 
 # My Project
-build
+_build
 node_modules

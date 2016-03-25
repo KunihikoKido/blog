@@ -1,4 +1,4 @@
-BUILDDIR = build
+BUILDDIR = _build
 
 .PHONY: help clean check html
 
@@ -15,7 +15,7 @@ clean:
 	-rm -rf $(BUILDDIR)/
 
 pdf:
-	gitbook pdf . $(BUILDDIR)/myblog.pdf
+	gitbook pdf . $(BUILDDIR)/docs.pdf
 
 html:
 	gitbook build . $(BUILDDIR)/html
