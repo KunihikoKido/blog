@@ -9,7 +9,7 @@ help:
 
 
 check:
-	redpen -c redpen-conf-ja.xml -f markdown -l 0 src/tool/*.md
+	redpen -c redpen-conf-ja.xml -f markdown -l 0 tools/*.md
 
 clean:
 	-rm -rf $(BUILDDIR)/
