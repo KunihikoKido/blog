@@ -1,5 +1,5 @@
 # Docs HOWTO
-[![Build Status](https://travis-ci.org/KunihikoKido/myblog.svg?branch=master)](https://travis-ci.org/KunihikoKido/myblog)
+[![Build Status](https://travis-ci.org/KunihikoKido/docs.svg?branch=master)](https://travis-ci.org/KunihikoKido/docs)
 
 ## Conditions of use
 このプロジェクトは、 [Kunihiko Kido](https://github.com/KunihikoKido) 個人のブログ記事校正及びビルドプロセスのために公開されています。
