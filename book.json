@@ -1,6 +1,6 @@
 {
-  "title": "My Blog",
-  "description": "",
+  "title": "Technical Documents",
+  "description": "Technical documents by Kunihiko Kido",
   "language": "ja",
   "structure": {
     "readme": "INTRO.md"
