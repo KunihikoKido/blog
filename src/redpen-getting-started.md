@@ -112,6 +112,16 @@ sample.md:7: ValidationError[DoubledWord], 一文に二回以上利用されて�
 redpen -c redpen-conf.xml sample.md
 ```
 
+## 各種エディタのプラグイン
+各種エディタ用にプラグインも用意されています。
+
+* [Atom Editor package by griffin-stewie](https://atom.io/packages/redpen)
+* [Emacs redpen-paragraph by karronoli](https://libraries.io/emacs/redpen-paragraph/v0.2)
+* [WordPress plugin](https://github.com/redpen-cc/redpen-wordpress-plugin)
+* [IntelliJ IDEA plugin](https://plugins.jetbrains.com/plugin/8210)
+* [SublimeLinter module for RedPen](https://github.com/taky/sublimelinter-redpen)
+
+
 ## RedPen と Github と Travis CI でレビュを効率化
 一人で技術文書を書いている場合は、コマンドラインで RedPen を実行して規約に沿っているか確認すれば良いのですが、複数人で作業している場合は Travis CI との連携が便利そうです。
 規約（redpen-conf）を文書と一緒に Github で共有して、Travis CI と連携することで、基本的な規約のレビュが自動化できますね。
