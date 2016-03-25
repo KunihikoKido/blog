@@ -125,10 +125,10 @@ redpen -c redpen-conf.xml sample.md
 という流れです。
 
 プルリクエストをもらって、規約に従っていなければ、以下のようにエラーが表示されます。
-![github_all_checks_have_failed.png](https://raw.githubusercontent.com/KunihikoKido/docs/master/tools/images/github_all_checks_have_failed.png)
+![faild](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/redpen-getting-started-1.png)
 
 規約に従った文書であれば、 All checks have passed となって安全にマージすることができます。
-![github_all_checks_have_passed.png](https://raw.githubusercontent.com/KunihikoKido/docs/master/tools/images/github_all_checks_have_passed.png)
+![passed](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/redpen-getting-started-2.png)
 
 ### Github のファイル構成例
 以下のファイル構成では、src ディレクトリ配下に Markdown 形式の文章を管理する構成です。
