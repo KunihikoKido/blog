@@ -150,7 +150,7 @@ myblog
 ├── .gitignore
 ├── .travis.yml                     # Travis CI ファイル
 ├── README.md
-├── redpen-conf-ja.xml                 # RedPen 規約ファイル
+├── redpen-conf-ja.xml              # RedPen 規約ファイル
 └── src                             # コンテンツファイル
     └── redpen-getting-started.md
 ```
