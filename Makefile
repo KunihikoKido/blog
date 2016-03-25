@@ -4,6 +4,7 @@ BUILDDIR = _build
 
 help:
 	@echo "Please use \`make <target>' where <target> is one of"
+	@echo "  check      to check document"
 	@echo "  html       to make standalone HTML files"
 	@echo "  pdf        to make pdf file"
 
