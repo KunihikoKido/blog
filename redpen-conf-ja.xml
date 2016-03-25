@@ -17,4 +17,8 @@
         <validator name="JapaneseStyle" />
         <validator name="DoubleNegative" />
     </validators>
+    <symbols>
+        <symbol name="FULL_STOP" value="。" />
+        <symbol name="COLON" value="：" />
+    </symbols>
 </redpen-conf>
