@@ -1,23 +1,23 @@
-# 【改】AWS Lambda で MeCab を動かす
+# AWS Lambda で MeCab を動かす【改】
 木戸です。
 
-前回ご紹介した「[AWS Lambda で MeCab を動かす](http://dev.classmethod.jp/cloud/aws-lambda-with-mecab/)」のエントリーですが、通りすがりの shogo82148 さんに素敵なプルリクエストをいただきましたので、今回はそのご紹介です。
+前回ご紹介した「[ AWS Lambda で MeCab を動かす](http://dev.classmethod.jp/cloud/aws-lambda-with-mecab/)」のエントリですが、通りすがりの shogo82148 さんに素敵なプルリクエストをいただきました。今回はそのご紹介です。
 
 ## 改善点
 改善点は以下の２点です。
 
 * 「**外部プロセス起動をやめて高速化**」
-	* MeCabは非常に高速なのですが、外部プロセス起動をやめることでさらに高速化しています。
-* 「**OSコマンドインジェクションの危険性の改善**」
-	* Amazon API Gateway などで外部に公開した場合のOSコマンドインジェクションの危険性を改善しています。
+	* MeCab は非常に高速なのですが、外部プロセス起動をやめることでさらに高速化しています。
+* 「**OS コマンドインジェクションの危険性の改善**」
+	* Amazon API Gateway などで外部に公開した場合の OS コマンドインジェクションの危険性を改善しています。
 
 
 ## ソースの解説
-前回ご紹介したサンプルコードでは、``LD_LIBRARY_PATH`` を使って、``import MeCab`` 時に ``libmecab.so`` ライブラリを見つけられるようにするため、外部プロセスとして起動していました。（そもそも、Lambda handler 起動する前に ``LD_LIBRATY_PATH`` 設定できればこんなことしなくても良いのですが。。）
+前回ご紹介したサンプルコードでは、``LD_LIBRARY_PATH`` を使って ``import MeCab`` 時に ``libmecab.so`` ライブラリを見つけられるようにするため、外部プロセスとして起動していました。（そもそも、Lambda handler 起動する前に ``LD_LIBRATY_PATH`` 設定できればこんなことしなくても良いのですが。）
 
-改善後は、``import MeCab`` する前に、``ctypes.cdll.LoadLibrary`` を使って ``libmecab.so`` ライブラリを直接読み込むことで、``LD_LIBRARY_PATH`` が設定されていなくても MeCab のモジュールとそのライブラリがリンクできるようになっています。そのため上記の改善と、MeCab を実行するモジュールを外部に切り出す必要も無くなり、``lambda_function.py`` と  ``tokenize.py`` モジュールが統合され、コード的にもかなりシンプルになっています！
+改善後は、``import MeCab`` する前に ``ctypes.cdll.LoadLibrary`` を使って ``libmecab.so`` ライブラリを直接読み込みます。そうすることで ``LD_LIBRARY_PATH`` が設定されていなくても MeCab のモジュールとそのライブラリがリンクできるようになっています。そのため上記の改善と MeCab を実行するモジュールを外部に切り出す必要も無くなり、``lambda_function.py`` と  ``tokenize.py`` モジュールが統合され、コード的にもかなりシンプルになっています！
 
-_lambda_function.py（tokenize.py 統合）_
+_lambda_function.py （tokenize.py 統合）_
 
 ```python
 # coding=utf-8
