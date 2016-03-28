@@ -57,7 +57,7 @@ PDF ファイルを作成するには、以下の手順で作成します。
 cd docs
 
 # 2. make pdf file.
-make html
+make pdf
 
 # 3. open pdf in preview app.
 open _build/docs.pdf
