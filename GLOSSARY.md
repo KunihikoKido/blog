@@ -29,3 +29,9 @@ Document に定義された各種フィールド
 
 # Document-Oriented
 ドキュメント指向
+
+# CJK
+中国語、日本語、韓国語
+
+# Bigram
+２文字 NGram 方式によるトークナイズ。
