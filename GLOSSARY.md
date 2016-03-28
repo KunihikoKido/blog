@@ -26,3 +26,6 @@ Document に定義された各種フィールド
 
 # RDB
 リレーショナル・データベース
+
+# Document-Oriented
+ドキュメント指向
