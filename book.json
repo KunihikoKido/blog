@@ -1,6 +1,7 @@
 {
   "title": "Hello! Elasticsearch",
   "description": "Elasticsearch Technical documents by Kunihiko Kido",
+  "author": "Kunihiko Kido",
   "language": "ja",
   "structure": {
     "readme": "INTRO.md"
