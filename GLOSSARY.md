@@ -9,6 +9,12 @@
 複数のドキュメントを保持するための論理的な単位。
 （Relational DB の Table に近い仕組み。）
 
+# Types
+Type 参照
+
+# Fields
+Document に定義された各種フィールド
+
 # Document
 複数のフィールドから構成される JSON フォーマットのインデックス対象データ。
 
