@@ -11,3 +11,6 @@
 
 # Document
 複数のフィールドから構成される JSON フォーマットのインデックス対象データ。
+
+# Documents
+[Document](#Document) 参照
