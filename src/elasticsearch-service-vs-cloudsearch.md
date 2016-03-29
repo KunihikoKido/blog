@@ -30,7 +30,7 @@ CloudSearch はテキスト型や日付型、数字型（int/double）それに�
 一方、Elasticsearch Service はそれらのデータ型に加え、ネストされたオブジェクト型や親子関連のインデックスをサポートしています。
 そのため、１つのドキュメントに対して１対多の関連を持った情報も正確にフィルタリングしたり、ソート条件として使用できる。
 
-一般的にフラットな構造の商品検索では、CloudSearch と Elasticsarch Service ともに候補にできます。
+一般的にフラットな構造の商品検索では、CloudSearch と Elasticsearch Service ともに候補にできます。
 しかし、旅行サイトのツアーやチケット検索のように、一つの商材に対して期間と価格の組み合わせを複数持つようなデータ構造の場合 Elasticsearch Service のみが候補としてあげられる。
 
 ## 運用で楽がしたい場合は CloudSearch
