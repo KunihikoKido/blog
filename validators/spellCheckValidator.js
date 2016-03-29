@@ -12,7 +12,6 @@ function validateSentence(sentence) {
     'Analyze',
     'Analysis',
     'Query',
-    'Index',
     'Indices',
     'Document',
     'Documents'
@@ -54,7 +53,7 @@ function validateSentence(sentence) {
 
   for (var i = 0; i < sentence.tokens.length; i++) {
     // 名詞だけを対象に
-    if (sentence.tokens[i].tags[0] == '名詞') {
+    if (sentence.tokens[i].tags[0] == '名詞' && sentence.tokens[i].surface.length > 3) {
       if (checkKeywordArray.indexOf(sentence.tokens[i].surface) == -1) {
         for (var j=0; j < checkKeywordArray.length; j++) {
           //console.log('checking : ' + sentence.tokens[i].surface + ' and ' + checkKeywordArray[j])
