@@ -12,7 +12,7 @@ help:
 
 
 check:
-	@$(foreach doc,$(DOCS),echo "$(REDPEN) $(doc)"; $(REDPEN) $(doc);)
+	@$(foreach doc,$(DOCS),echo "$(REDPEN) $(doc)"; $(REDPEN) $(doc)||exit 1;)
 
 clean:
 	-rm -rf $(BUILDDIR)/
