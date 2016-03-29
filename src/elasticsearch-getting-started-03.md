@@ -14,7 +14,7 @@ RDB で管理されている商品情報など、決められた ID を持って
 
 例えば、`product` Index の `items` Type に ID が `123` の商品情報をインデックスルルには、以下のようにリクエストします。
 
-```json
+```js
 PUT /product/items/123
 {
   "name": "冷蔵庫",
@@ -25,7 +25,7 @@ PUT /product/items/123
 
 以下はそのレスポンス例です。指定した `123` が Document Id として登録されます。
 
-```json
+```js
 {
   "_index": "product",
   "_type": "items",
@@ -40,7 +40,7 @@ PUT /product/items/123
 
 リクエスト方法は先ほどの例を修正すると、Document Id を指定せずに、メソッドを `POST` に変更しリクエストするだけです。
 
-```json
+```js
 POST /product/items/
 {
   "name": "冷蔵庫",
@@ -51,7 +51,7 @@ POST /product/items/
 
 以下はそのレスポンス例です。 `_id` に自動生成された Document Id が付与されます。
 
-```json
+```js
 {
   "_index": "product",
   "_type": "items",
@@ -59,4 +59,142 @@ POST /product/items/
   "_version": 1,
   "created": true
 }
+```
+
+## ドキュメント取得の基本
+基本的なドキュメントの取得方法は、インデックス時のメソッドを `GET` に変更するだけです。
+
+```
+GET /product/items/123?pretty
+```
+
+レスポンスは、インデックス名やタイプ名などのメタ情報と、`_source` フィールドが以下の例のように返されます。
+
+```js
+{
+  "_index": "product",
+  "_type": "items",
+  "_id": "123",
+  "_version": 1,
+  "found": true,
+  "_source": {
+    "name": "冷蔵庫",
+    "price": 3456,
+    "published": "2016/03/29"    
+  }
+}
+```
+
+### 存在しないドキュメントのレスポンス例
+また、存在しないドキュメントを指定した場合には、`404` の HTTP レスポンスコードと一緒に以下の例のようなレスポンスが返されます。
+
+```js
+{
+  "_index": "product",
+  "_type": "items",
+  "_id": "123",
+  "found": false,  
+}
+```
+
+### ドキュメントの一部を取得する
+
+```
+GET /product/items/123?_source=name,price
+```
+
+```js
+{
+  "_index": "product",
+  "_type": "items",
+  "_id": "123",
+  "_version": 1,
+  "found": true,
+  "_source": {
+    "name": "冷蔵庫",
+    "price": 3456
+  }
+}
+```
+
+### メタ情報なしに `_source` のみ取得する
+
+```
+GET /product/items/_source
+```
+
+
+```js
+{
+  "name": "冷蔵庫",
+  "price": 3456,
+  "published": "2016/03/29"
+}
+```
+
+## ドキュメントの存在を確認する
+
+```
+curl -i -XHEAD http://localhost:9200/product/items/123
+```
+
+```
+HTTP/1.1 200 OK
+Content-Type: text/plain; charset=UTF-8
+Content-Length: 0
+```
+
+
+```
+HTTP/1.1 404 Not Found
+Content-Type: text/plain; charset=UTF-8
+Content-Length: 0
+```
+
+## ドキュメント更新の基本
+
+```js
+PUT /product/items/123
+{
+  "name": "冷蔵庫",
+  "price": 999,
+  "published": "2016/03/30"
+}
+```
+
+
+```js
+{
+  "_index": "product",
+  "_type": "items",
+  "_id": "123",
+  "_version": 2,
+  "created": false
+}
+```
+
+## 存在しない場合のみ新しいドキュメントを作成する
+
+```
+PUT /product/items/123?op_type=create
+{... document ...}
+```
+
+```
+PUT /product/items/123/_create
+{... document ...}
+```
+
+
+```js
+{
+  "error" : "DocumentAlreadyExistsException[[product][4] [items][123]: document already exists]",
+  "status" : 409
+}
+```
+
+## ドキュメント削除の基本
+
+```
+DELETE /product/items/123
 ```
