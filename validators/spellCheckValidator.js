@@ -14,7 +14,11 @@ function validateSentence(sentence) {
     'Query',
     'Indices',
     'Document',
-    'Documents'
+    'Documents',
+    'Cluster',
+    'Shards',
+    'Shard',
+    'Template'
   ]
 
   var levenshteinDistance = function(a, b) {
