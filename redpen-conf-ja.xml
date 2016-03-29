@@ -20,9 +20,8 @@
         <validator name="DoubleNegative" />
     </validators>
     <symbols>
-        <symbol name="FULL_STOP" value="。" />
-        <symbol name="COLON" value=":" />
-        <symbol name="DOLLAR_SIGN" value="＄" />
+        <symbol name="FULL_STOP" value="。" invalid-chars="．,"/>
+        <symbol name="COLON" value="：" />
         <symbol name="NUMBER_SIGN" value="＃" />
     </symbols>
 </redpen-conf>
