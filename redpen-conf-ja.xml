@@ -13,7 +13,9 @@
         <validator name="SpaceBetweenAlphabeticalWord" />
         <validator name="CommaNumber" />
         <validator name="SuccessiveWord" />
-        <validator name="JavaScript" />
+        <validator name="JavaScript">
+          <property name="script-path" value="validators" />
+        </validator>
         <validator name="JapaneseStyle" />
         <validator name="DoubleNegative" />
     </validators>
