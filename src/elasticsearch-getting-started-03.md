@@ -285,7 +285,8 @@ views の値が１足されます。
 DELETE /blog/posts/123
 ```
 
-## 楽観的並行性制御（optimistic concurrency control）
+## 少し高度なドキュメントの更新方法
+### 楽観的並行性制御（optimistic concurrency control）
 Elasticsearch は、他の処理とは競合してはならないトランザクションにおいて、楽観的並行性制御の仕組みを提供しています。
 
 楽観的並行性制御とは、ドキュメント更新開始時には特に排他処理は行なわず、完了する際に他からの更新がされたかどうかを確認します。
