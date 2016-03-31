@@ -23,5 +23,10 @@
         <symbol name="FULL_STOP" value="。" invalid-chars="．,"/>
         <symbol name="COLON" value="：" />
         <symbol name="NUMBER_SIGN" value="＃" />
+        <symbol name="LEFT_PARENTHESIS" value="（" />
+        <symbol name="RIGHT_PARENTHESIS" value="）" />
+        <symbol name="LESS_THAN_SIGN" value="＜" />
+        <symbol name="GREATER_THAN_SIGN" value="＞" />
+        <symbol name="EQUAL_SIGN" value="＝" />
     </symbols>
 </redpen-conf>
