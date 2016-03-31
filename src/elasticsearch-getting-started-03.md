@@ -259,6 +259,15 @@ PUT /blog/posts/123?version=1
 #### 外部システム管理のバージョン番号を使用した楽観的ロック
 外部システム管理のバージョン番号を使用する場合は、`version` パラメータに加え、`version_type=external` パラメータを使用して以下のようにリクエストします。また、`version` パラメータには外部システムで管理しているバージョン番号を指定します。
 
+```js
+PUT /blog/posts/123?version=5&version_type=external
+{
+  "title": "Hello! Elasticsearch",
+  "author": "Kunihiko Kido",
+  "views": 0
+}
+```
+
 外部システムで管理しているバージョン番号が常に最新ということを前提としているため、現在のドキュメントのバージョン番号は事前に知る必要はありません。
 
 ドキュメントの現在のバージョン番号が、指定したバージョン番号未満の場合は更新に成功します。
@@ -267,11 +276,20 @@ PUT /blog/posts/123?version=1
 また、バージョン番号が同じか大き場合（すでに新しい情報で更新されている場合）にはエラーになります。
 
 ```js
-PUT /blog/posts/123?version=5&version_type=external
 {
-  "title": "Hello! Elasticsearch",
-  "author": "Kunihiko Kido",
-  "views": 0
+  "error" : {
+    "root_cause" : [ {
+      "type" : "version_conflict_engine_exception",
+      "reason" : "[posts][123]: version conflict, current [2], provided [1]",
+      "shard" : "0",
+      "index" : "blog"
+    } ],
+    "type" : "version_conflict_engine_exception",
+    "reason" : "[posts][123]: version conflict, current [2], provided [1]",
+    "shard" : "0",
+    "index" : "blog"
+  },
+  "status" : 409
 }
 ```
 
