@@ -383,12 +383,22 @@ Bulk API は１度のリクエストで、複数のドキュメントに対す�
 
 ※ 注意: Elasticsearch 2.3 から追加された API です。
 
+**2.3 以前で当機能を実現する場合の手段**
+
+* scroll/scan API で検索条件にマッチしたドキュメントを取得して、Bulk API を使ってアップデートする方法
+
 ### Reindex API
 インデックス済みの情報を再度インデックスし直すための API です。
 
 ※ 参考: [Reindex API](https://www.elastic.co/guide/en/elasticsearch/reference/2.3/docs-reindex.html)
 
 ※ 注意: Elasticsearch 2.3 から追加された API です。
+
+**2.3 以前で当機能を実現する場合の手段**
+
+* scroll/scan API で検索条件にマッチしたドキュメントを取得して、Bulk API を使って上書き更新する方法
+* 公式 Elasticsearch Client (Python など) の Reindex 用のヘルパ関数を使用する。
+  * 注意: Reindex 用のヘルパ関数が提供されていない言語ものもある
 
 ## まとめ
 今回は Elasticsearch におけるドキュメント管理（操作方法）について説明しました。
