@@ -352,31 +352,41 @@ PUT /blog/posts/123?ttl=10m
 * Update By Query API (>=2.3)
 * Reindex API (>=2.3)
 
-### [Multi Get API](https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-multi-get.html)
+### Multi Get API
 Multi Get API は１度のリクエストで、複数のドキュメントを取得するための API です。
 
-### [Bulk API](https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-bulk.html)
+※ 参考: [Multi Get API](https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-multi-get.html)
+
+### Bulk API
 Bulk API は１度のリクエストで、複数のドキュメントに対する追加・更新・削除オペレーションを提供する API です。
 
 大量のドキュメントを追加・更新・削除する場合は、この Bulk API を使用したほうがパフォーマンスが良いです。
 
-### [Delete By Query API](https://www.elastic.co/guide/en/elasticsearch/reference/1.7/docs-delete-by-query.html)
+※ 参考: [Bulk API](https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-bulk.html)
+
+### Delete By Query API
 検索条件にマッチしたドキュメントを削除する API です。
+
+※ 参考: [Delete By Query API](https://www.elastic.co/guide/en/elasticsearch/reference/1.7/docs-delete-by-query.html)
 
 ※ 注意: Elasticsearch 2.0 で削除された API です。
 
-2.0 以上で当機能を実現する場合の手段
+**2.0 以上で当機能を実現する場合の手段**
 
 * [Delete By Query Plugin を使用する方法](https://www.elastic.co/guide/en/elasticsearch/plugins/2.3/plugins-delete-by-query.html)
 * scroll/scan API で検索条件にマッチしたドキュメント ID を取得し、Bulk API を使って削除する方法
 
-### [Update By Query API](https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-update-by-query.html)
+### Update By Query API
 検索条件にマッチしたドキュメントの任意のフィールドの値を更新する API です。
+
+※ 参考:[Update By Query API](https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-update-by-query.html)
 
 ※ 注意: Elasticsearch 2.3 から追加された API です。
 
-### [Reindex API](https://www.elastic.co/guide/en/elasticsearch/reference/2.3/docs-reindex.html)
+### Reindex API
 インデックス済みの情報を再度インデックスし直すための API です。
+
+※ 参考: [Reindex API](https://www.elastic.co/guide/en/elasticsearch/reference/2.3/docs-reindex.html)
 
 ※ 注意: Elasticsearch 2.3 から追加された API です。
 
