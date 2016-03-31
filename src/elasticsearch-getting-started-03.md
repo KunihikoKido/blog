@@ -1,14 +1,16 @@
 # 第３回 Elasticsearch 入門 ドキュメント管理の基本
 前回は「データスキーマ設計のいろは」というテーマで Elasticsearch にインデックスするためのドキュメント構造の設計について説明しました。今回は「ドキュメント管理の基本」というテーマで、そのドキュメントを追加・更新・削除する操作の基本を解説します。
 
-## とてもシンプルな API
+## 直感的に分かりやす API
 Elasticsearch は検索をはじめ、各種設定やサーバの状態取得など、ほとんどの操作を API として提供しています。もちろんドキュメントの追加・参照・更新・削除の API も提供していて、その仕様はとてもシンプルで直感的に使いこなすことができます。
 
 ドキュメントをあらわす URL スキーマは以下のようになっています。
 
 ```js
-GET|PUT|POST|DELETE|HEAD /{index}/{type}/{id}
+/{index}/{type}/{id}
 ```
+
+基本的には、各種ドキュメントのエンドポイントに対して、`GET` `PUT` `POST` `DELETE` `HEAD` メソッドで操作します。
 
 例えば、posts というタイプを持つ blog インデックスに ドキュメントを識別するための Id が 123 というドキュメントを追加するには次のようにリクエストするだけです。
 
@@ -16,18 +18,16 @@ GET|PUT|POST|DELETE|HEAD /{index}/{type}/{id}
 PUT /blog/posts/123
 {
   "title": "Hello! Elasticsearch",
-  "auther": "Kunihiko Kido",
+  "author": "Kunihiko Kido",
   "views": 0
 }
 ```
 
-
-もし、blog インデックスが存在しない場合は、このオペレーションで自動的に posts タイプも含めて作成されます。そして body で指定した JSON 形式のドキュメントが追加され検索可能になります。
-
-とりあえず検索したいだけなら、本当にこれだけのオペレーションで、ドキュメントが追加され検索可能になってしまうのです。（カスタム・アナライザを適用する場合は、個別のマッピング定義が必要ですが別の機会に説明します。）
+もし、blog インデックスが存在しない場合は、このオペレーションで自動的に posts タイプも含めて作成されます。そして body で指定した JSON 形式のドキュメントが追加され検索可能になります。とりあえず検索したいだけなら、本当にこれだけのオペレーションで、ドキュメントが追加され検索可能になってしまうのです。（カスタム・アナライザを適用する場合は、個別のマッピング定義が必要ですが別の機会に説明します。）
 
 ## １つのつのドキュメントは一意な Id で管理されている
 Elasticsearch は Index 、Type 内のドキュメントを一意に識別することができるのはドキュメントの Id のみです。
+
 RDB のように複数のフィールドの組み合わせによるユニーク・キーなどの制約は定義することはできません。
 
 
@@ -43,11 +43,10 @@ RDB のように複数のフィールドの組み合わせによるユニーク�
 PUT /blog/posts/123
 {
   "title": "Hello! Elasticsearch",
-  "auther": "Kunihiko Kido",
+  "author": "Kunihiko Kido",
   "views": 0
 }
 ```
-
 
 アクセスログなどのように Id 管理されていないデータはどうすれば良いでしょうか？
 
@@ -58,7 +57,7 @@ Elasticsearch にはドキュメント Id を自動生成する仕組みもあ�
 POST /blog/posts/
 {
   "title": "Hello! Elasticsearch",
-  "auther": "Kunihiko Kido",
+  "author": "Kunihiko Kido",
   "views": 0
 }
 ```
@@ -67,134 +66,28 @@ POST /blog/posts/
 
 ```js
 {
-  "_index": "blog",
-  "_type": "posts",
-  "_id": "AVFgSgVHUP18jI2wRx0w",
-  "_version": 1,
-  "created": true
+	"_index": "blog",
+	"_type": "posts",
+	"_id": "AVPKnvgaogRcMfU8CT47",
+	"_version": 1,
+	"_shards": {
+		"total": 2,
+		"successful": 1,
+		"failed": 0
+	},
+	"created": true
 }
 ```
 
-## ドキュメント取得の基本
-基本的なドキュメントの取得方法は、インデックス時のメソッドを `GET` に変更するだけです。
-
-```
-GET /blog/posts/123
-```
-
-レスポンスは、インデックス名やタイプ名などのメタ情報と、`_source` フィールドが以下の例のように返されます。
-
-```js
-{
-  "_index": "blog",
-  "_type": "posts",
-  "_id": "123",
-  "_version": 1,
-  "found": true,
-  "_source": {
-    "title": "Hello! Elasticsearch",
-    "auther": "Kunihiko Kido",
-    "views": 0
-  }
-}
-```
-
-### 存在しないドキュメントのレスポンス例
-また、存在しないドキュメントを指定した場合には、`404` の HTTP レスポンスコードと一緒に以下の例のようなレスポンスが返されます。
-
-```js
-{
-  "_index": "blog",
-  "_type": "posts",
-  "_id": "123",
-  "found": false,  
-}
-```
-
-### ドキュメントの一部を取得する
-ドキュメントが大きい場合など、必要なフィールドのみ取得することも可能です。
-
-```
-GET /blog/posts/123?_source=title,auther
-```
-
-```js
-{
-  "_index": "product",
-  "_type": "items",
-  "_id": "123",
-  "_version": 1,
-  "found": true,
-  "_source": {
-    "title": "Hello! Elasticsearch",
-    "auther": "Kunihiko Kido"
-  }
-}
-```
-
-### メタ情報なしに `_source` のみ取得する
-`_index` や `_type` などのメタ情報を含めずに、`_source` の内容だけ取得することもできます。
-
-```
-GET /blog/posts/123/_source
-```
-
-
-```js
-{
-  "title": "Hello! Elasticsearch",
-  "auther": "Kunihiko Kido",
-  "views": 0
-}
-```
-
-## ドキュメントの存在を確認する
-ドキュメントが存在するかどうかを確認するには HEAD メソッドを使用します。
-body レスポンスはありません。HTTP のレスポンス情報で存在確認を判断することができます。
-
-```
-HEAD /blog/posts/123
-```
-
-存在する場合
-
-```
-HTTP/1.1 200 OK
-Content-Type: text/plain; charset=UTF-8
-Content-Length: 0
-```
-
-存在しない場合
-
-```
-HTTP/1.1 404 Not Found
-Content-Type: text/plain; charset=UTF-8
-Content-Length: 0
-```
-
-## ドキュメント更新の基本
-ドキュメントの更新は幾つか方法があるので、注意が必要です。
-
-### ドキュメント全体を上書き更新する場合
-以下のリクエストはドキュメントの追加と同じです。すでに存在する場合は、リクエストした内容でドキュメント全体が上書き更新されます。
-
-```js
-PUT /blog/posts/123
-{
-  "title": "Hello! Kibana",
-  "auther": "Kunihiko Kido",
-  "views": 0
-}
-```
-
+## 少し高度なドキュメント管理方法
 ### 存在しない場合のみ新しいドキュメントを作成する
-ドキュメントが存在しない場合のみ新しい内容で追加するには `op_type=create` または `_create` エンドポインントを使用します。
+ドキュメントが存在しない場合のみ新しい内容で追加するには `op_type=create` または `_create` エンドポイントを使用します。
 
 ```js
 PUT /blog/posts/123?op_type=create
 {
   "title": "Hello! Elasticsearch",
-  "auther": "Kunihiko Kido",
+  "author": "Kunihiko Kido",
   "views": 0,
   "published": "2016/03/29"
 }
@@ -206,7 +99,7 @@ PUT /blog/posts/123?op_type=create
 PUT /blog/posts/123/_create
 {
   "title": "Hello! Elasticsearch",
-  "auther": "Kunihiko Kido",
+  "author": "Kunihiko Kido",
   "views": 0
 }
 ```
@@ -243,7 +136,7 @@ PUT /blog/posts/123/_update
   "found": true,
   "_source": {
     "title": "Hello! Elasticsearch",
-    "auther": "Kunihiko Kido",
+    "author": "Kunihiko Kido",
     "tags": ["Elasticsearch"],
     "views": 0
   }
@@ -252,6 +145,9 @@ PUT /blog/posts/123/_update
 
 ### スクリプトを使ってドキュメントの一部を更新する
 例えば、views をカウントアップしたい場合など、もとの値をベースにドキュメントの一部を更新したい場合は `script` を使用します。
+
+参考: [Enabling dynamic scripting](https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-scripting.html#enable-dynamic-scripting)
+
 
 ```js
 PUT /blog/posts/123/_update
@@ -271,47 +167,177 @@ views の値が１足されます。
   "found": true,
   "_source": {
     "title": "Hello! Elasticsearch",
-    "auther": "Kunihiko Kido",
+    "author": "Kunihiko Kido",
     "tags": ["Elasticsearch"],
     "views": 1
   }
 }
 ```
 
+#### 部分更新と衝突への対応
+例えば、ページビュ数など複数のプロセスによってカウントアップされる値を更新したい場合は、`retry_on_conflict` パラメータを使用することができます。
 
-## ドキュメント削除の基本
-ドキュメントを削除するには、`DELETE` メソッドを使用します。
+以下の例では複数のプロセスによって同時に `views` フィールドの値をカウントアップした際に発生するエラーに対して５回りトライして更新します。
 
+```js
+POST /blog/posts/123/_update?retry_on_conflict=5
+{
+   "script" : "ctx._source.views+=1",
+   "upsert": {
+       "views": 0
+   }
+}
 ```
-DELETE /blog/posts/123
-```
 
-## 少し高度なドキュメントの更新方法
+この方法は、書き込む順番は関係のないページビュ数などのカウントアップに有効です。書き込む順番が重要な場合は楽観的ロックを使用します。
+
 ### 楽観的並行性制御（optimistic concurrency control）
-Elasticsearch は、他の処理とは競合してはならないトランザクションにおいて、楽観的並行性制御の仕組みを提供しています。
+Elasticsearch は、他の処理とは競合してはならないトランザクションにおいて、楽観的並行性制御（以下楽観的ロック）の仕組みを提供しています。
 
-楽観的並行性制御とは、ドキュメント更新開始時には特に排他処理は行なわず、完了する際に他からの更新がされたかどうかを確認します。
+楽観的ロックとは、ドキュメント更新開始時には特に排他処理は行なわず、完了する際に他からの更新がされたかどうかを確認します。
 そして、もし他から更新されてしまっていたら自らの更新処理を破棄し、エラーとする仕組みです。
 
-以下のリクエストでは、現在インデックスされている version が 1 の場合は更新されます。
+#### Elasticsearch 管理のバージョン番号を使用した場合の楽観的ロック
+Elasticsearch はドキュメントの `_version` メタ情報にバージョン番号を管理しています。
+このバージョン番号はドキュメントが更新されるたびに増加します。
+この Elasticsearch が管理しているバージョン番号を使った楽観的ロックの仕組みを説明します。
+
+まずは更新する対象ドキュメントのバージョン番号を確認します。以下の例では 1 です。
+
+```js
+{
+  "_index": "blog",
+  "_type": "posts",
+  "_id": "123",
+  "_version": 1,
+  "found": true,
+  "_source": {
+    "title": "Hello! Elasticsearch",
+    "author": "Kunihiko Kido"
+  }
+}
+```
+
+このバージョン番号を使って、楽観的並行性制御するには `version` パラメータを使用して以下のようにリクエストします。
 
 ```js
 PUT /blog/posts/123?version=1
 {
   "title": "Hello! Elasticsearch",
-  "auther": "Kunihiko Kido",
+  "author": "Kunihiko Kido",
   "views": 0
 }
 ```
 
-ドキュメントの更新が成功すると version が 2 へ増加します。
+ドキュメントを更新するときに、他のプロセスに更新されずにバージョン番号が１のままの時は更新に成功します。
+そして、`_version` の値は 2 へ増加します。
 
-```
+すでに他のプロセスに更新され、 `_version` の値が指定した値と異なる場合は、以下のようにエラーになります。
+
+```js
 {
-  "_index": "blog",
-  "_type": "posts",
-  "_id": "123",
-  "_version": 2,
-  "created": false
+  "error" : {
+    "root_cause" : [ {
+      "type" : "version_conflict_engine_exception",
+      "reason" : "[posts][123]: version conflict, current [2], provided [1]",
+      "shard" : "0",
+      "index" : "blog"
+    } ],
+    "type" : "version_conflict_engine_exception",
+    "reason" : "[posts][123]: version conflict, current [2], provided [1]",
+    "shard" : "0",
+    "index" : "blog"
+  },
+  "status" : 409
 }
 ```
+
+#### 外部システム管理のバージョン番号を使用した場合の楽観的ロック
+外部システム管理のバージョン番号を使用する場合は、`version` パラメータに加え、`version_type=external` パラメータを使用して以下のようにリクエストします。`version` パラメータには外部システムで管理しているバージョン番号を指定します。
+
+外部システムで管理しているバージョン番号が常に最新ということになるので、現在のドキュメントのバージョン番号は事前に知る必要はありません。
+ドキュメントの現在のバージョン番号が、指定したバージョン番号未満の場合は更新に成功します。そして `_version` が指定したバージョン番号で更新されます。
+
+また、バージョン番号が同じか大き場合にはエラーになります。
+
+```js
+PUT /blog/posts/123?version=5&version_type=external
+{
+  "title": "Hello! Elasticsearch",
+  "author": "Kunihiko Kido",
+  "views": 0
+}
+```
+
+### 有効期限つきドキュメントをインデックスする（TTL）
+ドキュメントを削除する方法には、TTL （Time To Live）を指定して、有効期限つきのドキュメントをインデックスする方法もあります。
+
+アクセスログなど増加していくデータを自動で削除するのに便利です。
+
+まずは、`_ttl` の設定を有効にする。
+
+```js
+PUT /blog
+{
+  "mapping": {
+    "posts": {
+      "_ttl": {
+        "enabled": true
+      }
+    }
+  }
+}
+```
+てドキュメント追加時に `ttl` パラメータに有効期限をつけてインデックスする。以下のドキュメントはインデックス後１０分経過すると削除されます。
+
+```js
+PUT /blog/posts/123?ttl=10m
+{
+  "title": "Hello! Elasticsearch",
+  "author": "Kunihiko Kido",
+  "views": 0
+}
+```
+
+`ttl` パラメータを指定しなくても、`_ttl` 設定有効時にデフォルトの TTL を設定することも可能です。
+
+
+## 複数ドキュメントの一括操作
+これまで、１つのドキュメントに対する管理方法（操作方法）を説明してきました。この章では、複数のドキュメントを１度に処理する 各種 API を簡単に紹介したいと思います。
+
+* Multi Get API
+* Bulk API
+* Delete By Query API (<=1.7)
+* Update By Query API (>=2.3)
+* Reindex API (>=2.3)
+
+### [Multi Get API](https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-multi-get.html)
+Multi Get API は１度のリクエストで、複数のドキュメントを取得するための API です。
+
+### [Bulk API](https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-bulk.html)
+Bulk API は１度のリクエストで、複数のドキュメントに対する追加・更新・削除オペレーションを提供する API です。
+
+### [Delete By Query API](https://www.elastic.co/guide/en/elasticsearch/reference/1.7/docs-delete-by-query.html)
+検索条件にマッチしたドキュメントを削除する API です。
+
+※ 注意: Elasticsearch 2.0 で削除された API です。
+
+2.0 以上で、当機能を実現する場合の手段
+
+* [Delete By Query Plugin を使用する方法](https://www.elastic.co/guide/en/elasticsearch/plugins/2.3/plugins-delete-by-query.html)
+* scroll/scan API で検索条件にマッチしたドキュメント Id を取得ご、Bulk API を使って削除する方法
+
+### [Update By Query API](https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-update-by-query.html)
+検索条件にマッチしたドキュメントの任意のフィールドの値を更新する API です。
+
+※ 注意: Elasticsearch 2.3 から追加された API です。
+
+### [Reindex API](https://www.elastic.co/guide/en/elasticsearch/reference/2.3/docs-reindex.html)
+インデックス済みの情報を再度インデックスし直すための API です。
+
+※ 注意: Elasticsearch 2.3 から追加された API です。
+
+## まとめ
+今回は Elasticsearch におけるドキュメント管理（操作方法）について説明しました。
+楽観的ロック、スクリプトを使用した部分更新など、検索エンジンとは思えないほどの高機能ぶりです。
+このようなドキュメント管理の特徴も他の検索エンジンにはない Elasticsearch の特徴と言えるのではないでしょうか。
