@@ -18,7 +18,7 @@
         </validator>
         <validator name="JapaneseStyle" />
         <validator name="DoubleNegative" />
-        <validator name="DuplicatedSection" />
+        <!-- <validator name="DuplicatedSection" /> -->
     </validators>
     <symbols>
         <symbol name="FULL_STOP" value="。" invalid-chars=","/>
