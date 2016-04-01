@@ -38,40 +38,29 @@ Travis CI は必須ではありませんが、文章校正チェックで使用�
 
 ```sh
 docs
-├── images              # (1)
+├── draft               # (1)
+├── images              # (2)
 │   ├── redpen-getting-started-1.png
 │   └── redpen-getting-started-2.png
-├── src                 # (2)
+├── published           # (3)
 │   ├── elasticsearch-getting-started-01.md
 │   ├── elasticsearch-getting-started-02.md
 │   ├── elasticsearch-getting-started-03.md
 │   └── redpen-getting-started.md
-├── validators          # (3)
+├── validators          # (4)
 │   ├── easyReadCheck.js
 │   └── spellCheckValidator.js
-├── .bookignore         # (4)
-├── .gitignore          # (5)
-├── .travis.yml         # (6)
-├── book.json           # (7)
-├── GLOSSARY.md         # (8)
-├── INTRO.md            # (9)
-├── Makefile            # (10)
-├── README.md           # (11)
-├── redpen-conf-ja.xml  # (12)
-└── SUMMARY.md          # (13)
+├── .bookignore         # (5)
+├── .gitignore          # (6)
+├── .travis.yml         # (7)
+├── book.json           # (8)
+├── GLOSSARY.md         # (9)
+├── INTRO.md            # (10)
+├── Makefile            # (11)
+├── README.md           # (12)
+├── redpen-conf-ja.xml  # (13)
+└── SUMMARY.md          # (14)
 ```
-
-- **(1)** 画像ファイル管理ディレクトリ
-- **(2)** ブログ記事管理ディレクトリ
-- **(3)** RedPen のカスタム・バリデータ
-- **(1)** GitBook の用語集ページ
-- **(2)** GitBook のトップページ
-- **(3)** Travis CI 向けの各種オペレーション
-- **(4)** 当プロジェクトの説明
-- **(5)** GitBook の目次ページ
-- **(6)** GitBook の設定ファイル
-- **(8)** RedPen の設定ファイル（校正ルール）
-
 
 ### 記事を書くときのルール
 まずは記事を書くときのルールです。
