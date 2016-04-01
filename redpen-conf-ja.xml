@@ -12,15 +12,16 @@
         <validator name="ParagraphNumber"/>
         <validator name="SpaceBetweenAlphabeticalWord" />
         <validator name="CommaNumber" />
-        <validator name="SuccessiveWord" />
+        <!-- <validator name="SuccessiveWord" /> -->
         <validator name="JavaScript">
           <property name="script-path" value="validators" />
         </validator>
         <validator name="JapaneseStyle" />
         <validator name="DoubleNegative" />
+        <validator name="DuplicatedSection" />
     </validators>
     <symbols>
-        <symbol name="FULL_STOP" value="。" invalid-chars="．,"/>
+        <symbol name="FULL_STOP" value="。" invalid-chars=","/>
         <symbol name="COLON" value="：" />
         <symbol name="NUMBER_SIGN" value="＃" />
         <symbol name="LEFT_PARENTHESIS" value="（" />
