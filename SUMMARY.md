@@ -11,4 +11,3 @@
 ----
 
 * [Elasticsearch Marvel 2.x はプロダクションでも無料で使えるので入れておこう](src/elasticsearch-marvel-2-x-basic-license.md)
-* [Elasticsearch で、自由自在に検索・分析できるようになるためのヒント](src/cmdevio2016-report-c2-elasticsearch.md)
