@@ -1,6 +1,5 @@
 BUILDDIR = _build
-P_DOCS = $(wildcard published/*)
-D_DOCS = $(wildcard draft/*)
+DOCS = $(wildcard _posts/*)
 REDPEN = redpen -c redpen-conf-ja.xml -f markdown -l 0
 .PHONY: help clean check html
 
@@ -13,8 +12,7 @@ help:
 
 
 check:
-	@$(foreach doc,$(D_DOCS),echo "$(REDPEN) $(doc)"; $(REDPEN) $(doc)||exit 1;)
-	@$(foreach doc,$(P_DOCS),echo "$(REDPEN) $(doc)"; $(REDPEN) $(doc)||exit 1;)
+	@$(foreach doc,$(DOCS),echo "$(REDPEN) $(doc)"; $(REDPEN) $(doc)||exit 1;)
 
 clean:
 	-rm -rf $(BUILDDIR)/
