@@ -19,8 +19,8 @@
 # 1. install gitbook cli
 npm install -g gitbook-cli
 
-# 2. install gitbook-pdf
-npm install -g gitbook-pdf
+# 2. install Calibre for gitbook convert to pdf
+brew cask install calibre
 
 # 3. install redpen
 brew install redpen
