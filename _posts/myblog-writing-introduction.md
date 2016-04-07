@@ -1,5 +1,5 @@
-# 快適？ブログ執筆環境紹介
-木戸です。入社して２ヶ月が経ちました。ブログの投稿本数も１１本（５．５／月）と標準的なペースで書いています。
+# 快適？ブログ執筆環境構築
+木戸です。入社して２ヶ月が経ちました。ブログの投稿本数も１１本（５．５／月）と比較的順調なペースで書いています。
 
 社内のブログの執筆環境は人それぞれのようで、Wordpress で直接書いている人や、Mac で Markdown エディタを使って書いている人など様々なようです。
 
@@ -25,7 +25,7 @@
 基本的には Github を起点に、Mac と iPhone の両方で編集できるようにしています。
 電子書籍化は GitBook を使って、Github へコミットしたタイミングで自動で作成される仕組みです。
 
-![blog writing](../images/myblog-writing-1.png)
+![blog writing](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/myblog-writing-1.png)
 
 
 Travis CI は必須ではありませんが、文章校正チェックで使用しています。
@@ -94,6 +94,8 @@ https://github.com/KunihikoKido/docs
 文章校正ルールのチェックには RedPen を使用しています。
 RedPen は以下のような校正ルールファイルを用意すると、そのルールに従って自然言語で書かれた文章をチェックしてくれる優れものです。
 
+<a class="embedly-card" href="http://dev.classmethod.jp/tool/redpen-getting-started/">RedPen でわかりやすい技術文書を書こう ｜ Developers.IO</a><script async src="//cdn.embedly.com/widgets/platform.js" charset="UTF-8"></script>
+
 **redpen-conf-ja.xml**
 
 ```xml
@@ -135,32 +137,32 @@ RedPen は以下のような校正ルールファイルを用意すると、そ�
 
 上記設定の内容の説明
 
-* SentenceLength
+* `SentenceLength`
   * 文の長さ自体を検査（最大１２０文字）
-* InvalidSymbol
+* `InvalidSymbol`
   * 不正なシンボルの検索
-* KatakanaEndHyphen
+* `KatakanaEndHyphen`
   * カタカナ単語末尾の長音検査
-* KatakanaSpellCheck
+* `KatakanaSpellCheck`
   * カタカナ単語のゆらぎ検査
-* ParagraphNumber
+* `ParagraphNumber`
   * 節内のパラグラフ数（最大６パラグラフ）
-* SpaceBetweenAlphabeticalWord
+* `SpaceBetweenAlphabeticalWord`
   * アルファベット前後のスペースあるかどうかの検査
-* CommaNumber
+* `CommaNumber`
   * 一文中のコンマの数を検査
-* JavaScript
+* `JavaScript`
   * ひらがな表記検査（「殆ど」→「ほとんど」など）
   * 名詞のスペルチェック（Elasticsearch、Solr、など）
-* JapaneseStyle
+* `JapaneseStyle`
   * ですます調、である調の混在検査
-* DoubleNegative
+* `DoubleNegative`
   * 二重否定のチェック
 
 このような内容で文章をチェックしています。
 
 ## 電子書籍化（GitBook）
-![gitbook](../images/myblog-writing-2.png)
+![gitbook](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/myblog-writing-2.png)
 
 電子書籍化は GitBook を使用しています。
 Elasticsearch 関連の記事だけを対象に電子書籍化したいので、
@@ -221,10 +223,11 @@ GitBook をローカル環境へ用意するには以下の記事を参考にし
 
 ## まとめ
 ちょっと一人でブログを書く環境にしてはちょっとやりすぎなところはありますが、
-複数人でブログを書く環境ではその効果を発揮するのではと思います。
+複数人でブログを書く環境ではその効果を発揮するはずです。
 
-もちろん、今回紹介した環境を Github pages + jekyll へ適用することもできます。
+私はこの環境をブログの下書き用に使用していますが、
+もちろん、Github pages + jekyll と組み合わせてそのままブログを公開する環境としても利用することができます。
 
 Github pages + jekyll + Travis CI (RedPen で校正チェック)
 
-このブログ環境 Markdown で書けるし、プルリクのタイミングで文章の校正ルールチェックもできるので、もしかしたら最強なのでは？
+このブログ環境は Markdown で書けるし、プルリクのタイミングで文章の校正ルールチェックもできるので、もしかしたら最強なのでは？
