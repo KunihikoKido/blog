@@ -172,6 +172,8 @@ GitBook をローカル環境へ用意するには以下の記事を参考にし
 ### Mac OSX 環境
 
 #### Atom
+![Atom](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/myblog-writing-4.png)
+
 GitHub が提供するオープンソースのエディタです。
 Markdown のプレビュや、Git の操作（git-plus コミュニティパッケージ）が可能です。
 また、RedPen を Atom から操作するためのコミュニティパッケージも公開されています。
