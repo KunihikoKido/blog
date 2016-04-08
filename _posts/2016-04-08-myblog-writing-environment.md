@@ -34,7 +34,7 @@
 ## Github のファイル構成
 以下は Github で管理しているファイルやディレクトリ構成です。
 
-```sh
+```
 https://github.com/KunihikoKido/docs
 ├── _posts              # (1)
 │   ├── 2016-03-10-elasticsearch-getting-started-01.md
@@ -48,7 +48,7 @@ https://github.com/KunihikoKido/docs
 │   └── spellCheckValidator.js
 ├── .bookignore         # (4)
 ├── .gitignore          # (5)
-├── .Travis.yml         # (6)
+├── .travis.yml         # (6)
 ├── GLOSSARY.md         # (7)
 ├── INTRO.md            # (8)
 ├── Makefile            # (9)
@@ -188,7 +188,14 @@ Elasticsearch 関連の記事だけを対象に電子書籍化したいので、
 ```
 
 ### 各種コマンド
-ローカル環境でも、Markdown で書いた記事を GitBook の pdf や HTML へ変換できるように各種コマンド（`make html`、`make pdf`）を用意しています。
+ローカル環境で作業するときのコマンドを幾つか用意しています。
+
+* `make check`
+  * 文章の校正チェックをするためのコマンド
+* `make html`
+  * Markdown で書いた記事を GitBook 形式の HTML ファイルへビルドするためのコマンド
+* `make pdf`
+  * Markdown で書いた記事を GitBook 形式の PDF ファイルへビルドするためのコマンド
 
 GitBook をローカル環境へ用意するには以下の記事を参考にしてください。
 
