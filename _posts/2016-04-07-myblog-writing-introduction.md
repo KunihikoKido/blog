@@ -89,11 +89,13 @@ https://github.com/KunihikoKido/docs
 - **画像ファイル管理ルール**
   - `images` 配下で管理する
 
-### 文章校正ルール検査（RedPen）
+### 文章校正ルール（RedPen）
 文章校正ルールのチェックには RedPen を使用しています。
 RedPen は以下のような校正ルールファイルを用意すると、そのルールに従って自然言語で書かれた文章をチェックしてくれる優れものです。
 
 <a class="embedly-card" href="http://dev.classmethod.jp/tool/redpen-getting-started/">RedPen でわかりやすい技術文書を書こう ｜ Developers.IO</a><script async src="//cdn.embedly.com/widgets/platform.js" charset="UTF-8"></script>
+
+私は以下のルールで文章を校正しています。
 
 **redpen-conf-ja.xml**
 
@@ -105,13 +107,17 @@ RedPen は以下のような校正ルールファイルを用意すると、そ�
         </validator>
         <validator name="InvalidSymbol"/>
         <validator name="KatakanaEndHyphen"/>
-        <validator name="KatakanaSpellCheck"/>
+        <validator name="KatakanaSpellCheck">
+          <property name="min_ratio" value="0.1" />
+        </validator>
         <validator name="SectionLength">
-            <property name="max_num" value="1500"/>
+          <property name="max_num" value="1500"/>
         </validator>
         <validator name="ParagraphNumber"/>
         <validator name="SpaceBetweenAlphabeticalWord" />
-        <validator name="CommaNumber" />
+        <validator name="CommaNumber">
+          <property name="max_num" value="4"/>
+        </validator>
         <!-- <validator name="SuccessiveWord" /> -->
         <validator name="JavaScript">
           <property name="script-path" value="validators" />
@@ -134,8 +140,6 @@ RedPen は以下のような校正ルールファイルを用意すると、そ�
 </redpen-conf>
 ```
 
-上記設定の内容の説明
-
 * `SentenceLength`
   * 文の長さ自体を検査（最大１２０文字）
 * `InvalidSymbol`
@@ -144,12 +148,14 @@ RedPen は以下のような校正ルールファイルを用意すると、そ�
   * カタカナ単語末尾の長音検査
 * `KatakanaSpellCheck`
   * カタカナ単語のゆらぎ検査
+* `SectionLength`
+  * 節の長さ（最大１５００文字）
 * `ParagraphNumber`
   * 節内のパラグラフ数（最大６パラグラフ）
 * `SpaceBetweenAlphabeticalWord`
   * アルファベット前後のスペースあるかどうかの検査
 * `CommaNumber`
-  * 一文中のコンマの数を検査
+  * 一文中のコンマの数を検査（最大３）
 * `JavaScript`
   * ひらがな表記検査（「殆ど」→「ほとんど」など）
   * 名詞のスペルチェック（Elasticsearch、Solr、など）
@@ -158,7 +164,7 @@ RedPen は以下のような校正ルールファイルを用意すると、そ�
 * `DoubleNegative`
   * 二重否定のチェック
 
-このような内容で文章をチェックしています。
+アルファベット前後のスペース入れておくと、GitBook の用語集が作りやすいです。
 
 ## 電子書籍化（GitBook）
 ![gitbook](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/myblog-writing-2.png)
@@ -192,43 +198,53 @@ GitBook をローカル環境へ用意するには以下の記事を参考にし
 以下は簡単ですが、各種クライアントで使用しているツールを紹介します。
 
 ### Mac OSX 環境
-#### Markdown エディタ
-* Atom エディタ
-  * Github が提供するオープンソースのエディタ
-* markdown-perview core package (Atom エディタ)
-  * Atom エディタで Markdown のプレビュができるパッケージ
 
-#### Git クライアント
-* git-plus community package (Atom エディタ)
-  * Atom エディタで Git の操作を提供するパッケージ
+#### Atom
+GitHub が提供するオープンソースのエディタです。
+Markdown のプレビュや、Git の操作（git-plus コミュニティパッケージ）が可能です。
+また、RedPen を Atom から操作するためのコミュニティパッケージも公開されています。
 
-#### スクリーンキャプチャ・画像編集ツール
-* Skitch
-  * 画像に矢印入れたり、コメント入れたりするのに便利なツール
-* Licecap
-  * 画面キャプチャを Gif で動きのある画像作るのに便利なツール
+* [Atom](https://atom.io)
+* [git-plus - Atom Package](https://atom.io/packages/git-plus)
+* [redpen - Atom Package](https://atom.io/packages/redpen)
 
-#### 文章校正チェックツール
-* RedPen CLI
-  * RedPen のコマンドラインツール
-* redpen community package (Atom Editor)
-  * Atom エディタで RedPen の文章校正チェックができるパッケージ
+#### Skitch
+Skitch はスクリーン・キャプチャを撮ったり、画像に図形や矢印・コメントを簡単に描き込むことができるアプリケーションです。
 
-### iPhone 環境
-#### エディタ ＆ Git クライアントアプリ
-* Git2Go
-  * Git の操作とテキストの編集などができるアプリ
+* [Skitch](https://evernote.com/intl/jp/skitch/)
+
+#### LICEcap
+LICEcap はアニメーション・スクリーンキャプチャです。
+
+* [LICEcap](http://www.cockos.com/licecap/)
+
+#### RedPen
+RedPen は自然言語で記述された入力文書のチェックを自動化します。コマンドラインなどのツールを提供しています。
+
+* [RedPen](http://redpen.cc/)
+
+#### gitbook-cli
+GitBook コマンドラインツールです。Markdown で書いた GitBook 形式のファイルをビルドして HTML や PDF などの電子書籍フォーマットを出力することができます。
+
+* [gitbook-cli](https://github.com/GitbookIO/gitbook-cli)
+
+### iPhone iOS 環境
+
+#### Git2Go
+Git2Go は本格的な iOS 向け GitHub クライアントアプリケーションです。
+無料版では、GitHub 公開リポジトリをローカルにクローンして、
+コミット履歴やソースの参照だけでなくブランチの作成やコードの修正、コミットなどの操作を iOS から実行することが可能です。
+
+* [Git2Go](http://git2go.com/)
 
 
 ## まとめ
 一人でブログを書く環境にしては、ちょっとやりすぎなところはありますが、
-複数人でブログを書く環境ではその効果を発揮するはずです。たぶん。おそらく。きっと。
+チームでブログを書く環境ではその効果を発揮するはずです。たぶん。おそらく。きっと。
 
-私はこの環境をブログの下書き用に使用していますが、
+私はこの環境をブログの下書き用に使用しています。
 もちろん、Github pages + jekyll と組み合わせて、そのままブログを公開する環境として拡張することもできます。
 
 Github pages + jekyll + Travis CI (RedPen で校正チェック)
 
 このブログ環境は Markdown で書けるし、プルリクのタイミングで文章の校正ルールチェックもできるので、もしかしたら最強なのでは？
-
-
