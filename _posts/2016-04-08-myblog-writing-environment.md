@@ -3,7 +3,7 @@
 
 社内のブログの執筆環境は人それぞれのようで、Wordpress で直接書いている人や、Mac で Markdown エディタを使って書いている人など様々なようです。
 
-試行錯誤して、なんとなく自分にあったブログ執筆環境が整ってきたのでブログで紹介してみます。
+試行錯誤して、なんとなく自分にあったブログ執筆環境が整ってきたのでブログで紹介してみたいと思います。
 
 参考になれば幸いです。
 
@@ -35,7 +35,7 @@
 以下は Github で管理しているファイルやディレクトリ構成です。
 
 ```
-https://github.com/KunihikoKido/docs
+GitHub Repository
 ├── _posts              # (1)
 │   ├── 2016-03-10-elasticsearch-getting-started-01.md
 │   ├── 2016-03-17-elasticsearch-getting-started-02.md
@@ -72,6 +72,12 @@ https://github.com/KunihikoKido/docs
 - *(12):* GitBook 設定ファイル
 - *(13):* RedPen 設定ファイル
 
+Travis や GitBook の設定ファイルを用意して、各種サービスで校正チェック自動化したり電子書籍（PDF、ePub）を自動で公開しています。
+
+各種設定ファイルの内容など興味のある方はこちら↓を参照してください。
+
+※ 参考: [github.com/KunihikoKido/docs](https://github.com/KunihikoKido/docs)
+
 ## 記事を書くときのルール
 基本的には `_posts` 配下で記事ファイルを管理して、`images` 配下で画像ファイルを管理しています。
 また、それ以外にも幾つかルールを設定しています。
@@ -93,52 +99,9 @@ https://github.com/KunihikoKido/docs
 文章校正ルールのチェックには RedPen を使用しています。
 RedPen は以下のような校正ルールファイルを用意すると、そのルールに従って自然言語で書かれた文章をチェックしてくれる優れものです。
 
-<a class="embedly-card" href="http://dev.classmethod.jp/tool/redpen-getting-started/">RedPen でわかりやすい技術文書を書こう ｜ Developers.IO</a><script async src="//cdn.embedly.com/widgets/platform.js" charset="UTF-8"></script>
+※ 参考: [RedPen でわかりやすい技術文書を書こう - Developers.IO](http://dev.classmethod.jp/tool/redpen-getting-started/)
 
 私は以下のルールで文章を校正しています。
-
-**redpen-conf-ja.xml**
-
-```xml
-<redpen-conf lang="ja" type="zenkaku">
-    <validators>
-        <validator name="SentenceLength">
-            <property name="max_len" value="120"/>
-        </validator>
-        <validator name="InvalidSymbol"/>
-        <validator name="KatakanaEndHyphen"/>
-        <validator name="KatakanaSpellCheck">
-          <property name="min_ratio" value="0.1" />
-        </validator>
-        <validator name="SectionLength">
-          <property name="max_num" value="1500"/>
-        </validator>
-        <validator name="ParagraphNumber"/>
-        <validator name="SpaceBetweenAlphabeticalWord" />
-        <validator name="CommaNumber">
-          <property name="max_num" value="4"/>
-        </validator>
-        <!-- <validator name="SuccessiveWord" /> -->
-        <validator name="JavaScript">
-          <property name="script-path" value="validators" />
-        </validator>
-        <validator name="JapaneseStyle" />
-        <validator name="DoubleNegative" />
-        <!-- <validator name="DuplicatedSection" /> -->
-    </validators>
-    <symbols>
-        <symbol name="FULL_STOP" value="。" />
-        <symbol name="COMMA" value="、" />
-        <symbol name="COLON" value="：" />
-        <symbol name="NUMBER_SIGN" value="＃" />
-        <symbol name="LEFT_PARENTHESIS" value="（" />
-        <symbol name="RIGHT_PARENTHESIS" value="）" />
-        <symbol name="LESS_THAN_SIGN" value="＜" />
-        <symbol name="GREATER_THAN_SIGN" value="＞" />
-        <symbol name="EQUAL_SIGN" value="＝" />
-    </symbols>
-</redpen-conf>
-```
 
 * `SentenceLength`
   * 文の長さ自体を検査（最大１２０文字）
@@ -164,7 +127,7 @@ RedPen は以下のような校正ルールファイルを用意すると、そ�
 * `DoubleNegative`
   * 二重否定のチェック
 
-アルファベット前後のスペース入れておくと、GitBook の用語集が作りやすいです。
+※ アルファベット前後のスペース入れておくと、GitBook の用語集が作りやすいです。
 
 ## 電子書籍化（GitBook）
 ![gitbook](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/myblog-writing-2.png)
@@ -187,6 +150,8 @@ Elasticsearch 関連の記事だけを対象に電子書籍化したいので、
 * [第３回 Elasticsearch 入門 ドキュメント管理は意外と高度なことができる](_posts/2016-03-31-elasticsearch-getting-started-03.md)
 ```
 
+このように Elasticsearch 関連の記事を追加したら、SUMMARY.md を更新して GitHub へコミットすると自動で、PDF や ePub が作成される仕組みです。
+
 ### 各種コマンド
 ローカル環境で作業するときのコマンドを幾つか用意しています。
 
@@ -199,7 +164,7 @@ Elasticsearch 関連の記事だけを対象に電子書籍化したいので、
 
 GitBook をローカル環境へ用意するには以下の記事を参考にしてください。
 
-<a class="embedly-card" href="http://dev.classmethod.jp/devenv/install-gitbook/">GitBook 環境を準備してみる ｜ Developers.IO</a><script async src="//cdn.embedly.com/widgets/platform.js" charset="UTF-8"></script>
+* 参考: [GitBook 環境を準備してみる - Developers.IO](http://dev.classmethod.jp/devenv/install-gitbook/)
 
 ## クライアントツール
 以下は簡単ですが、各種クライアントで使用しているツールを紹介します。
