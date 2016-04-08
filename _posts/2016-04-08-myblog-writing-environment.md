@@ -23,7 +23,7 @@
 これらの要件をもとに、構築しているブログ執筆環境を説明します。
 
 ## システム概要
-![blog writing](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/myblog-writing-1.png)
+![system overview](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/myblog-writing-1.png)
 
 基本的には Github を起点に、Mac と iPhone の両方で編集できるようにしています。
 
