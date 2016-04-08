@@ -203,6 +203,8 @@ GitBook コマンドラインツールです。Markdown で書いた GitBook 形
 ### iPhone iOS 環境
 
 #### Git2Go
+![Git2Go](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/myblog-writing-3.png)
+
 Git2Go は本格的な iOS 向け GitHub クライアントアプリケーションです。
 無料版では、GitHub 公開リポジトリをローカルにクローンして、
 コミット履歴やソースの参照だけでなくブランチの作成やコードの修正、コミットなどの操作を iOS から実行することが可能です。
