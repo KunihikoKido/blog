@@ -57,6 +57,7 @@ Elasticsearch はインデックスやタイプを横断で検索できるよう
 
 エイリアス名を使うことで、アプリケーションの修正なく検索対象のインデックスを柔軟に変更できます。本番環境の検索はエイリアス名を使いましょう。
 
+* 参考: [Index Aliases](https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-aliases.html) (Elasticsearch 公式 リファレンス)
 
 ## ページング
 SQL では `LIMIT` を使って、１ページあたりの結果を取得します。Elasticsearch では、`size` と `from` パラメータを使います。
@@ -87,7 +88,7 @@ GET /_search?size=5&from=10
 #### 大量のデータをページングして取得するには
 すべてのデータダンプしたり大量のデータを一度に取得する場合は、通常の検索とは別の方法が用意されています。
 
-※ 参考: [scroll and scan APIs](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-scroll.html)
+※ 参考: [scroll and scan APIs](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-scroll.html) (Elasticsearch 公式 リファレンス)
 
 ## まとめ
 いかがでしたでしょうか？ Elasticsearch は他のデータベースに比べ、複数のデータベースを横断して検索することがごく当たり前の用途として提供されています。
