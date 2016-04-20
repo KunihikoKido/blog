@@ -1,0 +1,31 @@
+[
+  '{{repeat(2000, 2000)}}',
+  {
+    employee_id: '{{index()}}',
+    firstname: '{{firstName()}}',
+    lastname: '{{surname()}}',
+    email: '{{firstName().toLowerCase()}}.{{surname().toLowerCase()}}@classmethod.jp',
+    salary: '{{integer(200000, 1000000)}}',
+    age: '{{integer(20, 40)}}',
+    gender: '{{gender()}}',
+    phone: '+1 {{phone()}}',
+    address: '{{integer(100, 999)}} {{street()}}, {{city()}}, {{state()}}, {{integer(100, 10000)}}',
+    joined_date: '{{date(new Date(2014, 0, 1), new Date(), "YYYY-MM-dd")}}',
+    location: {
+      lat: '{{floating(-90.000001, 90)}}',
+      lon: '{{floating(-180.000001, 180)}}'
+    },
+    married: '{{bool()}}',
+    interests: [
+      '{{repeat(1, 5)}}',
+      '{{random("Amazon API Gateway", "Amazon AppStream", "Amazon CloudSearch", "Amazon CloudWatch", "Amazon Cognito", "Amazon Database Migration Service", "Amazon DynamoDB", "Amazon EC2 Container Service (ECS)", "Amazon ElastiCache", "Amazon Elastic Block Store (EBS)", "Amazon Elastic Compute Cloud (EC2)", "Amazon Elastic MapReduce", "Amazon Elasticsearch Service", "Amazon Elastic Transcoder", "Amazon GameLift", "Amazon Glacier", "Amazon Kinesis Firehose", "Amazon Kinesis Streams", "Amazon Machine Learning", "Amazon Mobile Analytics", "Amazon Redshift", "Amazon Relational Database Service (RDS)", "Amazon SimpleDB", "Amazon Simple Email Service (SES)", "Amazon Simple Notification Service (SNS)", "Amazon Simple Queue Service (SQS)", "Amazon Simple Storage Service (S3)", "Amazon Simple Workflow Service (SWF)", "Amazon Virtual Private Cloud (VPC)", "Amazon WorkDocs", "Amazon WorkMail", "Amazon WorkSpaces", "Auto Scaling", "AWS Certificate Manager", "AWS CloudFormation", "AWS CloudHSM", "AWS CloudTrail", "AWS CodeCommit", "AWS CodeDeploy", "AWS CodePipeline", "AWS Config", "AWS Data Pipeline", "AWS Direct Connect", "AWS Directory Service", "AWS Elastic Beanstalk", "AWS Import/Export Snowball", "AWS IoT", "AWS Key Management Service", "AWS Lambda", "AWS Marketplace", "AWS OpsWorks", "AWS Service Catalog", "AWS Storage Gateway", "Elastic Load Balancing", "VM Import/Export")}}'
+    ],
+    friends: [
+      '{{repeat(0, 3)}}',
+      {
+        firstname: '{{firstName()}}',
+        lastname: '{{surname()}}'
+      }
+    ]
+  }
+]

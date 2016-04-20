@@ -2,6 +2,7 @@ function validateSentence(sentence) {
 
   var checkKeywordArray = [
     'Elasticsearch',
+    'elasticsearch',
     'ElastiCache',
     'Solr',
     'DynamoDB',

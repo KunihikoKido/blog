@@ -1,0 +1,36 @@
+{
+  "template": "classmethod*",
+  "order": 0,
+  "settings": {
+    "number_of_replicas": 0
+  },
+  "mappings": {
+    "employees": {
+      "dynamic_templates": [
+        {
+          "string_template": {
+            "match": "*",
+            "match_mapping_type": "string",
+            "mapping": {
+              "type": "string",
+              "fields": {
+                "raw": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "properties": {
+        "location": {
+          "type": "geo_point"
+        },
+        "friends": {
+          "type": "nested"
+        }
+      }
+    }
+  }
+}
