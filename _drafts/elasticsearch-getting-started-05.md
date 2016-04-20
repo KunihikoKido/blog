@@ -37,12 +37,15 @@ tar -xvf elasticsearch-2.3.1.tar.gz
 ### 練習１．起動と停止とステータス確認
 それでは早速、ターミナルを開いて Elasticsearch のインストールディレクトリに移動して起動してみましょう。
 
+以下のコマンドで実行した Elasticsearch フォアグランドで実行します。
+停止する場合は `Ctrl+C` で停止します。
+
 ``` bash
 cd elasticsearch-2.3.1/bin
 ./elasticsearch
 ```
 
-
+起動すると以下のようなログがターミナルに表示されます。
 
 ``` bash
 ./elasticsearch
@@ -62,16 +65,44 @@ cd elasticsearch-2.3.1/bin
 [2016-04-20 12:33:21,330][INFO ][gateway                  ] [Riot Grrl] recovered [0] indices into cluster_state
 ```
 
+#### デフォルトでは Node の名前はランダムに設定される
 現在は 1 Cluster 内に 1 Node という構成で起動している状態です。
 このログの中に、`Riot Grrl` という単語が表示されています。これが Node の名前です。
 多分自分の端末に表示されている Node 名は別の名前が表示されているかもしれませんが問題ありません。Elasticsearch は起動時にランダムの Node 名を設定して起動するというのがデフォルトの動作です。
 Cluster のデフォルトの名前は `elasticsearch` です。
 
-
+#### Cluster や Node に任意の名前をつけることも可能
 起動時に任意の Cluster 名や Node 名を指定することも可能です。（または config/elasticsearch.yml の設定ファイルを変更）
 
 ``` bash
 ./elasticsearch --cluster.name classmethod --node.name node1
+```
+
+#### デフォルトポートは 9200
+Elasticsearch は REST API を受け付けるポートとして、`9200` にバインドされます。
+このポート番号は必要であれば変更することも可能です。
+
+以下のコマンドでアクセスしてみましょう。
+
+``` bash
+curl -XGET 'localhost:9200/'
+```
+
+正常に起動していれば、以下のように結果が表示されます。
+
+``` javascript
+{
+  "name" : "Suprema",
+  "cluster_name" : "elasticsearch",
+  "version" : {
+    "number" : "2.3.1",
+    "build_hash" : "bd980929010aef404e7cb0843e61d0665269fc39",
+    "build_timestamp" : "2016-04-04T12:25:05Z",
+    "build_snapshot" : false,
+    "lucene_version" : "5.5.0"
+  },
+  "tagline" : "You Know, for Search"
+}
 ```
 
 ### 練習２. Cluster や Node 、Index の状態を確認する
