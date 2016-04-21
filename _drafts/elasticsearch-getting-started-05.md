@@ -3,15 +3,15 @@
 第１回〜第４回にわたって Elasticsearch の基本的なことを説明してきました。今回は実際に Elasticsearch をさわりながら具体的に API の使い方を説明したいと思います。
 
 ## ハンズオンの内容
-今回のハンズオンは、以下の Elasticsearch 公式ドキュメントを参考にしています。
-Elasticsearch のインストールから、ステータスの確認、ドキュメントの登録〜検索まで頻繁に使用しそうな API を中心に節目する予定です。
+ハンズオンの内容は、以下の Elasticsearch 公式ドキュメントを参考にしています。
+Elasticsearch のインストールから、ステータスの確認、ドキュメントの登録〜検索まで頻繁に使用しそうな API を中心に説明していきます。
 
 * [Getting Started - Elasticsearch - The Definitive Guide](https://www.elastic.co/guide/en/elasticsearch/guide/current/getting-started.html)
 * [Getting Started - Elasticsearch Reference](https://www.elastic.co/guide/en/elasticsearch/reference/current/getting-started.html)
 
 
 ## 事前準備
-Elasticsearch を動かすには、少なくとも Java 7 のバージョンが必要です。現時点では、Oracle JDK version 1.8.0_73. が推奨されています。使用する PC の Java のバージョンを確認して、もしバージョンが古い場合は、バージョンアップをしてください。各種 OS の インストールドキュメントは [Oracle website](http://docs.oracle.com/javase/8/docs/technotes/guides/install/install_overview.html) を参考にしてください。
+Elasticsearch を動かすには、少なくとも Java 7 のバージョンが必要です。現時点では、Oracle JDK version 1.8.0_73. が推奨されています。使用する PC の Java のバージョンを確認して、もしバージョンが古い場合は、バージョンアップをしてください。各種 OS の Java のインストールドキュメントは [Oracle website](http://docs.oracle.com/javase/8/docs/technotes/guides/install/install_overview.html) を参考にしてください。
 
 ``` bash
 java -version
@@ -23,7 +23,7 @@ echo $JAVA_HOME
 * Terminal アプリケーション
 * cURL コマンド
 
-### インストール
+### Elasticsearch のインストール
 
 ``` bash
 # 1. ダウンロード
@@ -34,16 +34,21 @@ tar -xvf elasticsearch-2.3.1.tar.gz
 ```
 
 ## ハンズオン
-### 練習１．起動と停止とステータス確認
-それでは早速、ターミナルを開いて Elasticsearch のインストールディレクトリに移動して起動してみましょう。
+それでは早速ハンズオンを開始します。
 
-以下のコマンドで実行した Elasticsearch フォアグランドで実行します。
-停止する場合は `Ctrl+C` で停止します。
+### 練習１．起動・停止とステータス確認
+ターミナルを開いて Elasticsearch のインストールディレクトリに移動して起動してみましょう。
+
+Elasticsearch を起動するには以下の手順で実行します。
+
 
 ``` bash
 cd elasticsearch-2.3.1/bin
 ./elasticsearch
 ```
+
+※ 実行した Elasticsearch フォアグランドで実行します。
+停止する場合は `Ctrl+C` で停止します。-d オプションをつけて実行することでバックグラウンドで起動することもできます。
 
 起動すると以下のようなログがターミナルに表示されます。
 
@@ -67,7 +72,8 @@ cd elasticsearch-2.3.1/bin
 
 #### デフォルトでは Node の名前はランダムに設定される
 現在は 1 Cluster 内に 1 Node という構成で起動している状態です。
-このログの中に、`Riot Grrl` という単語が表示されています。これが Node の名前です。
+表示されているログの中に、`Riot Grrl` という単語を見つけることができます。これが Node の名前です。
+
 多分自分の端末に表示されている Node 名は別の名前が表示されているかもしれませんが問題ありません。Elasticsearch は起動時にランダムの Node 名を設定して起動するというのがデフォルトの動作です。
 Cluster のデフォルトの名前は `elasticsearch` です。
 
@@ -105,8 +111,15 @@ curl -XGET 'localhost:9200/'
 }
 ```
 
+これで Elasticsearch を使用する準備が整いました。
+簡単すぎて物足りないかもですね。
+
 ### 練習２. Cluster や Node 、Index の状態を確認する
+API にアクセスして Elasticsearch の状態を少し詳しく見ていきましょう。
+
 #### Cluster の状態確認
+まずは Cluster の状態からです。Cluster は Elasticsearch の分散システムを構成する仕組みの中で一番大きな単位です。同じ Cluster 内のすべてのノードを管理しています。
+
 Cluster の状態を確認するには、以下の API をコールします。
 
 ``` bash
@@ -121,10 +134,10 @@ epoch      timestamp cluster       status node.total node.data shards pri relo i
 1461220257 15:30:57  elasticsearch green           1         1      0   0    0    0        0             0                  -                100.0%
 ```
 
-status が `green` になっていますがこれが正常な状態です。まだ Index は１つも作成していないため Shards の数は０になっています。
+status が `green` になっていますが、これが正常な状態です。Node の数は１つです。Index は１つも作成していないため Shards の数は０になっています。
 
 ### すべての Index の情報一覧を確認する
-次に Index の情報を取得していみましょう。Index の情報一覧を取得するには以下の API をコールします。
+次に Index の情報を取得していみましょう。Index 情報一覧を取得するには以下の API をコールします。
 
 ``` bash
 curl 'localhost:9200/_cat/indices?v'
@@ -159,8 +172,68 @@ health status index    pri rep docs.count docs.deleted store.size pri.store.size
 yellow open   customer   5   1          0            0       130b           130b
 ```
 
-`customer` という名前の Index が Primary Shards 5、 Replica Shards 4 という設定で作成されているのがわかります。health が `yellow` になっているのは、Node が１つのため、Replica Shards が作成できないためです。
-（同じ Node ないに Primary とついになっている Replica Shards は作成されません。）
+`customer` という名前の Index が Primary Shards 5、 Replica Shards 1 という設定で作成されているのがわかります。
+
+health が `yellow` になっているのは、Node が１つのため、Replica Shards が作成できないためです。
+（同じ Node 内に Primary とついになっている Replica Shards は作成されません。）
+
+### Shards の状態を確認する
+Shards の状態をもう少し詳しく調べてみましょう。Shards の状態を確認するには、以下のように API をコールします。
+
+
+```
+curl 'localhost:9200/_cat/shards?v'
+```
+
+以下はそのレスポンスです。
+
+```
+curl 'localhost:9200/_cat/shards?v'
+
+```
+
+
+Primary Shards の０〜４が配置され、それのついになっている Replica Shards が UNASSIGNED になっていて配置されていないことがわかります。
+
+### Replica Shards の数を変更してみる
+今回１つの Node で構成していますので、Replica Shards は配置されず何の意味もありません。以下の API をコールして Replica Shards の数を０にしてみましょう。
+
+``` bash
+curl -XPUT 'localhost:9200/customer/_settings' -d '
+{
+    "index" : {
+        "number_of_replicas" : 0
+    }
+}'
+
+curl 'localhost:9200/_cat/indices?v'
+curl 'localhost:9200/_cat/shards?v'
+
+```
+
+以下はそのレスポンスです。
+
+```
+curl -XPUT 'localhost:9200/customer/_settings' -d '
+{
+    "index" : {
+        "number_of_replicas" : 0
+    }
+}'
+
+{
+  "acknowledged" : true
+}
+
+curl 'localhost:9200/_cat/indices?v'
+health status index    pri rep docs.count docs.deleted store.size pri.store.size
+green open   customer   5   0          0            0       130b           130b
+
+curl 'localhost:9200/_cat/shards?v'
+```
+
+
+
 
 ### 練習３. データの追加・更新・削除
 ### 練習４. サンプルデータを使って検索や集計
