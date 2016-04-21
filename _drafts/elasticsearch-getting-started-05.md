@@ -1,4 +1,4 @@
-# 第５回 Elasticsearch 入門 各種 API の使い方をハンズオンで理解する
+# 第５回 Elasticsearch 入門 API の使い方をハンズオンで理解する
 
 第１回〜第４回にわたって Elasticsearch の基本的なことを説明してきました。今回は実際に Elasticsearch をさわりながら具体的に API の使い方を説明したいと思います。
 
@@ -24,6 +24,9 @@ echo $JAVA_HOME
 * cURL コマンド
 
 ### Elasticsearch のインストール
+Elasticsearch のパッケージは、yum などの各種ディストリビューション向けのパッケージも提供していますが、今回は tar.gz 形式のパッケージをダウンロードしてきてインストールしてください。
+
+以下はそのインストール手順です。現在の最新バージョン v2.3.1 を使用します。
 
 ``` bash
 # 1. ダウンロード
@@ -33,11 +36,14 @@ curl -L -O https://download.elastic.co/elasticsearch/release/org/elasticsearch/d
 tar -xvf elasticsearch-2.3.1.tar.gz
 ```
 
+以上で事前準備は完了です。
+
 ## ハンズオン
-それでは早速ハンズオンを開始します。
+それでは早速ハンズオンをはじめたいと思います。
 
 ### 練習１．起動・停止とステータス確認
-ターミナルを開いて Elasticsearch のインストールディレクトリに移動して起動してみましょう。
+Elasticsearch の起動・停止とステータスの確認方法です。
+ターミナルを開いてインストールディレクトリに移動して Elasticsearch 起動してみましょう。
 
 Elasticsearch を起動するには以下の手順で実行します。
 
@@ -70,11 +76,14 @@ cd elasticsearch-2.3.1/bin
 [2016-04-20 12:33:21,330][INFO ][gateway                  ] [Riot Grrl] recovered [0] indices into cluster_state
 ```
 
+起動できましたか？
+
 #### デフォルトでは Node の名前はランダムに設定される
-現在は 1 Cluster 内に 1 Node という構成で起動している状態です。
+今起動した Elasticsearch は 1 Cluster 内に 1 Node という構成で起動している状態です。
+
 表示されているログの中に、`Riot Grrl` という単語を見つけることができます。これが Node の名前です。
 
-多分自分の端末に表示されている Node 名は別の名前が表示されているかもしれませんが問題ありません。Elasticsearch は起動時にランダムの Node 名を設定して起動するというのがデフォルトの動作です。
+おそらく自身の端末に表示されている Node 名は別の名前が表示されているかもしれませんが問題ありません。Elasticsearch は起動時にランダムの Node 名を設定して起動するというのがデフォルトの動作です。
 Cluster のデフォルトの名前は `elasticsearch` です。
 
 #### Cluster や Node に任意の名前をつけることも可能
@@ -84,8 +93,11 @@ Cluster のデフォルトの名前は `elasticsearch` です。
 ./elasticsearch --cluster.name classmethod --node.name node1
 ```
 
+本番環境では、Node 名に稼働しているサーバのホスト名など、それぞれの Node で識別しやすい名前をつけましょう。
+
 #### デフォルトポートは 9200
-Elasticsearch は REST API を受け付けるポートとして、`9200` にバインドされます。
+Elasticsearch は各種操作のための REST API を提供しています。
+その REST API を受け付けるポートとして、`9200` にバインドされます。
 このポート番号は必要であれば変更することも可能です。
 
 以下のコマンドでアクセスしてみましょう。
@@ -118,7 +130,7 @@ curl -XGET 'localhost:9200/'
 API にアクセスして Elasticsearch の状態を少し詳しく見ていきましょう。
 
 #### Cluster の状態確認
-まずは Cluster の状態からです。Cluster は Elasticsearch の分散システムを構成する仕組みの中で一番大きな単位です。同じ Cluster 内のすべてのノードを管理しています。
+まずは Cluster の状態からです。Cluster は Elasticsearch の分散システムを構成する仕組みの中で一番大きな単位です。Cluster の中に複数の Node を構成し、さらにその中に Shards を構成しています。
 
 Cluster の状態を確認するには、以下の API をコールします。
 
@@ -126,7 +138,7 @@ Cluster の状態を確認するには、以下の API をコールします。
 curl 'localhost:9200/_cat/health?v'
 ```
 
-以下はそのレスポンスです。`_cat` API は人が見て分かりやすいようにテキスト形式の結果表示になっています。
+以下はそのレスポンスです。`_cat` API は人が見て分かりやすいようにテキスト形式で結果表示する管理用の API です。
 
 ``` bash
 curl 'localhost:9200/_cat/health?v'
