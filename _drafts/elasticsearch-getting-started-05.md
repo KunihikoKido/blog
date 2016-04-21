@@ -160,6 +160,7 @@ yellow open   customer   5   1          0            0       130b           130b
 ```
 
 `customer` という名前の Index が Primary Shards 5、 Replica Shards 4 という設定で作成されているのがわかります。health が `yellow` になっているのは、Node が１つのため、Replica Shards が作成できないためです。
+（同じ Node ないに Primary とついになっている Replica Shards は作成されません。）
 
 ### 練習３. データの追加・更新・削除
 ### 練習４. サンプルデータを使って検索や集計
