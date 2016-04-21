@@ -14,6 +14,7 @@ function validateSentence(sentence) {
     'Analysis',
     'Query',
     'Indices',
+    'indices',
     'Document',
     'Documents',
     'Cluster',

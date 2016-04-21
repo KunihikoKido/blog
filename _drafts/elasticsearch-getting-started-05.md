@@ -92,7 +92,7 @@ curl -XGET 'localhost:9200/'
 
 ``` javascript
 {
-  "name" : "Suprema",
+  "name" : "Riot Grrl",
   "cluster_name" : "elasticsearch",
   "version" : {
     "number" : "2.3.1",
@@ -106,5 +106,60 @@ curl -XGET 'localhost:9200/'
 ```
 
 ### 練習２. Cluster や Node 、Index の状態を確認する
+#### Cluster の状態確認
+Cluster の状態を確認するには、以下の API をコールします。
+
+``` bash
+curl 'localhost:9200/_cat/health?v'
+```
+
+以下はそのレスポンスです。`_cat` API は人が見て分かりやすいようにテキスト形式の結果表示になっています。
+
+``` bash
+curl 'localhost:9200/_cat/health?v'
+epoch      timestamp cluster       status node.total node.data shards pri relo init unassign pending_tasks max_task_wait_time active_shards_percent
+1461220257 15:30:57  elasticsearch green           1         1      0   0    0    0        0             0                  -                100.0%
+```
+
+status が `green` になっていますがこれが正常な状態です。まだ Index は１つも作成していないため Shards の数は０になっています。
+
+### すべての Index の情報一覧を確認する
+次に Index の情報を取得していみましょう。Index の情報一覧を取得するには以下の API をコールします。
+
+``` bash
+curl 'localhost:9200/_cat/indices?v'
+```
+
+以下はそのレスポンスです。まだ１つも Index を作成していないため何も表示されません。
+
+``` bash
+curl 'localhost:9200/_cat/indices?v'
+health status index pri rep docs.count docs.deleted store.size pri.store.size
+```
+
+### Index を作成する
+Index を作成してみましょう。以下の例では、`customer` という名前のインデックスを作成しています。
+そして先ほど説明した `/_cat/indices` API を使って Index の情報を取得しています。
+
+```
+curl -XPUT 'localhost:9200/customer?pretty'
+curl 'localhost:9200/_cat/indices?v'
+```
+
+以下はそのレスポンスです。
+
+```
+curl -XPUT 'localhost:9200/customer?pretty'
+{
+  "acknowledged" : true
+}
+
+curl 'localhost:9200/_cat/indices?v'
+health status index    pri rep docs.count docs.deleted store.size pri.store.size
+yellow open   customer   5   1          0            0       130b           130b
+```
+
+`customer` という名前の Index が Primary Shards 5、 Replica Shards 4 という設定で作成されているのがわかります。health が `yellow` になっているのは、Node が１つのため、Replica Shards が作成できないためです。
+
 ### 練習３. データの追加・更新・削除
 ### 練習４. サンプルデータを使って検索や集計
