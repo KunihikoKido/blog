@@ -38,6 +38,19 @@ tar -xvf elasticsearch-2.3.1.tar.gz
 
 以上で事前準備は完了です。
 
+## 基本コンセプト
+ハンズオンを始める前に、Elasticsearch の基本コンセプトを簡単に説明します。
+
+### Cluster
+Cluster は１つまたは複数の Node (Server) から構成されます。
+
+### Node
+### Index
+### Type
+### Document
+### Field
+### Shards & Replicas
+
 ## ハンズオン
 それでは早速ハンズオンをはじめたいと思います。
 
@@ -252,4 +265,5 @@ Replica Shards の数が０と表示されていれば成功です。また、�
 
 
 ### 練習３. データの追加・更新・削除
+サンプルデータをインデックスして、
 ### 練習４. サンプルデータを使って検索や集計
