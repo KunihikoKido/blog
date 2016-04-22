@@ -179,7 +179,7 @@ epoch      timestamp cluster       status node.total node.data shards pri relo i
 
 status が `green` になっていますが、これが正常な状態です。Node の数は１つです。Index は１つも作成していないため Shards の数は０になっています。
 
-### すべての Index の情報一覧を確認する
+#### すべての Index の情報一覧を確認する
 次に Index の情報を取得していみましょう。Index 情報一覧を取得するには以下の API をコールします。
 
 ``` bash
@@ -193,7 +193,7 @@ curl 'localhost:9200/_cat/indices?v'
 health status index pri rep docs.count docs.deleted store.size pri.store.size
 ```
 
-### Index を作成する
+#### Index を作成する
 Index を作成してみましょう。以下の例では、`customer` という名前のインデックスを作成しています。
 そして先ほど説明した `/_cat/indices` API を使って Index の情報を取得しています。
 
@@ -220,7 +220,7 @@ yellow open   customer   5   1          0            0       130b           130b
 health が `yellow` になっているのは、Node が１つのため、Replica Shards が作成できないためです。
 （同じ Node 内に Primary とついになっている Replica Shards は作成されません。）
 
-### Shards の状態を確認する
+#### Shards の状態を確認する
 Shards の状態をもう少し詳しく調べてみましょう。Shards の状態を確認するには、以下のように API をコールします。
 
 
@@ -248,7 +248,7 @@ customer 0     r      UNASSIGNED
 
 Primary Shards の０〜４が配置され、それのついになっている Replica Shards が `UNASSIGNED` になっていて配置されていないことがわかります。
 
-### Replica Shards の数を変更する
+#### Replica Shards の数を変更する
 今回１つの Node で構成していますので、Replica Shards は配置されず、何の意味もありません。以下の API をコールして Replica Shards の数を０にしてみましょう。
 
 ``` bash
@@ -293,6 +293,215 @@ Replica Shards の数が０と表示されていれば成功です。また、�
 
 ※ Primary Shards は、Index 作成後はその数を変更できません。
 
-### 練習３. データの追加・更新・削除
-サンプルデータをインデックスして、
+#### ドキュメントのインデックス
+`customer` Index にデータを登録してみましょう。
+
+
+```
+curl -XPUT 'localhost:9200/customer/external/1?pretty' -d '
+{
+  "name": "John Doe"
+}'
+```
+
+```
+curl -XPUT 'localhost:9200/customer/external/1?pretty' -d '
+{
+  "name": "John Doe"
+}'
+{
+  "_index" : "customer",
+  "_type" : "external",
+  "_id" : "1",
+  "_version" : 1,
+  "_shards" : {
+    "total" : 2,
+    "successful" : 1,
+    "failed" : 0
+  },
+  "created" : true
+}
+```
+
+
+```
+curl -XGET 'localhost:9200/customer/external/1?pretty'
+```
+
+```
+curl -XGET 'localhost:9200/customer/external/1?pretty'
+{
+  "_index" : "customer",
+  "_type" : "external",
+  "_id" : "1",
+  "_version" : 1,
+  "found" : true,
+  "_source" : {
+    "name" : "John Doe"
+  }
+}
+```
+
+#### Index の削除
+
+```
+curl -XDELETE 'localhost:9200/customer?pretty'
+curl 'localhost:9200/_cat/indices?v'
+```
+
+
+```
+curl -XDELETE 'localhost:9200/customer?pretty'
+{
+  "acknowledged" : true
+}
+curl 'localhost:9200/_cat/indices?v'
+health status index pri rep docs.count docs.deleted store.size pri.store.size
+
+```
+
+#### ドキュメントのインデックスと置き換え
+
+```
+curl -XPUT 'localhost:9200/customer/external/1?pretty' -d '
+{
+  "name": "John Doe"
+}'
+```
+
+
+```
+curl -XPUT 'localhost:9200/customer/external/1?pretty' -d '
+{
+  "name": "John Doe"
+}'
+```
+
+
+```
+curl -XPUT 'localhost:9200/customer/external/2?pretty' -d '
+{
+  "name": "John Doe"
+}'
+```
+
+
+```
+curl -XPOST 'localhost:9200/customer/external/?pretty' -d '
+{
+  "name": "John Doe"
+}'
+```
+
+#### ドキュメントの更新
+
+```
+curl -XPOST 'localhost:9200/customer/external/1/_update?pretty' -d '
+{
+  "doc": {"name": "Jane Doe"}
+}'
+```
+
+
+```
+curl -XPOST 'localhost:9200/customer/external/1/_update?pretty' -d '
+{
+  "doc": {"name": "Jane Doe", "age": 20}
+}'
+```
+
+
+```
+curl -XPOST 'localhost:9200/customer/external/1/_update?pretty' -d '
+{
+  "script" : "ctx._source.age += 5"
+}'
+```
+
+#### ドキュメントの削除
+
+```
+curl -XDELETE 'localhost:9200/customer/external/2?pretty'
+```
+
+#### バッチプロセッシング
+
+
+```
+curl -XPOST 'localhost:9200/customer/external/_bulk?pretty' -d '
+{"index":{"_id":"1"}}
+{"name": "John Doe" }
+{"index":{"_id":"2"}}
+{"name": "Jane Doe" }
+'
+```
+
+
+```
+curl -XPOST 'localhost:9200/customer/external/_bulk?pretty' -d '
+{"update":{"_id":"1"}}
+{"doc": { "name": "John Doe becomes Jane Doe" } }
+{"delete":{"_id":"2"}}
+'
+```
+
 ### 練習４. サンプルデータを使って検索や集計
+
+
+```
+{
+    "employee_id": 0,
+    "firstname": "Kay",
+    "lastname": "Ward",
+    "email": "todd.nguyen@classmethod.jp",
+    "salary": 726428,
+    "age": 38,
+    "gender": "male",
+    "phone": "+1 (917) 512-3882",
+    "address": "720 Maujer Street, Graniteville, Virgin Islands, 6945",
+    "joined_date": "2014-10-24",
+    "location": {
+        "lat": 72.434989,
+        "lon": 48.395502
+    },
+    "married": false,
+    "interests": ["Auto Scaling", "Amazon Cognito"],
+    "friends": [{
+        "firstname": "Melba",
+        "lastname": "Hobbs"
+    }]
+}
+```
+
+[www.json-generator.com/](http://www.json-generator.com/)
+
+
+[employees.zip](https://github.com/KunihikoKido/docs/blob/master/data/employees.zip?raw=true)
+
+
+
+```
+curl -XPOST 'localhost:9200/classmethod/employees/_bulk?pretty' --data-binary "@employees.jsonl"
+curl -XPOST 'localhost:9200/classmethod/_refresh?pretty'
+curl 'localhost:9200/_cat/indices?v'
+```
+
+
+```
+curl 'localhost:9200/_cat/indices?v'
+health status index       pri rep docs.count docs.deleted store.size pri.store.size
+yellow open   classmethod   5   1       2000            0       130b           130b
+```
+
+
+```
+curl -XDELETE 'localhost:9200/classmethod'
+```
+
+```
+curl -XPUT 'localhost:9200/_template/classmethod' -d @index-template.json
+```
+
+```
+curl -XDELETE 'localhost:9200/_template/classmethod'
+```
