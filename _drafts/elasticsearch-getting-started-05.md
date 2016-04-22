@@ -42,7 +42,7 @@ tar -xvf elasticsearch-2.3.1.tar.gz
 ハンズオンを始める前に、Elasticsearch の基本コンセプトを簡単に説明します。
 Elasticsearch は、検索のボリュームとデータ量の両方に対してスケーラブルな検索および分析エンジンです。
 リソースが足りなければ、サーバを追加してい構成するだけで様々なサイズの要件に対応できます。
-そのため、Elasticsearch を構成する各種要素について理解しましょう。
+そのため、すこし用語が多いので Elasticsearch を構成する主要要素について理解しましょう。
 
 ### Cluster
 Cluster は１つまたは複数の Node (Server) から構成されます。
@@ -68,6 +68,9 @@ Elasticsearch  ⇒ Indices   ⇒ Types  ⇒ Documents ⇒ Fields
 ### Shards & Replicas
 Shards は、Index を物理的に管理し、Node に配置されます。書き込み可能な Primary Shards と 読み取り専用の Replica Shards から構成されます。デフォルトでは、１つの Index は５つの Primary Shards と、それと対になる Replica Shards が１つづつ作成されるように設定されています。サーバはこの Shards 数分スケールアウトすることが可能です。
 
+何となくわかりましたでしょうか？
+
+もう少し付け加えると、複数の Cluster を使用する Multi Cluster という構成も可能です。
 
 ## ハンズオン
 それでは早速ハンズオンをはじめたいと思います。
@@ -84,7 +87,7 @@ cd elasticsearch-2.3.1/bin
 ./elasticsearch
 ```
 
-※ 実行した Elasticsearch フォアグランドで実行します。
+※ 実行した Elasticsearch はフォアグランドで実行されます。
 停止する場合は `Ctrl+C` で停止します。-d オプションをつけて実行することでバックグラウンドで起動することもできます。
 
 起動すると以下のようなログがターミナルに表示されます。
@@ -109,7 +112,7 @@ cd elasticsearch-2.3.1/bin
 
 起動できましたか？
 
-#### デフォルトでは Node の名前はランダムに設定される
+#### Node の名前はランダムに設定される
 今起動した Elasticsearch は 1 Cluster 内に 1 Node という構成で起動している状態です。
 
 表示されているログの中に、`Riot Grrl` という単語を見つけることができます。これが Node の名前です。
@@ -117,7 +120,7 @@ cd elasticsearch-2.3.1/bin
 おそらく自身の端末に表示されている Node 名は別の名前が表示されているかもしれませんが問題ありません。Elasticsearch は起動時にランダムの Node 名を設定して起動するというのがデフォルトの動作です。
 Cluster のデフォルトの名前は `elasticsearch` です。
 
-#### Cluster や Node に任意の名前をつけることも可能
+#### Cluster や Node に任意の名前をつける
 起動時に任意の Cluster 名や Node 名を指定することも可能です。（または config/elasticsearch.yml の設定ファイルを変更）
 
 ``` bash
