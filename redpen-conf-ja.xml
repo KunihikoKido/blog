@@ -34,5 +34,6 @@
         <symbol name="LESS_THAN_SIGN" value="＜" />
         <symbol name="GREATER_THAN_SIGN" value="＞" />
         <symbol name="EQUAL_SIGN" value="＝" />
+        <symbol name="AMPERSAND" value="＆" />
     </symbols>
 </redpen-conf>

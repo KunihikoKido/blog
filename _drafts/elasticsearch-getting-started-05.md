@@ -40,16 +40,34 @@ tar -xvf elasticsearch-2.3.1.tar.gz
 
 ## 基本コンセプト
 ハンズオンを始める前に、Elasticsearch の基本コンセプトを簡単に説明します。
+Elasticsearch は、検索のボリュームとデータ量の両方に対してスケーラブルな検索および分析エンジンです。
+リソースが足りなければ、サーバを追加してい構成するだけで様々なサイズの要件に対応できます。
+そのため、Elasticsearch を構成する各種要素について理解しましょう。
 
 ### Cluster
 Cluster は１つまたは複数の Node (Server) から構成されます。
+すべてのデータはこの Cluster 配下で管理され、すべての Node を横断して検索することを可能にします。
+各 Node は一意な Cluster 名を識別し、その Cluster に参加します。
+デフォルトの Cluster 名は、`elasticsearch` です。
 
 ### Node
-### Index
-### Type
-### Document
-### Field
+Node は１つのサーバです。Cluster の一部として構成されます。
+データをストアし、Cluster に参加してデータのインデックスや検索を提供します。
+
+### Index & Type & Document
+Index はデータを管理するための論理的な仕組みです。
+Elasticsearch の Index を説明するために、リレーショナル DB と比較してみます。
+
+```
+Relational DB  ⇒ Databases ⇒ Tables ⇒ Rows      ⇒ Columns
+Elasticsearch  ⇒ Indices   ⇒ Types  ⇒ Documents ⇒ Fields
+```
+
+１つの Elasticsearch Cluster は複数の Indices （Databases） を定義することができ、それぞれに複数の Types （Tables） を構成することができます。Types それぞれに複数の Documents （Rows） を保存でき、Document 毎に複数の Fields （Columns） を持っています。
+
 ### Shards & Replicas
+Shards は、Index を物理的に管理し、Node に配置されます。書き込み可能な Primary Shards と 読み取り専用の Replica Shards から構成されます。デフォルトでは、１つの Index は５つの Primary Shards と、それと対になる Replica Shards が１つづつ作成されるように設定されています。サーバはこの Shards 数分スケールアウトすることが可能です。
+
 
 ## ハンズオン
 それでは早速ハンズオンをはじめたいと思います。
@@ -179,14 +197,14 @@ health status index pri rep docs.count docs.deleted store.size pri.store.size
 Index を作成してみましょう。以下の例では、`customer` という名前のインデックスを作成しています。
 そして先ほど説明した `/_cat/indices` API を使って Index の情報を取得しています。
 
-```
+``` bash
 curl -XPUT 'localhost:9200/customer?pretty'
 curl 'localhost:9200/_cat/indices?v'
 ```
 
 以下はそのレスポンスです。
 
-```
+``` bash
 curl -XPUT 'localhost:9200/customer?pretty'
 {
   "acknowledged" : true
@@ -206,19 +224,29 @@ health が `yellow` になっているのは、Node が１つのため、Replica
 Shards の状態をもう少し詳しく調べてみましょう。Shards の状態を確認するには、以下のように API をコールします。
 
 
-```
+``` bash
 curl 'localhost:9200/_cat/shards?v'
 ```
 
 以下はそのレスポンスです。
 
-```
+``` bash
 curl 'localhost:9200/_cat/shards?v'
-
+index    shard prirep state      docs store ip        node   
+customer 3     p      STARTED       0  159b 127.0.0.1 Riot Grrl
+customer 3     r      UNASSIGNED                             
+customer 2     p      STARTED       0  159b 127.0.0.1 Riot Grrl
+customer 2     r      UNASSIGNED                             
+customer 1     p      STARTED       0  159b 127.0.0.1 Riot Grrl
+customer 1     r      UNASSIGNED                             
+customer 4     p      STARTED       0  159b 127.0.0.1 Riot Grrl
+customer 4     r      UNASSIGNED                             
+customer 0     p      STARTED       0  159b 127.0.0.1 Riot Grrl
+customer 0     r      UNASSIGNED                             
 ```
 
 
-Primary Shards の０〜４が配置され、それのついになっている Replica Shards が UNASSIGNED になっていて配置されていないことがわかります。
+Primary Shards の０〜４が配置され、それのついになっている Replica Shards が `UNASSIGNED` になっていて配置されていないことがわかります。
 
 ### Replica Shards の数を変更する
 今回１つの Node で構成していますので、Replica Shards は配置されず、何の意味もありません。以下の API をコールして Replica Shards の数を０にしてみましょう。
@@ -227,42 +255,43 @@ Primary Shards の０〜４が配置され、それのついになっている R
 curl -XPUT 'localhost:9200/customer/_settings' -d '
 {
     "index" : {
-        "number_of_replicas" : 0
+        "number_of_replicas" : 1
     }
 }'
 
 curl 'localhost:9200/_cat/indices?v'
 curl 'localhost:9200/_cat/shards?v'
-
 ```
 
 以下はそのレスポンスです。
 
-```
+``` bash
 curl -XPUT 'localhost:9200/customer/_settings' -d '
 {
     "index" : {
         "number_of_replicas" : 0
     }
 }'
-
-{
-  "acknowledged" : true
-}
+{"acknowledged":true}
 
 curl 'localhost:9200/_cat/indices?v'
 health status index    pri rep docs.count docs.deleted store.size pri.store.size
-green open   customer   5   0          0            0       130b           130b
+green  open   customer   5   0          0            0       795b           795b
 
 curl 'localhost:9200/_cat/shards?v'
+index    shard prirep state   docs store ip        node   
+customer 3     p      STARTED    0  159b 127.0.0.1 Riot Grrl
+customer 2     p      STARTED    0  159b 127.0.0.1 Riot Grrl
+customer 1     p      STARTED    0  159b 127.0.0.1 Riot Grrl
+customer 4     p      STARTED    0  159b 127.0.0.1 Riot Grrl
+customer 0     p      STARTED    0  159b 127.0.0.1 Riot Grrl
 ```
 
 Replica Shards の数が０と表示されていれば成功です。また、先ほどまで yellow だった health が green になっているのが確認できると思います。配置されるべきすべての Shards が正常に配置されているためです。
 
 このように Replica Shards は、Index 作成後も自由にその数を変更することができます。
 
-※ Praimary Shards は、Index 作成後はその数を変更できません。
-
+※ Primary Shards は、Index 作成後はその数を変更できません。
 
 ### 練習３. データの追加・更新・削除
 サンプルデータをインデックスして、
