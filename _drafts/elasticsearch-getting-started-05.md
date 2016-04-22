@@ -207,8 +207,8 @@ curl 'localhost:9200/_cat/shards?v'
 
 Primary Shards の０〜４が配置され、それのついになっている Replica Shards が UNASSIGNED になっていて配置されていないことがわかります。
 
-### Replica Shards の数を変更してみる
-今回１つの Node で構成していますので、Replica Shards は配置されず何の意味もありません。以下の API をコールして Replica Shards の数を０にしてみましょう。
+### Replica Shards の数を変更する
+今回１つの Node で構成していますので、Replica Shards は配置されず、何の意味もありません。以下の API をコールして Replica Shards の数を０にしてみましょう。
 
 ``` bash
 curl -XPUT 'localhost:9200/customer/_settings' -d '
@@ -244,7 +244,11 @@ green open   customer   5   0          0            0       130b           130b
 curl 'localhost:9200/_cat/shards?v'
 ```
 
+Replica Shards の数が０と表示されていれば成功です。また、先ほどまで yellow だった health が green になっているのが確認できると思います。配置されるべきすべての Shards が正常に配置されているためです。
 
+このように Replica Shards は、Index 作成後も自由にその数を変更することができます。
+
+※ Praimary Shards は、Index 作成後はその数を変更できません。
 
 
 ### 練習３. データの追加・更新・削除
