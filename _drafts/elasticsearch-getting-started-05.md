@@ -448,7 +448,7 @@ curl -XPOST 'localhost:9200/customer/external/_bulk?pretty' -d '
 ### 練習４. サンプルデータを使って検索や集計
 
 
-```
+``` javascript
 {
     "employee_id": 0,
     "firstname": "Kay",
