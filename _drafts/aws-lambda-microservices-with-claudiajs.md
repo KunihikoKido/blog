@@ -42,12 +42,12 @@ api.get('/hello', function () {
 
 `package.json` に `"files": "*.js"` を追加します。
 
-```
+``` javascript
 {
   "name": "web-api-sample",
   "version": "1.0.0",
   "description": "",
-  "files": "*.js",
+  "files": "*.js",              // Add
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -95,7 +95,7 @@ curl https://zjv2654klk.execute-api.us-east-1.amazonaws.com/latest/hello
 
 
 ```
-https://zjv2654klk.execute-api.us-east-1.amazonaws.com/latest/hello
+curl https://zjv2654klk.execute-api.us-east-1.amazonaws.com/latest/hello
 "hello world"
 ```
 
