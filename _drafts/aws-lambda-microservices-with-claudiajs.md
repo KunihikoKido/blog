@@ -69,11 +69,6 @@ api.get('/hello', function () {
 claudia create --name web-api-sample --region us-east-1 --api-module app
 ```
 
-![AWS Lambda Console](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/aws-lambda-microservices-with-claudiajs-1.png)
-
-![Amazon API Gateway Console](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/aws-lambda-microservices-with-claudiajs-2.png)
-
-
 ```
 {
   "lambda": {
@@ -88,6 +83,13 @@ claudia create --name web-api-sample --region us-east-1 --api-module app
   }
 }
 ```
+
+
+![AWS Lambda Console](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/aws-lambda-microservices-with-claudiajs-1.png)
+
+![Amazon API Gateway Console](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/aws-lambda-microservices-with-claudiajs-2.png)
+
+
 
 ```
 curl https://zjv2654klk.execute-api.us-east-1.amazonaws.com/latest/hello
