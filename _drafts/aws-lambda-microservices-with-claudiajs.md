@@ -79,7 +79,7 @@ api.get('/hello', function () {
 claudia create --name web-api-sample --region us-east-1 --api-module app
 ```
 
-しばらく待つと、以下のようなデプロイ情報が表示されます。
+しばらく待つと、以下のようなデプロイ情報が表示されます。（claudia.json ファイルにも保存されます）
 
 ```
 {
