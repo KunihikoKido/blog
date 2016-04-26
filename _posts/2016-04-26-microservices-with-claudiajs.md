@@ -4,7 +4,7 @@
 ## Claudia.js とは？
 Claudia.js はマイクロサービスを簡単に開発するためのオープンソースのデプロイメントツールです。Claudia.js を使うと AWS Lambda と Amazon API Gateway を使ったマイクロサービスを簡単に開発・デプロイすることができます。
 
-Node.js 用の REST API をプログラミングするための Claudia API Builder ライブラリが提供されています。
+さらに、Node.js 用の REST API をプログラミングするための Claudia API Builder ライブラリが提供されています。
 Claudia.js は Claudia API Builder でプログラミングされたソースコードから、Amazon API Gateway に設定するべき内容を解釈して API のデプロイをコマンド一つで自動化してくれます。
 
 すごく便利そうですね。
@@ -162,8 +162,8 @@ api.put('/users/{id}', function (request){
 		'_id': id,
 		'_source': {
 			userId: id,
-			name: request.body.name,
-			age: request.body.age
+			name: request.body.name || 'Kunihiko Kido',
+			age: request.body.age || 39
 		},
 		updated: true
 	};
@@ -198,6 +198,8 @@ claudia update
 Amazon API Gateway Console をリロードすると ユーザ情報 API エンドポイントと各種メソッドが追加されているのが確認できます。
 
 ![Amazon API Gateway Console](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/aws-lambda-microservices-with-claudiajs-2.png)
+
+curl コマンドを使ってリクエストしてみましょう。
 
 #### Create a new user
 *request:*
@@ -299,7 +301,7 @@ claudia destroy
 
 ## さいごに
 いかがでしたでしょうか。今回は Claudia.js の基本的な使い方について説明しました。
-使ってみた印象では、Claudia.js のデプロイ自動化だけでなく、REST API を実装しやすくする Claudia API Builder も魅力的に感じました。バックエンドに S3 や DynamoDB を使ったより実践的な[サンプルプロジェクト](https://github.com/claudiajs/example-projects)も公開されていますので、ぜひ使ってその便利さを実感してください。
+使ってみた印象では、Claudia.js のデプロイ自動化だけでなく、REST API を実装しやすくする Claudia API Builder も魅力的に感じました。バックエンドに S3 や DynamoDB を使ったより実践的な[サンプルプロジェクト](https://github.com/claudiajs/example-projects)も公開されていますので、ぜひ使ってその便利さを体験してください。
 
 
 ## 参考
