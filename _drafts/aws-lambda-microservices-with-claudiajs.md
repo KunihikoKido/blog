@@ -1,7 +1,8 @@
 # ClaudiaJS を使った簡単マイクロサービス開発
 Claudia.js はマイクロサービスを簡単に開発するためのオープンソースのデプロイメントツールです。Claudia.js を使うと AWS Lambda と Amazon API Gateway を使ったマイクロサービスを簡単に開発・デプロイすることができます。
 
-Node.js 用の REST API をプログラミングするための Claudia API Builder ライブラリが提供されています。Claudia.js は Claudia API Builder でプログラミングされたソースコードから、Amazon API Gateway に設定するべき内容を解釈して API のデプロイをコマンド一つで自動化してくれます。
+Node.js 用の REST API をプログラミングするための Claudia API Builder ライブラリが提供されています。
+Claudia.js は Claudia API Builder でプログラミングされたソースコードから、Amazon API Gateway に設定するべき内容を解釈して API のデプロイをコマンド一つで自動化してくれます。
 
 便利そうですね。
 
@@ -73,43 +74,46 @@ api.get('/hello', function () {
 以下のコマンドで、AWS Lambda と Amazon API Gateway に API を公開するためのモジュールと各種設定が自動的に行われます。
 
 ``` bash
-claudia create --name web-api-sample --region us-east-1 --api-module app
+claudia create --name web-api-test --region us-east-1 --api-module app
 ```
 
-しばらく経つと、プロジェクトのルートディレクトリ配下に claudia.js という名前のファイル作成されます。ファイルの内容は以下のようなデプロイメント情報です。
+しばらく待つと、以下のようなデプロイ情報が表示されます。
 
 ```
 {
   "lambda": {
-    "role": "web-api-test-executor",
-    "name": "web-api-test",
+    "role": "web-api-sample-executor",
+    "name": "web-api-sample",
     "region": "us-east-1"
   },
   "api": {
-    "id": "zjv2654klk",
+    "id": "6thvhu4lc5",
     "module": "app",
-    "url": "https://zjv2654klk.execute-api.us-east-1.amazonaws.com/latest"
+    "url": "https://6thvhu4lc5.execute-api.us-east-1.amazonaws.com/latest"
   }
 }
 ```
 
+### API の動作確認
+API がデプロイされたようなので、確認してみましょう。
+
+AWS Lambda Console を確認すると、`web-api-test` という名前のファンクションが登録されています。
 
 ![AWS Lambda Console](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/aws-lambda-microservices-with-claudiajs-1.png)
 
+
+Amazon API Gateway Console では、`/hello` API エンドポイントに GET メソッドが定義されてることが確認できます。
+
 ![Amazon API Gateway Console](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/aws-lambda-microservices-with-claudiajs-2.png)
 
-
-
-```
-curl https://zjv2654klk.execute-api.us-east-1.amazonaws.com/latest/hello
-```
-
+以下のように `curl` コマンドを使って、アクセスしてみましょう。"hello claudia.js" とレスポンスが返ってきますね。
 
 ```
 curl https://zjv2654klk.execute-api.us-east-1.amazonaws.com/latest/hello
-"hello world"
+"hello claudia.js"
 ```
 
+## API エンドポイントを追加してみる
 
 ```
 npm install superb --save
