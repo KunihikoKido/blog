@@ -103,19 +103,26 @@ AWS Lambda Console を確認すると、`web-api-test` という名前のファ�
 
 
 Amazon API Gateway Console では、`/hello` API エンドポイントに GET メソッドが定義されてることが確認できます。
-
-以下のように `curl` コマンドを使って、アクセスしてみましょう。"hello claudia.js" とレスポンスが返ってきますね。
+以下のように `curl` コマンドを使って、アクセスしてみましょう。（`6thvhu4lc5` は割り振られた API ID を指定してください）
 
 ```
-curl https://zjv2654klk.execute-api.us-east-1.amazonaws.com/latest/hello
+curl https://6thvhu4lc5.execute-api.us-east-1.amazonaws.com/latest/hello
 "hello claudia.js"
 ```
 
+"hello claudia.js" とレスポンスが返ってきますね。
+
+
 ## API エンドポイントを追加してみる
+`name` パラメータに任意の名前を渡すと挨拶フレーズを返す、`greet` API を追加します。
+
+任意のワードをランダムに返す `superb` モジュールを現在のプロジェクトにインストールします。
 
 ```
 npm install superb --save
 ```
+
+次に、app.js に以下のコードを追加します。
 
 ```
 api.get('/greet', function (request) {
@@ -133,12 +140,8 @@ claudia update
 
 
 ```
-curl https://zjv2654klk.execute-api.us-east-1.amazonaws.com/latest/greet?name=Mike
-```
-
-```
-curl https://zjv2654klk.execute-api.us-east-1.amazonaws.com/latest/greet?name=Mike
-"Mike is beautiful"
+curl https://6thvhu4lc5.execute-api.us-east-1.amazonaws.com/latest/greet?name=Mike
+"Mike is splendid"
 ```
 
 
