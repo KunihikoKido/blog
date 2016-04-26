@@ -1,13 +1,15 @@
-# ClaudiaJS を使った簡単マイクロサービス開発
+# Claudia.js を使った簡単マイクロサービス開発
+最近流行りのサーバーレス・アーキテクチャでの開発は、複数のサービスを組み合わせて使うことが多いと思います。そのためデプロイや設定は複雑になりがちです。AWS でサーバーレス・アーキテクチャの代表と言えば、AWS Lambda と Amazon API Gateway が思い浮かぶのではないでしょうか？今回ご紹介する Claudia.js は、それらのサービスを使用した開発をさらに加速する予感です。
+
+## Claudia.js とは？
 Claudia.js はマイクロサービスを簡単に開発するためのオープンソースのデプロイメントツールです。Claudia.js を使うと AWS Lambda と Amazon API Gateway を使ったマイクロサービスを簡単に開発・デプロイすることができます。
 
 Node.js 用の REST API をプログラミングするための Claudia API Builder ライブラリが提供されています。
 Claudia.js は Claudia API Builder でプログラミングされたソースコードから、Amazon API Gateway に設定するべき内容を解釈して API のデプロイをコマンド一つで自動化してくれます。
 
-便利そうですね。
+すごく便利そうですね。
 
 それでは早速使ってみたのでその利用手順を説明したいと思います。
-
 
 
 ## Claudia.js のインストール
@@ -34,8 +36,8 @@ npm install claudia-api-builder --save
 次に `app.js` という名前で以下の内容を作成します。
 
 ``` javascript
-var ApiBuilder = require('claudia-api-builder'),
-	api = new ApiBuilder();
+var ApiBuilder = require('claudia-api-builder');
+var api = new ApiBuilder();
 
 module.exports = api;
 
@@ -47,7 +49,7 @@ api.get('/hello', function () {
 
 上記のプログラムは、エンドポイント `/hello` に対して GET メソッドでアクセスすると文字列 'hello claudia.js' を返す簡単な API です。
 
-`package.json` に `"files": "*.js"` を追加します。
+次に `package.json` に `"files": "*.js"` を追加します。
 
 ``` javascript
 {
@@ -265,10 +267,14 @@ curl -XDELETE https://6thvhu4lc5.execute-api.us-east-1.amazonaws.com/latest/user
 }
 ```
 
+## あとかたずけ
+AWS Lambda と Amazon API Gateway の各種設定やモジュールを削除するには以下のコマンドを実行します。
+
 ```
 claudia destroy
 ```
 
+これで綺麗さっぱりインストールしたマイクロサービスは削除されました。
 
 ## さいごに
 最近流行りのサーバーレス・アーキテクチャでの開発は、複数のサービスを組み合わせて使うことが多いと思います。そのためデプロイや設定は複雑になりがちです。Claudia.js を使うことで、開発からデプロイまで一気通貫してできるのでますますサーバーレス・アーキテクチャの開発が加速するのではないでしょうか。
