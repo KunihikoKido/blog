@@ -104,8 +104,6 @@ AWS Lambda Console を確認すると、`web-api-test` という名前のファ�
 
 Amazon API Gateway Console では、`/hello` API エンドポイントに GET メソッドが定義されてることが確認できます。
 
-![Amazon API Gateway Console](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/aws-lambda-microservices-with-claudiajs-2.png)
-
 以下のように `curl` コマンドを使って、アクセスしてみましょう。"hello claudia.js" とレスポンスが返ってきますね。
 
 ```
@@ -131,7 +129,7 @@ api.get('/greet', function (request) {
 claudia update
 ```
 
-![Amazon API Gateway Console](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/aws-lambda-microservices-with-claudiajs-3.png)
+![Amazon API Gateway Console](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/aws-lambda-microservices-with-claudiajs-2.png)
 
 
 ```
