@@ -300,4 +300,12 @@ claudia destroy
 これで綺麗さっぱりインストールしたマイクロサービスは削除されました。
 
 ## さいごに
-最近流行りのサーバーレス・アーキテクチャでの開発は、複数のサービスを組み合わせて使うことが多いと思います。そのためデプロイや設定は複雑になりがちです。Claudia.js を使うことで、開発からデプロイまで一気通貫してできるのでますますサーバーレス・アーキテクチャの開発が加速するのではないでしょうか。
+いかがでしたでしょうか。今回は Claudia.js の基本的な使い方について説明しました。
+使ってみた印象では、Claudia.js のデプロイ自動化だけでなく、REST API を実装しやすくする Claudia API Builder も魅力的に感じました。バックエンドに S3 や DynamoDB を使ったより実践的な[サンプルプロジェクト](https://github.com/claudiajs/example-projects)も公開されていますので、ぜひ使ってその便利さを実感してください。
+
+
+## 参考
+
+* [Claudia.js](https://github.com/claudiajs/claudia)
+* [Claudia API Builder](https://github.com/claudiajs/claudia-api-builder)
+* [Claudia.js Example projects](https://github.com/claudiajs/example-projects)
