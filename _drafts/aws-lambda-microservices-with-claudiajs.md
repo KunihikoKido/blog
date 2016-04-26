@@ -76,7 +76,7 @@ api.get('/hello', function () {
 以下のコマンドで、AWS Lambda と Amazon API Gateway に API を公開するためのモジュールと各種設定が自動的に行われます。
 
 ``` bash
-claudia create --name web-api-test --region us-east-1 --api-module app
+claudia create --name web-api-sample --region us-east-1 --api-module app
 ```
 
 しばらく待つと、以下のようなデプロイ情報が表示されます。
@@ -99,7 +99,7 @@ claudia create --name web-api-test --region us-east-1 --api-module app
 ### API の動作確認
 API がデプロイされたようなので、確認してみましょう。
 
-AWS Lambda Console を確認すると、`web-api-test` という名前のファンクションが登録されています。
+AWS Lambda Console を確認すると、`web-api-sample` という名前のファンクションが登録されています。
 
 ![AWS Lambda Console](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/aws-lambda-microservices-with-claudiajs-1.png)
 
