@@ -113,37 +113,157 @@ curl https://6thvhu4lc5.execute-api.us-east-1.amazonaws.com/latest/hello
 "hello claudia.js" とレスポンスが返ってきますね。
 
 
-## API エンドポイントを追加してみる
-`name` パラメータに任意の名前を渡すと挨拶フレーズを返す、`greet` API を追加します。
+## API を追加してみる
+REST API を実装するイメージで、ユーザ情報を操作する各種 API を実装してみます（モック）。
 
-任意のワードをランダムに返す `superb` モジュールを現在のプロジェクトにインストールします。
+* `/users`
+  * POST: ユーザ情報追加 API
+* `/users/{id}`
+  * GET: ユーザ情報取得 API
+  * PUT: ユーザ情報更新 API
+  * DELETE: ユーザ情報削除 API
+
+
+app.js に以下のコードを追加します。
 
 ```
-npm install superb --save
-```
-
-次に、app.js に以下のコードを追加します。
-
-```
-api.get('/greet', function (request) {
-	var superb = require('superb');
-	return request.queryString.name + ' is ' + superb();
+api.post('/users', function (request){
+	'use strict';
+	var id = request.body.userId;
+	var result = {
+		'_id': id,
+		'_source': {
+			userId: id,
+			name: request.body.name,
+			age: request.body.age
+		},
+		created: true
+	};
+	return result;
 });
+
+
+api.get("/users/{id}", function (request) {
+	'use strict';
+	var id = request.pathParams.id;
+	var item = {
+		userId: id,
+		name: 'Kunihiko Kido',
+		age: 39
+	}
+	return item;
+});
+
+
+api.put('/users/{id}', function (request){
+	'use strict';
+	var id = request.pathParams.id;
+	var result = {
+		'_id': id,
+		'_source': {
+			userId: id,
+			name: request.body.name,
+			age: request.body.age
+		},
+		updated: true
+	};
+	return result;
+
+});
+
+
+api.delete('/users/{id}', function (request){
+	'use strict';
+	var id = request.pathParams.id;
+	var item = {
+		'_id': id,
+		'_source': {
+			userId: id,
+			name: 'Kunihiko Kido',
+			age: 39,
+		},
+		deleted: true
+	};
+	return item;
+})
 ```
 
+最後に以下のコマンドを実行してデプロイします。
 
 ```
 claudia update
 ```
 
+### 追加した API の確認
+Amazon API Gateway Console をリロードすると ユーザ情報 API エンドポイントと各種メソッドが追加されているのが確認できます。
+
 ![Amazon API Gateway Console](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/aws-lambda-microservices-with-claudiajs-2.png)
 
+#### Create a new user
+```
+curl -H "Content-Type: application/json" -XPOST https://6thvhu4lc5.execute-api.us-east-1.amazonaws.com/latest/users -d '
+{
+  "userId": "1",
+  "name": "Kunihiko Kido",
+  "age": 39
+}'
+
+{
+  "_id": "1",
+  "_source": {
+    "userId": "1",
+    "name": "Kunihiko Kido",
+    "age": 39
+  },
+  "created": true
+}
+```
+
+#### Get the user by id
+```
+curl -XGET https://6thvhu4lc5.execute-api.us-east-1.amazonaws.com/latest/users/1
+
+{
+  "userId": "1",
+  "name": "Kunihiko Kido",
+  "age": 39
+}
 
 ```
-curl https://6thvhu4lc5.execute-api.us-east-1.amazonaws.com/latest/greet?name=Mike
-"Mike is splendid"
+
+#### Update the user name
+```
+curl -H "Content-Type: application/json" -XPUT https://6thvhu4lc5.execute-api.us-east-1.amazonaws.com/latest/users/1 -d '
+{
+  "name": "Kido"
+}'
+
+{
+  "_id": "1",
+  "_source": {
+    "userId": "1",
+    "name": "Kido",
+    "age": 39
+  },
+  "updated": true
+}
 ```
 
+#### Remove the user
+
+```
+curl -XDELETE https://6thvhu4lc5.execute-api.us-east-1.amazonaws.com/latest/users/1
+
+{
+  "_id": "1",
+  "_source": {
+    "userId": "1",
+    "name": "Kunihiko Kido",
+    "age": 39
+  },
+  "deleted": true
+}
+```
 
 ```
 claudia destroy
