@@ -202,6 +202,8 @@ Amazon API Gateway Console をリロードすると ユーザ情報 API エン�
 ![Amazon API Gateway Console](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/aws-lambda-microservices-with-claudiajs-2.png)
 
 #### Create a new user
+*request:*
+
 ```
 curl -H "Content-Type: application/json" -XPOST https://6thvhu4lc5.execute-api.us-east-1.amazonaws.com/latest/users -d '
 {
@@ -209,7 +211,11 @@ curl -H "Content-Type: application/json" -XPOST https://6thvhu4lc5.execute-api.u
   "name": "Kunihiko Kido",
   "age": 39
 }'
+```
 
+*response:*
+
+```
 {
   "_id": "1",
   "_source": {
@@ -222,9 +228,15 @@ curl -H "Content-Type: application/json" -XPOST https://6thvhu4lc5.execute-api.u
 ```
 
 #### Get the user by id
+*request:*
+
 ```
 curl -XGET https://6thvhu4lc5.execute-api.us-east-1.amazonaws.com/latest/users/1
+```
 
+*response:*
+
+```
 {
   "userId": "1",
   "name": "Kunihiko Kido",
@@ -234,12 +246,18 @@ curl -XGET https://6thvhu4lc5.execute-api.us-east-1.amazonaws.com/latest/users/1
 ```
 
 #### Update the user name
+*request:*
+
 ```
 curl -H "Content-Type: application/json" -XPUT https://6thvhu4lc5.execute-api.us-east-1.amazonaws.com/latest/users/1 -d '
 {
   "name": "Kido"
 }'
+```
 
+*response:*
+
+```
 {
   "_id": "1",
   "_source": {
@@ -252,10 +270,15 @@ curl -H "Content-Type: application/json" -XPUT https://6thvhu4lc5.execute-api.us
 ```
 
 #### Remove the user
+*request:*
 
 ```
 curl -XDELETE https://6thvhu4lc5.execute-api.us-east-1.amazonaws.com/latest/users/1
+```
 
+*response:*
+
+```
 {
   "_id": "1",
   "_source": {
