@@ -97,10 +97,9 @@ claudia create --name web-api-sample --region us-east-1 --api-module app
 ```
 
 ### API の動作確認
-API がデプロイされたようなので、確認してみましょう。
-
-AWS Lambda Console を確認すると、`web-api-sample` という名前のファンクションが登録されています。
-Amazon API Gateway Console では、`/hello` API エンドポイントに GET メソッドが定義されてることが確認できます。
+API がデプロイされたようなので確認してみましょう。
+AWS Lambda Console を確認すると、`web-api-sample` という名前のファンクションが登録されています。また、
+Amazon API Gateway Console では、`/hello` API エンドポイントに GET メソッドが定義されてることが確認することができます。
 
 ![AWS Lambda Console](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/aws-lambda-microservices-with-claudiajs-1.png)
 
@@ -109,10 +108,9 @@ Amazon API Gateway Console では、`/hello` API エンドポイントに GET �
 
 ```
 curl https://6thvhu4lc5.execute-api.us-east-1.amazonaws.com/latest/hello
-"hello claudia.js"
 ```
 
-"hello claudia.js" とレスポンスが返ってきますね。
+"hello claudia.js" とレスポンスが返って来れば正常にデプロイされていることが確認できます。
 
 
 ## API を追加してみる
