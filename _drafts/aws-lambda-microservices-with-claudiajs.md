@@ -1,5 +1,11 @@
 # ClaudiaJS を使った簡単マイクロサービス開発
-Claudia.js は AWS Lambda と Amazon API Gateway を使った Node.js ベースのマイクロサービスを簡単に開発するためのオープンソースのデプロイメントツールです。
+Claudia.js はマイクロサービスを簡単に開発するためのオープンソースのデプロイメントツールです。Claudia.js を使うと AWS Lambda と Amazon API Gateway を使ったマイクロサービスを簡単に開発・デプロイすることができます。
+
+Node.js 用の REST API をプログラミングするための Claudia API Builder ライブラリが提供されています。Claudia.js は Claudia API Builder でプログラミングされたソースコードから、Amazon API Gateway に設定するべき内容を解釈して API のデプロイをコマンド一つで自動化してくれます。
+
+便利そうですね。
+
+それでは早速使ってみたのでその利用手順を説明したいと思います。
 
 
 
@@ -12,7 +18,7 @@ npm install claudia -g
 ```
 
 ## Node.js プロジェクトの作成
-以下の手順で Node.js プロジェクトを作成してください。
+以下の手順で Node.js プロジェクトを作成します。
 
 ``` bash
 # 1. プロジェクトの作成と初期化
@@ -34,11 +40,11 @@ module.exports = api;
 
 api.get('/hello', function () {
 	'use strict';
-	return 'hello world';
+	return 'hello claudia.js';
 });
 ```
 
-上記のプログラムは、エンドポイント `/hello` に対して GET メソッドでアクセスすると文字列 'hello world' を返す簡単な API です。
+上記のプログラムは、エンドポイント `/hello` に対して GET メソッドでアクセスすると文字列 'hello claudia.js' を返す簡単な API です。
 
 `package.json` に `"files": "*.js"` を追加します。
 
@@ -64,10 +70,13 @@ api.get('/hello', function () {
 それでは、AWS に作成したマイクロサービスをインストールしてみましょう。
 
 インストールするには、`claudia create` コマンドを使用します。
+以下のコマンドで、AWS Lambda と Amazon API Gateway に API を公開するためのモジュールと各種設定が自動的に行われます。
 
 ``` bash
 claudia create --name web-api-sample --region us-east-1 --api-module app
 ```
+
+しばらく経つと、プロジェクトのルートディレクトリ配下に claudia.js という名前のファイル作成されます。ファイルの内容は以下のようなデプロイメント情報です。
 
 ```
 {
@@ -134,3 +143,7 @@ curl https://zjv2654klk.execute-api.us-east-1.amazonaws.com/latest/greet?name=Mi
 ```
 claudia destroy
 ```
+
+
+## さいごに
+最近流行りのサーバーレス・アーキテクチャでの開発は、複数のサービスを組み合わせて使うことが多いと思います。そのためデプロイや設定は複雑になりがちです。Claudia.js を使うことで、開発からデプロイまで一気通貫してできるのでますますサーバーレス・アーキテクチャの開発が加速するのではないでしょうか。
