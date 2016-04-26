@@ -100,11 +100,11 @@ claudia create --name web-api-sample --region us-east-1 --api-module app
 API がデプロイされたようなので、確認してみましょう。
 
 AWS Lambda Console を確認すると、`web-api-sample` という名前のファンクションが登録されています。
+Amazon API Gateway Console では、`/hello` API エンドポイントに GET メソッドが定義されてることが確認できます。
 
 ![AWS Lambda Console](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/aws-lambda-microservices-with-claudiajs-1.png)
 
 
-Amazon API Gateway Console では、`/hello` API エンドポイントに GET メソッドが定義されてることが確認できます。
 以下のように `curl` コマンドを使って、アクセスしてみましょう。（`6thvhu4lc5` は割り振られた API ID を指定してください）
 
 ```
