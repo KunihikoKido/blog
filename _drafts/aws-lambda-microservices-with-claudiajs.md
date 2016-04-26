@@ -128,7 +128,7 @@ REST API を実装するイメージで、ユーザ情報を操作する各種 A
 
 app.js に以下のコードを追加します。
 
-```
+``` javascript
 api.post('/users', function (request){
 	'use strict';
 	var id = request.body.userId;
