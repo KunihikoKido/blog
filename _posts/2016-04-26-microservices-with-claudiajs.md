@@ -290,7 +290,7 @@ curl -XDELETE https://6thvhu4lc5.execute-api.us-east-1.amazonaws.com/latest/user
 }
 ```
 
-## あとかたずけ
+## おかたづけ
 AWS Lambda と Amazon API Gateway の各種設定やモジュールを削除するには以下のコマンドを実行します。
 
 ```
