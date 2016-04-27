@@ -46,8 +46,7 @@ Elasticsearch は、検索のボリュームとデータ量の両方に対して
 
 ### Cluster
 Cluster は１つまたは複数の Node (Server) から構成されます。
-すべてのデータはこの Cluster 配下で管理され、すべての Node を横断して検索することを可能にします。
-各 Node は一意な Cluster 名を識別し、その Cluster に参加します。
+すべてのデータはこの Cluster 配下で管理され、Cluster に所属するすべての Node を横断して検索することを可能にします。各 Node は一意な Cluster 名を識別し、その Cluster に参加します。
 デフォルトの Cluster 名は、`elasticsearch` です。
 
 ### Node
@@ -371,7 +370,8 @@ curl -XPUT 'localhost:9200/customer/external/1?pretty' -d '
 }'
 ```
 
-すでに存在するデータに対して、`PUT` メソッドを使用してドキュメントを更新すると後から更新したドキュメントに置き換えられます。
+すでに存在するデータに対して、`PUT` メソッドを使用してドキュメントを更新すると、後から更新したドキュメントに置き換えられます。
+そのため、更新したい部分的な情報ではなく、置き換える対象ドキュメント全体の情報が必要です。
 
 
 以下のように id `2` はまだインデックスされていないため新規追加になります。
@@ -384,7 +384,7 @@ curl -XPUT 'localhost:9200/customer/external/2?pretty' -d '
 ```
 
 `id` を指定せずに `POST` メソッドを使用してドキュメントをインデックスした場合には、
-id が自動で割り振られるため常に追加処理となります。
+id が自動で割り振られるため常に新しいドキュメントとして追加されます。
 
 ```
 curl -XPOST 'localhost:9200/customer/external/?pretty' -d '
@@ -394,7 +394,7 @@ curl -XPOST 'localhost:9200/customer/external/?pretty' -d '
 ```
 
 #### ドキュメントの更新
-ドキュメントの部分更新をする場合は、以下のように `_update` エンドポイントを使用して、以下のように API をコールします。
+ドキュメントの部分更新をする場合は、以下のように `_update` エンドポイントを使用して、API をコールします。
 置き換えと異なるのは、更新したいフィールドの内容のみ指定すれば良い点です。
 
 ```
@@ -413,6 +413,7 @@ curl -XPOST 'localhost:9200/customer/external/1/_update?pretty' -d '
 }'
 ```
 
+さらに `script` を使用すると、更新対象データの元の値を使用して計算した結果で更新することが可能です。
 
 ```
 curl -XPOST 'localhost:9200/customer/external/1/_update?pretty' -d '
