@@ -75,6 +75,12 @@ Shards は、Index を物理的に管理し、Node に配置されます。書�
 ## ハンズオン
 それでは早速ハンズオンをはじめたいと思います。
 
+* 練習１. 起動・停止とステータス確認
+* 練習２. Cluster や Node 、Index の状態を確認する
+* 練習３. ドキュメントの操作
+* 練習４. バッチプロセッシング
+* 練習５. サンプルデータを使って検索や集計
+
 ### 練習１．起動・停止とステータス確認
 Elasticsearch の起動・停止とステータスの確認方法です。
 ターミナルを開いてインストールディレクトリに移動して Elasticsearch 起動してみましょう。
@@ -158,7 +164,6 @@ curl -XGET 'localhost:9200/'
 ```
 
 これで Elasticsearch を使用する準備が整いました。
-簡単すぎて物足りないかもですね。
 
 ### 練習２. Cluster や Node 、Index の状態を確認する
 API にアクセスして Elasticsearch の状態を少し詳しく見ていきましょう。
@@ -296,9 +301,12 @@ Replica Shards の数が０と表示されていれば成功です。また、�
 
 ※ Primary Shards は、Index 作成後はその数を変更できません。
 
-#### ドキュメントのインデックス
-`customer` Index にデータを登録してみましょう。
+### 練習３. ドキュメント管理
+ドキュメントの追加・更新・削除など操作方法について説明します。
 
+#### ドキュメントのインデックス
+以下の例では `customer` Index 内の `external` Type に Id が `1` のデータを登録する例です。
+登録する内容は JSON フォーマットで構造化したデータを指定します。
 
 ```
 curl -XPUT 'localhost:9200/customer/external/1?pretty' -d '
@@ -306,6 +314,8 @@ curl -XPUT 'localhost:9200/customer/external/1?pretty' -d '
   "name": "John Doe"
 }'
 ```
+
+レスポンスは以下のようになります。created が `true` となっているのは、新規で作成されたことを意味します。
 
 ```
 curl -XPUT 'localhost:9200/customer/external/1?pretty' -d '
@@ -326,10 +336,15 @@ curl -XPUT 'localhost:9200/customer/external/1?pretty' -d '
 }
 ```
 
+#### ドキュメントの取得
+インデックスしたドキュメントを取得してみましょう。
 
 ```
 curl -XGET 'localhost:9200/customer/external/1?pretty'
 ```
+
+レスポンスは以下のようになります。found が `true` となっているので指定したドキュメントが見つかったことを意味しています。
+また、インデックスした元の JSON データは、`_source` フィールドに含まれます。
 
 ```
 curl -XGET 'localhost:9200/customer/external/1?pretty'
@@ -345,25 +360,9 @@ curl -XGET 'localhost:9200/customer/external/1?pretty'
 }
 ```
 
-#### Index の削除
-
-```
-curl -XDELETE 'localhost:9200/customer?pretty'
-curl 'localhost:9200/_cat/indices?v'
-```
-
-
-```
-curl -XDELETE 'localhost:9200/customer?pretty'
-{
-  "acknowledged" : true
-}
-curl 'localhost:9200/_cat/indices?v'
-health status index pri rep docs.count docs.deleted store.size pri.store.size
-
-```
-
 #### ドキュメントのインデックスと置き換え
+以下のリクエストは先ほどと全く同じドキュメントをインデックスするためのリクエストです。
+もう一度実行してみましょう。
 
 ```
 curl -XPUT 'localhost:9200/customer/external/1?pretty' -d '
@@ -372,14 +371,10 @@ curl -XPUT 'localhost:9200/customer/external/1?pretty' -d '
 }'
 ```
 
+すでに存在するデータに対して、`PUT` メソッドを使用してドキュメントを更新すると後から更新したドキュメントに置き換えられます。
 
-```
-curl -XPUT 'localhost:9200/customer/external/1?pretty' -d '
-{
-  "name": "John Doe"
-}'
-```
 
+以下のように id `2` はまだインデックスされていないため新規追加になります。
 
 ```
 curl -XPUT 'localhost:9200/customer/external/2?pretty' -d '
@@ -388,6 +383,8 @@ curl -XPUT 'localhost:9200/customer/external/2?pretty' -d '
 }'
 ```
 
+`id` を指定せずに `POST` メソッドを使用してドキュメントをインデックスした場合には、
+id が自動で割り振られるため常に追加処理となります。
 
 ```
 curl -XPOST 'localhost:9200/customer/external/?pretty' -d '
@@ -397,6 +394,8 @@ curl -XPOST 'localhost:9200/customer/external/?pretty' -d '
 ```
 
 #### ドキュメントの更新
+ドキュメントの部分更新をする場合は、以下のように `_update` エンドポイントを使用して、以下のように API をコールします。
+置き換えと異なるのは、更新したいフィールドの内容のみ指定すれば良い点です。
 
 ```
 curl -XPOST 'localhost:9200/customer/external/1/_update?pretty' -d '
@@ -405,6 +404,7 @@ curl -XPOST 'localhost:9200/customer/external/1/_update?pretty' -d '
 }'
 ```
 
+また、以下の例では `name` フィールドの更新と `age` フィールドの追加をしています。
 
 ```
 curl -XPOST 'localhost:9200/customer/external/1/_update?pretty' -d '
@@ -427,7 +427,26 @@ curl -XPOST 'localhost:9200/customer/external/1/_update?pretty' -d '
 curl -XDELETE 'localhost:9200/customer/external/2?pretty'
 ```
 
-#### バッチプロセッシング
+
+#### Index の削除
+
+```
+curl -XDELETE 'localhost:9200/customer?pretty'
+curl 'localhost:9200/_cat/indices?v'
+```
+
+
+```
+curl -XDELETE 'localhost:9200/customer?pretty'
+{
+  "acknowledged" : true
+}
+curl 'localhost:9200/_cat/indices?v'
+health status index pri rep docs.count docs.deleted store.size pri.store.size
+
+```
+
+### 練習４. バッチプロセッシング
 
 
 ```
@@ -448,7 +467,7 @@ curl -XPOST 'localhost:9200/customer/external/_bulk?pretty' -d '
 '
 ```
 
-### 練習４. サンプルデータを使って検索や集計
+### 練習５. サンプルデータを使って検索や集計
 
 
 ``` javascript
