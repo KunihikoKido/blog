@@ -1,0 +1,4 @@
+POST /customer/external
+{
+  "name": "John Doe"
+}

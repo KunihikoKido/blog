@@ -152,10 +152,6 @@ Elasticsearch は各種操作のための REST API を提供しています。
 
 以下のコマンドでアクセスしてみましょう。
 
-``` bash
-curl -XGET 'localhost:9200/'
-```
-
 ```
 GET /
 ```
@@ -165,7 +161,8 @@ GET /
 
 正常に起動していれば、以下のように結果が表示されます。
 
-``` javascript
+``` bash
+# GET /
 {
   "name" : "Riot Grrl",
   "cluster_name" : "elasticsearch",
@@ -190,14 +187,14 @@ API にアクセスして Elasticsearch の状態を少し詳しく見ていき�
 
 Cluster の状態を確認するには、以下の API をコールします。
 
-``` bash
-curl 'localhost:9200/_cat/health?v'
+```
+GET /_cat/health?v
 ```
 
 以下はそのレスポンスです。`_cat` API は人が見て分かりやすいようにテキスト形式で結果表示する管理用の API です。
 
 ``` bash
-curl 'localhost:9200/_cat/health?v'
+# GET /_cat/health?v
 epoch      timestamp cluster       status node.total node.data shards pri relo init unassign pending_tasks max_task_wait_time active_shards_percent
 1461220257 15:30:57  elasticsearch green           1         1      0   0    0    0        0             0                  -                100.0%
 ```
@@ -207,14 +204,13 @@ status が `green` になっていますが、これが正常な状態です。N
 #### すべての Index の情報一覧を確認する
 次に Index の情報を取得していみましょう。Index 情報一覧を取得するには以下の API をコールします。
 
-``` bash
-curl 'localhost:9200/_cat/indices?v'
+```
+GET /_cat/indices?v
 ```
 
 以下はそのレスポンスです。まだ１つも Index を作成していないため何も表示されません。
 
 ``` bash
-curl 'localhost:9200/_cat/indices?v'
 health status index pri rep docs.count docs.deleted store.size pri.store.size
 ```
 
@@ -223,19 +219,19 @@ Index を作成してみましょう。以下の例では、`customer` という
 そして先ほど説明した `/_cat/indices` API を使って Index の情報を取得しています。
 
 ``` bash
-curl -XPUT 'localhost:9200/customer?pretty'
-curl 'localhost:9200/_cat/indices?v'
+PUT /customer
+GET /_cat/indices?v
 ```
 
 以下はそのレスポンスです。
 
 ``` bash
-curl -XPUT 'localhost:9200/customer?pretty'
+# PUT /customer
 {
   "acknowledged" : true
 }
 
-curl 'localhost:9200/_cat/indices?v'
+# GET /_cat/indices?v
 health status index    pri rep docs.count docs.deleted store.size pri.store.size
 yellow open   customer   5   1          0            0       130b           130b
 ```
@@ -249,14 +245,14 @@ health が `yellow` になっているのは、Node が１つのため、Replica
 Shards の状態をもう少し詳しく調べてみましょう。Shards の状態を確認するには、以下のように API をコールします。
 
 
-``` bash
-curl 'localhost:9200/_cat/shards?v'
+```
+GET /_cat/shards?v
 ```
 
 以下はそのレスポンスです。
 
 ``` bash
-curl 'localhost:9200/_cat/shards?v'
+# GET /_cat/shards?v
 index    shard prirep state      docs store ip        node   
 customer 3     p      STARTED       0  159b 127.0.0.1 Riot Grrl
 customer 3     r      UNASSIGNED                             
@@ -276,40 +272,38 @@ Primary Shards の０〜４が配置され、それのついになっている R
 #### Replica Shards の数を変更する
 今回１つの Node で構成していますので、Replica Shards は配置されず、何の意味もありません。以下の API をコールして Replica Shards の数を０にしてみましょう。
 
-``` bash
-curl -XPUT 'localhost:9200/customer/_settings' -d '
+```
+PUT /customer/_settings
 {
     "index" : {
-        "number_of_replicas" : 1
+        "number_of_replicas": 0
     }
-}'
+}
 
-curl 'localhost:9200/_cat/indices?v'
-curl 'localhost:9200/_cat/shards?v'
+GET /_cat/indices?v
+GET /_cat/shards?v
 ```
 
 以下はそのレスポンスです。
 
 ``` bash
-curl -XPUT 'localhost:9200/customer/_settings' -d '
+# PUT /customer/_settings
 {
-    "index" : {
-        "number_of_replicas" : 0
-    }
-}'
-{"acknowledged":true}
+  "acknowledged": true
+}
 
-curl 'localhost:9200/_cat/indices?v'
-health status index    pri rep docs.count docs.deleted store.size pri.store.size
-green  open   customer   5   0          0            0       795b           795b
+# GET /_cat/indices?v
+health status index       pri rep docs.count docs.deleted store.size pri.store.size
+green  open   customer      5   0          0            0       795b           795b
 
-curl 'localhost:9200/_cat/shards?v'
-index    shard prirep state   docs store ip        node   
-customer 3     p      STARTED    0  159b 127.0.0.1 Riot Grrl
-customer 2     p      STARTED    0  159b 127.0.0.1 Riot Grrl
-customer 1     p      STARTED    0  159b 127.0.0.1 Riot Grrl
-customer 4     p      STARTED    0  159b 127.0.0.1 Riot Grrl
-customer 0     p      STARTED    0  159b 127.0.0.1 Riot Grrl
+
+# GET /_cat/shards?v
+index       shard prirep state      docs   store ip        node      
+customer    1     p      STARTED       0    159b 127.0.0.1 Riot Grrl
+customer    3     p      STARTED       0    159b 127.0.0.1 Riot Grrl
+customer    4     p      STARTED       0    159b 127.0.0.1 Riot Grrl
+customer    2     p      STARTED       0    159b 127.0.0.1 Riot Grrl
+customer    0     p      STARTED       0    159b 127.0.0.1 Riot Grrl
 ```
 
 Replica Shards の数が０と表示されていれば成功です。また、先ほどまで yellow だった health が green になっているのが確認できると思います。配置されるべきすべての Shards が正常に配置されているためです。
@@ -326,19 +320,15 @@ Replica Shards の数が０と表示されていれば成功です。また、�
 登録する内容は JSON フォーマットで構造化したデータを指定します。
 
 ```
-curl -XPUT 'localhost:9200/customer/external/1?pretty' -d '
+PUT /customer/external/1
 {
   "name": "John Doe"
-}'
+}
 ```
 
 レスポンスは以下のようになります。created が `true` となっているのは、新規で作成されたことを意味します。
 
 ```
-curl -XPUT 'localhost:9200/customer/external/1?pretty' -d '
-{
-  "name": "John Doe"
-}'
 {
   "_index" : "customer",
   "_type" : "external",
@@ -357,14 +347,13 @@ curl -XPUT 'localhost:9200/customer/external/1?pretty' -d '
 インデックスしたドキュメントを取得してみましょう。
 
 ```
-curl -XGET 'localhost:9200/customer/external/1?pretty'
+GET /customer/external/1
 ```
 
 レスポンスは以下のようになります。found が `true` となっているので指定したドキュメントが見つかったことを意味しています。
 また、インデックスした元の JSON データは、`_source` フィールドに含まれます。
 
 ```
-curl -XGET 'localhost:9200/customer/external/1?pretty'
 {
   "_index" : "customer",
   "_type" : "external",
@@ -382,10 +371,10 @@ curl -XGET 'localhost:9200/customer/external/1?pretty'
 もう一度実行してみましょう。
 
 ```
-curl -XPUT 'localhost:9200/customer/external/1?pretty' -d '
+PUT /customer/external/1
 {
   "name": "John Doe"
-}'
+}
 ```
 
 すでに存在するデータに対して、`PUT` メソッドを使用してドキュメントを更新すると、後から更新したドキュメントに置き換えられます。
@@ -395,20 +384,20 @@ curl -XPUT 'localhost:9200/customer/external/1?pretty' -d '
 以下のように id `2` はまだインデックスされていないため新規追加になります。
 
 ```
-curl -XPUT 'localhost:9200/customer/external/2?pretty' -d '
+PUT /customer/external/2
 {
   "name": "John Doe"
-}'
+}
 ```
 
 `id` を指定せずに `POST` メソッドを使用してドキュメントをインデックスした場合には、
 id が自動で割り振られるため常に新しいドキュメントとして追加されます。
 
 ```
-curl -XPOST 'localhost:9200/customer/external/?pretty' -d '
+POST /customer/external
 {
   "name": "John Doe"
-}'
+}
 ```
 
 #### ドキュメントの更新
@@ -416,51 +405,52 @@ curl -XPOST 'localhost:9200/customer/external/?pretty' -d '
 置き換えと異なるのは、更新したいフィールドの内容のみ指定すれば良い点です。
 
 ```
-curl -XPOST 'localhost:9200/customer/external/1/_update?pretty' -d '
+POST /customer/external/1/_update
 {
   "doc": {"name": "Jane Doe"}
-}'
+}
 ```
 
 また、以下の例では `name` フィールドの更新と `age` フィールドの追加をしています。
 
 ```
-curl -XPOST 'localhost:9200/customer/external/1/_update?pretty' -d '
+POST /customer/external/1/_update
 {
   "doc": {"name": "Jane Doe", "age": 20}
-}'
+}
 ```
 
 さらに `script` を使用すると、更新対象データの元の値を使用して計算した結果で更新することが可能です。
 
 ```
-curl -XPOST 'localhost:9200/customer/external/1/_update?pretty' -d '
+POST /customer/external/1/_update
 {
   "script" : "ctx._source.age += 5"
-}'
+}
 ```
 
 #### ドキュメントの削除
 
 ```
-curl -XDELETE 'localhost:9200/customer/external/2?pretty'
+DELETE /customer/external/2
 ```
 
 
 #### Index の削除
 
 ```
-curl -XDELETE 'localhost:9200/customer?pretty'
-curl 'localhost:9200/_cat/indices?v'
+DELETE /customer
+GET /_cat/indices?v
 ```
 
 
 ```
-curl -XDELETE 'localhost:9200/customer?pretty'
+# DELETE /customer
 {
   "acknowledged" : true
 }
-curl 'localhost:9200/_cat/indices?v'
+
+# GET /_cat/indices?v
 health status index pri rep docs.count docs.deleted store.size pri.store.size
 
 ```
@@ -469,21 +459,19 @@ health status index pri rep docs.count docs.deleted store.size pri.store.size
 
 
 ```
-curl -XPOST 'localhost:9200/customer/external/_bulk?pretty' -d '
+POST /customer/external/_bulk
 {"index":{"_id":"1"}}
 {"name": "John Doe" }
 {"index":{"_id":"2"}}
 {"name": "Jane Doe" }
-'
 ```
 
 
 ```
-curl -XPOST 'localhost:9200/customer/external/_bulk?pretty' -d '
+POST /customer/external/_bulk
 {"update":{"_id":"1"}}
-{"doc": { "name": "John Doe becomes Jane Doe" } }
+{"doc": {"name": "John Doe becomes Jane Doe"}}
 {"delete":{"_id":"2"}}
-'
 ```
 
 ### 練習５. サンプルデータを使って検索や集計
@@ -520,16 +508,55 @@ curl -XPOST 'localhost:9200/customer/external/_bulk?pretty' -d '
 [employees.zip](https://github.com/KunihikoKido/docs/blob/master/data/employees.zip?raw=true)
 
 
+```
+PUT /_template/classmethod
+{
+  "template": "classmethod*",
+  "order": 0,
+  "settings": {
+    "number_of_replicas": 0
+  },
+  "mappings": {
+    "employees": {
+      "dynamic_templates": [
+        {
+          "string_template": {
+            "match": "*",
+            "match_mapping_type": "string",
+            "mapping": {
+              "type": "string",
+              "fields": {
+                "raw": {
+                  "type": "string",
+                  "index": "not_analyzed"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "properties": {
+        "location": {
+          "type": "geo_point"
+        },
+        "friends": {
+          "type": "nested"
+        }
+      }
+    }
+  }
+}
+```
+
+
 
 ```
 curl -XPOST 'localhost:9200/classmethod/employees/_bulk?pretty' --data-binary "@employees.jsonl"
-curl -XPOST 'localhost:9200/classmethod/_refresh?pretty'
-curl 'localhost:9200/_cat/indices?v'
 ```
 
 
 ```
-curl 'localhost:9200/_cat/indices?v'
+GET /_cat/indices?v
 health status index       pri rep docs.count docs.deleted store.size pri.store.size
 yellow open   classmethod   5   1       2000            0       130b           130b
 ```

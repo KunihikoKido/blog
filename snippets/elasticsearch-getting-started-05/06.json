@@ -1,0 +1,9 @@
+PUT /customer/_settings
+{
+    "index" : {
+        "number_of_replicas": 0
+    }
+}
+
+GET /_cat/indices?v
+GET /_cat/shards?v
