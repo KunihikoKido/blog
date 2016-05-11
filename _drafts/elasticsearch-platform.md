@@ -63,8 +63,7 @@ DynamoDB などのキー・バリュー型のデータベースは、ユーザ�
 ## データ利活用におけるシステム要件
 データ利活用におけるシステム要件を以下に挙げてみました。
 
-* あらゆる規模に拡張可能（検索トラフィック・データ量の両方）
-* リアルタイムにデータを利用可能（検索・分析）
+* あらゆる規模に拡張可能（検索トラフィック・データ量／書き込み速度の両方）
 * すべてのデータを横断して検索できる
 * 高速なクエリ実行
 * 高度なクエリ言語
@@ -85,11 +84,144 @@ DynamoDB などのキー・バリュー型のデータベースは、ユーザ�
 
 特にオリジナルデータを管理しているデータベースの置き換えは、基本的には避けるべきです。もしオリジナルデータを他で管理していて、検索や分析のためだけに使用しているデータベースは置き換えを検討することができます。
 
+
 ## あらゆる規模に拡張可能な Elasticsearch
+Elasticsearch の Index は複数の Shards (Primary/Replica) で管理されていて、その Shards は Node (Server) に配置される仕組みです。そのため、検索トラフィック増大やデータの増大（書き込み速度の低下）の両方に対して、Node を増やすことでシステムを拡張することができます。
 
 ### Single Elasticsearch Cluster
+以下の図は１台以上の Node で構成される基本的な Cluster 構成です。
+
 ![single elasticsearch cluster]( https://raw.githubusercontent.com/KunihikoKido/docs/master/images/elasticsearch-platform/elasticsearch-platform.003.png)
 
 
 ### Multiple Elasticsearch Clusters
+以下の図は、複数の Cluster から構成される超大規模な構成です。
+インデックスなどの書き込みはそれぞれの Cluster で管理されます。
+Tribe Node と言う特別な Node は、検索リクエストをバックエンドの Cluster へ伝播させるプロキシ的な役割を担います。
+
 ![multiple elasticsearch clusters](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/elasticsearch-platform/elasticsearch-platform.004.png)
+
+
+## すべてのデータを横断して検索できる Elasticsearch
+Elasticsearch は複数の Index に対して柔軟に横断検索することができます。
+以下はそのバリエーション例です。
+
+- `/_search`  
+  すべてのインデックス内のすべてのタイプを対象に検索する
+- `/blog/_search`  
+  blog インデックス内のすべてのタイプを対象に検索する
+- `/blog,author/_search`  
+  blog と author インデックス内のすべてのタイプを対象に検索する
+- `/b*,a*/_search`  
+  b から始まるインデックスと、a から始まるインデックス内のすべてのタイプを対象に検索する
+- `/blog/posts/_search`  
+  blog インデックス内の posts タイプを対象に検索する
+- `/blog,author/posts,users/_search`  
+  blog と author インデックス内の posts と users タイプを対象に検索する
+- `/_all/posts,users/_search`  
+  すべてのインデックス内の posts と users タイプを対象に検索する
+
+
+## 高速なクエリ実行
+Elasticsearch は元のデータをそのまま保存するのではなく、高速に検索できるようにトークン単位でインデックスを作ります。１冊の本に例えるなら本の末尾にある索引を作るイメージです。
+
+検索の際はその索引ページからクエリ条件にあったドキュメント探して結果を高速に返します。
+
+## 高度なクエリ言語
+Elasticsearch はクエリ言語として JSON ベースの Query DSL を提供しています。
+構造化された JSON フォーマットで、論理的に組み立てやすくさまざななクエリを提供しています。
+
+```
+{
+    "query": {
+        "bool": {
+            "must": [{
+                "match": {
+                    "title": "Search"
+                }
+            }, {
+                "match": {
+                    "content": "Elasticsearch"
+                }
+            }],
+            "filter": [{
+                "term": {
+                    "status": "published"
+                }
+            }, {
+                "range": {
+                    "publish_date": {
+                        "gte": "2015-01-01"
+                    }
+                }
+            }]
+        }
+    }
+}
+```
+
+* Query DSL
+  * Match All Query
+  * Full text queries
+    * Match Query
+    * Multi Match Query
+    * Common Terms Query
+    * Query String Query
+    * Simple Query String Query  
+  * Term level queries
+    * Term Query
+    * Terms Query
+    * Range Query
+    * Exists Query
+    * Missing Query
+    * Prefix Query
+    * Wildcard Query
+    * Regexp Query
+    * Fuzzy Query
+    * Type Query
+    * Ids Query
+  * Compound queries
+    * Constant Score Query
+    * Bool Query
+    * Dis Max Query
+    * Function Score Query
+    * Boosting Query
+    * Indices Query
+    * And Query
+    * Not Query
+    * Or Query
+    * Filtered Query
+    * Limit Query
+  * Joining queries
+    * Nested Query
+    * Has Child Query
+    * Has Parent Query
+  * Geo queries
+    * GeoShape Query
+    * Geo Bounding Box Query
+    * Geo Distance Query
+    * Geo Distance Range Query
+    * Geo Polygon Query
+    * Geohash Cell Query
+  * Specialized queries
+    * More Like This Query
+    * Template Query
+    * Script Query
+  * Span queries
+    * Span Term Query
+    * Span Multi Term Query
+    * Span First Query
+    * Span Near Query
+    * Span Or Query
+    * Span Not Query
+    * Span Containing Query
+    * Span Within Query
+
+[Query DSL](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html)
+
+[Aggregations](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations.html)
+
+
+* 様々種類のスキーマに対応可能
+* 様々な種類のデータ型に対応可能
+* 柔軟なデータモデル（マルチテナンシーなど）

@@ -29,11 +29,22 @@ Elasticsearch のパッケージは、yum などの各種ディストリビュ�
 以下はそのインストール手順です。現在の最新バージョン v2.3.1 を使用します。
 
 ``` bash
-# 1. ダウンロード
+# 1. Elasticsearch インストール
 curl -L -O https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/2.3.1/elasticsearch-2.3.1.tar.gz
-
-# 2. 解凍
 tar -xvf elasticsearch-2.3.1.tar.gz
+
+# 2. Kuromoji & ICU プラグインのインストール
+cd elasticsearch-2.3.1
+./bin/plugin install analysis-kuromoji
+./bin/plugin install analysis-icu
+
+# 2. Kibana のインストール
+curl -L -O https://download.elastic.co/kibana/kibana/kibana-4.5.0-darwin-x64.tar.gz
+tar -xvf kibana-4.5.0-darwin-x64.tar.gz
+
+# 3. Sense プラグインのインストール
+cd kibana-4.5.0-darwin-x64
+./bin/kibana plugin --install elastic/sense
 ```
 
 以上で事前準備は完了です。
@@ -144,6 +155,7 @@ Elasticsearch は各種操作のための REST API を提供しています。
 ``` bash
 curl -XGET 'localhost:9200/'
 ```
+[View in sense](http://localhost:5601/app/sense/?load_from=https://www.elastic.co/guide/en/elasticsearch/plugins/current/snippets/analysis-icu-folding/1.json)
 
 正常に起動していれば、以下のように結果が表示されます。
 
