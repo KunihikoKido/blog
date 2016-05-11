@@ -155,7 +155,7 @@ Elasticsearch は各種操作のための REST API を提供しています。
 ``` bash
 curl -XGET 'localhost:9200/'
 ```
-[View in sense](http://localhost:5601/app/sense/?load_from=https://www.elastic.co/guide/en/elasticsearch/plugins/current/snippets/analysis-icu-folding/1.json)
+[View in sense](http://localhost:5601/app/sense/?load_from=https://github.com/KunihikoKido/docs/blob/03da31694d99fde96b63c299141d951827ac1019/snippets/elasticsearch-getting-started-05/1.json?raw=true)
 
 正常に起動していれば、以下のように結果が表示されます。
 
