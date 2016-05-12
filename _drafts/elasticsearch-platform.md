@@ -56,9 +56,7 @@ DynamoDB などのキー・バリュー型のデータベースは、ユーザ�
 
 ![event driven](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/elasticsearch-platform/elasticsearch-platform.001.png)
 
-
-
-このシステムは、すでにあるデータを対象に新しいユースケースを実現したい場合でも、要件によってはシステム構成から見直す必要が出てきます。また、利用する手続きや言語の異なるデータベース（データストア）が複数存在するため、開発者の学習コストも多くなります。
+利用する手続きや言語の異なるデータベース（データストア）が複数存在するため、開発者の学習コストも高くなります。
 
 ## データ利活用におけるシステム要件
 データ利活用におけるシステム要件を以下に挙げてみました。
@@ -66,10 +64,10 @@ DynamoDB などのキー・バリュー型のデータベースは、ユーザ�
 * あらゆる規模に拡張可能（検索トラフィック・データ量／書き込み速度の両方）
 * すべてのデータを横断して検索できる
 * 高速なクエリ実行
-* 高度なクエリ言語
 * 様々種類のスキーマに対応可能
 * 様々な種類のデータ型に対応可能
 * 柔軟なデータモデル（マルチテナンシーなど）
+* 高度なクエリ言語
 
 主な要件はこんな感じでしょうか。どんなサイズのデータ量にも拡張できて、様々なユースケースにも対応できるように高速かつ高度なクエリ言語を提供し、さまざなま種類のデータをストアできるシステムということです。
 
@@ -82,7 +80,8 @@ DynamoDB などのキー・バリュー型のデータベースは、ユーザ�
 
 ここで重要なのは、Elasticsearch は他のデータベースを置き換えるものではないということ。
 
-特にオリジナルデータを管理しているデータベースの置き換えは、基本的には避けるべきです。もしオリジナルデータを他で管理していて、検索や分析のためだけに使用しているデータベースは置き換えを検討することができます。
+特にオリジナルデータを管理しているデータベースの置き換えは、基本的には避けるべきです。この理由は、リレーショナル DB に比べ Elasticsearch で管理するデータは、冗長になります。例えばカテゴリ名称を管理するカテゴリマスタ
+もしオリジナルデータを他で管理していて、検索や分析のためだけに使用しているデータベースは置き換えを検討することができます。
 
 
 ## あらゆる規模に拡張可能な Elasticsearch
@@ -106,19 +105,19 @@ Tribe Node と言う特別な Node は、検索リクエストをバックエン
 Elasticsearch は複数の Index に対して柔軟に横断検索することができます。
 以下はそのバリエーション例です。
 
-- `/_search`  
+- `/_search`
   すべてのインデックス内のすべてのタイプを対象に検索する
-- `/blog/_search`  
+- `/blog/_search`
   blog インデックス内のすべてのタイプを対象に検索する
-- `/blog,author/_search`  
+- `/blog,author/_search`
   blog と author インデックス内のすべてのタイプを対象に検索する
-- `/b*,a*/_search`  
+- `/b*,a*/_search`
   b から始まるインデックスと、a から始まるインデックス内のすべてのタイプを対象に検索する
-- `/blog/posts/_search`  
+- `/blog/posts/_search`
   blog インデックス内の posts タイプを対象に検索する
-- `/blog,author/posts,users/_search`  
+- `/blog,author/posts,users/_search`
   blog と author インデックス内の posts と users タイプを対象に検索する
-- `/_all/posts,users/_search`  
+- `/_all/posts,users/_search`
   すべてのインデックス内の posts と users タイプを対象に検索する
 
 
@@ -127,11 +126,19 @@ Elasticsearch は元のデータをそのまま保存するのではなく、高
 
 検索の際はその索引ページからクエリ条件にあったドキュメント探して結果を高速に返します。
 
+## 様々種類のスキーマに対応可能
+Elasticsearch は、JSON フォーマットで表現可能なデータであれば
+
+## 様々な種類のデータ型に対応可能
+
+## 柔軟なデータモデル（マルチテナンシーなど）
+
 ## 高度なクエリ言語
 Elasticsearch はクエリ言語として JSON ベースの Query DSL を提供しています。
 構造化された JSON フォーマットで、論理的に組み立てやすくさまざななクエリを提供しています。
 
-```
+
+``` javascript
 {
     "query": {
         "bool": {
@@ -156,72 +163,132 @@ Elasticsearch はクエリ言語として JSON ベースの Query DSL を提供�
                 }
             }]
         }
+    },
+    "aggs": {
+        "group_by_category": {
+            "terms": {
+                "field": "category"
+            },
+            "aggs": {
+                "avg_pageviews": {
+                    "avg": {
+                        "field": "views"
+                    }
+                }
+            }
+        }
     }
 }
 ```
 
-* Query DSL
-  * Match All Query
-  * Full text queries
-    * Match Query
-    * Multi Match Query
-    * Common Terms Query
-    * Query String Query
-    * Simple Query String Query  
-  * Term level queries
-    * Term Query
-    * Terms Query
-    * Range Query
-    * Exists Query
-    * Missing Query
-    * Prefix Query
-    * Wildcard Query
-    * Regexp Query
-    * Fuzzy Query
-    * Type Query
-    * Ids Query
-  * Compound queries
-    * Constant Score Query
-    * Bool Query
-    * Dis Max Query
-    * Function Score Query
-    * Boosting Query
-    * Indices Query
-    * And Query
-    * Not Query
-    * Or Query
-    * Filtered Query
-    * Limit Query
-  * Joining queries
-    * Nested Query
-    * Has Child Query
-    * Has Parent Query
-  * Geo queries
-    * GeoShape Query
-    * Geo Bounding Box Query
-    * Geo Distance Query
-    * Geo Distance Range Query
-    * Geo Polygon Query
-    * Geohash Cell Query
-  * Specialized queries
-    * More Like This Query
-    * Template Query
-    * Script Query
-  * Span queries
-    * Span Term Query
-    * Span Multi Term Query
-    * Span First Query
-    * Span Near Query
-    * Span Or Query
-    * Span Not Query
-    * Span Containing Query
-    * Span Within Query
+### Queries
 
-[Query DSL](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html)
+* Match All Query
+* Full text queries
+  * Match Query
+  * Multi Match Query
+  * Common Terms Query
+  * Query String Query
+  * Simple Query String Query
+* Term level queries
+  * Term Query
+  * Terms Query
+  * Range Query
+  * Exists Query
+  * Missing Query
+  * Prefix Query
+  * Wildcard Query
+  * Regexp Query
+  * Fuzzy Query
+  * Type Query
+  * Ids Query
+* Compound queries
+  * Constant Score Query
+  * Bool Query
+  * Dis Max Query
+  * Function Score Query
+  * Boosting Query
+  * Indices Query
+  * And Query
+  * Not Query
+  * Or Query
+  * Filtered Query
+  * Limit Query
+* Joining queries
+  * Nested Query
+  * Has Child Query
+  * Has Parent Query
+* Geo queries
+  * GeoShape Query
+  * Geo Bounding Box Query
+  * Geo Distance Query
+  * Geo Distance Range Query
+  * Geo Polygon Query
+  * Geohash Cell Query
+* Specialized queries
+  * More Like This Query
+  * Template Query
+  * Script Query
+* Span queries
+  * Span Term Query
+  * Span Multi Term Query
+  * Span First Query
+  * Span Near Query
+  * Span Or Query
+  * Span Not Query
+  * Span Containing Query
+  * Span Within Query
 
-[Aggregations](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations.html)
+※ 参考: [Query DSL](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html)
 
+### Aggregations
 
-* 様々種類のスキーマに対応可能
-* 様々な種類のデータ型に対応可能
-* 柔軟なデータモデル（マルチテナンシーなど）
+* Metrics Aggregations
+  * Avg Aggregation
+  * Cardinality Aggregation
+  * Extended Stats Aggregation
+  * Geo Bounds Aggregation
+  * Geo Centroid Aggregation
+  * Max Aggregation
+  * Min Aggregation
+  * Percentiles Aggregation
+  * Percentile Ranks Aggregation
+  * Scripted Metric Aggregation
+  * Stats Aggregation
+  * Sum Aggregation
+  * Top hits Aggregation
+  * Value Count Aggregation
+* Bucket Aggregations
+  * Children Aggregation
+  * Date Histogram Aggregation
+  * Date Range Aggregation
+  * Filter Aggregation
+  * Filters Aggregation
+  * Geo Distance Aggregation
+  * GeoHash grid Aggregation
+  * Global Aggregation
+  * Histogram Aggregation
+  * IPv4 Range Aggregation
+  * Missing Aggregation
+  * Nested Aggregation
+  * Range Aggregation
+  * Reverse nested Aggregation
+  * Sampler Aggregation
+  * Significant Terms Aggregation
+  * Terms Aggregation
+* Pipeline Aggregations
+  * Avg Bucket Aggregation
+  * Derivative Aggregation
+  * Max Bucket Aggregation
+  * Min Bucket Aggregation
+  * Sum Bucket Aggregation
+  * Stats Bucket Aggregation
+  * Extended Stats Bucket Aggregation
+  * Percentiles Bucket Aggregation
+  * Moving Average Aggregation
+  * Cumulative Sum Aggregation
+  * Bucket Script Aggregation
+  * Bucket Selector Aggregation
+  * Serial Differencing Aggregation
+
+※ 参考: [Aggregations](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations.html)
