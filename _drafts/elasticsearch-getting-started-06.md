@@ -1,4 +1,4 @@
-# 第６回 Elasticsearch 入門 API の使い方をハンズオンで理解する
+# 第６回 Elasticsearch 入門 API の使い方をハンズオンで理解する 〜前編〜
 
 第１回〜第４回にわたって Elasticsearch の基本的なことを説明してきました。今回は実際に Elasticsearch をさわりながら具体的に API の使い方を説明したいと思います。
 
