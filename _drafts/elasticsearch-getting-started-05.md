@@ -27,3 +27,262 @@ DynamoDB などの NoSQL は、幅広い種類の膨大な量のデータを高�
 当然開発者の学習コストも高くなってしまうため、新たなユースケースが発生した際にデータを活用するのが難しくなってしまいます。
 
 ![event driven](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/elasticsearch-getting-started-05.001.png)
+
+
+## Elasticsearch の使いどころ
+昨今のシステムにおいて、データ利活用におけるシステム要件を以下にあげてみました。
+
+* あらゆる規模に拡張可能
+  * 検索トラフィック・データ量／書き込み速度の両方
+* 様々な種類のデータを横断して検索できる
+* 様々な種類のスキーマに対応可能
+* 様々な種類のデータ型に対応可能
+* 柔軟なデータモデル
+  * マルチテナンシ、スキーマレスなど
+* 高速なクエリ実行とリアルタイム分析
+* 高度なクエリ言語
+
+これまで検索エンジンというと、いわゆる検索ボックスで任意のキーワードを入力して全文検索で使うイメージがほとんどですが、
+Elasticsearch はデータ利活用における上記の要件をすべてカバーすることが可能なため、参照系（検索・集計分析）のほとんどで利用可能です。
+強いて向かないデータをあげると、Memcached などで管理されている利用目的が限定されたキャッシュデータは Elasticsearch にインデックスしてもあまり意味がありません。
+
+### Elasticsearch 中心のデータ駆動型のシステム
+データ利活用におけるシステムに Elasticsearch を適用すると以下のようなシステムになります。
+
+![data driven](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/elasticsearch-getting-started-05.002.png)
+
+
+すべてのデータを Elasticsearch にインデックスすることで、データの検索や集計など参照系のインターフェースを統一することができます。
+また、必要に応じて複数のデータソースを横断して検索や集計をすることが可能になるのです。
+それと、リアルタイム分析が優れているので、個人的にはバッチ処理の開発が格段に少なくなる気がします。
+
+ここで重要なのは、Elasticsearch は他のデータベースを置き換えるものではないということ。
+
+特にオリジナルデータを管理しているデータベースの置き換えは、基本的には避けるべきです。この理由は、辞書やインデックス処理の変更が必要な場合はオリジナルのデータをもとにデータをインデックスし直すこともあるからです。また、リレーショナル・データベースと比較して、データの設計が非正規化されるためデータの内容が冗長的になります。
+もし、オリジナルデータを他で管理していて、検索や分析のためだけに使用しているデータベースは置き換えを検討することができます。
+
+### あらゆる規模に拡張可能
+Elasticsearch の Index は複数の Shards (Primary/Replica) で管理されていて、その Shards は Node (Server) に配置される仕組みです。そのため、検索トラフィック増大やデータの増大（書き込み速度の低下）の両方に対して、Node (Server) を増やすことでシステムを拡張することができます。
+
+以下の図は１台以上の Node で構成される基本的な Cluster 構成です。
+
+![single elasticsearch cluster](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/elasticsearch-getting-started-05.003.png)
+
+Single Cluster の基本的な構成でもかなり大規模なシステムを構築可能です。
+
+#### 超大規模なシステムも構成できる
+さらに、複数の Cluster を統合してさらに大規模なシステムも構成可能です。
+
+以下の図は、複数の Cluster から構成される超大規模な構成です。
+インデックスなどの書き込みはそれぞれの Cluster で管理されます。
+Tribe Node と言う特別な Node は、検索リクエストをバックエンドの Cluster へ伝播させるプロキシ的な役割を担います。
+
+![multiple elasticsearch cluster](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/elasticsearch-getting-started-05.004.png)
+
+この構成は、パフォーマンス面、運用面、障害発生時のリスクをどう考えるかによって検討するのが良いでしょう。
+例えば、e コマースサイトで商品情報などサイト上で公開するデータと、アクセスログなど管理者が分析のみで使用するデータを同じ Cluster で管理する場合を考えてみます。
+この場合、大規模なアクセスログのインデックス処理の影響が、一般のユーザが利用する商品情報検索のパフォーマンスにも影響する可能性があります。このような影響が大きい場合は Cluster を分けて運用することを検討します。
+
+また、Tribe Node 必ずしも必要ではありません。複数の Cluster を横断して検索する要件があれば採用すれば良いと思います。
+
+### 様々な種類のデータを横断して検索できる
+Elasticsearch は複数の Index に対して柔軟に横断検索することができます。
+以下はそのバリエーション例です。
+
+- `/_search`
+  すべてのインデックス内のすべてのタイプを対象に検索する
+- `/blog/_search`
+  blog インデックス内のすべてのタイプを対象に検索する
+- `/blog,author/_search`
+  blog と author インデックス内のすべてのタイプを対象に検索する
+- `/b*,a*/_search`
+  b から始まるインデックスと、a から始まるインデックス内のすべてのタイプを対象に検索する
+- `/blog/posts/_search`
+  blog インデックス内の posts タイプを対象に検索する
+- `/blog,author/posts,users/_search`
+  blog と author インデックス内の posts と users タイプを対象に検索する
+- `/_all/posts,users/_search`
+  すべてのインデックス内の posts と users タイプを対象に検索する
+
+
+Tribe Node を利用する場合も同じです。ただし、すべての Cluster で Index 名が一意に識別できるように作成する必要があります。
+
+### 高速なクエリ実行とリアルタイム分析
+Elasticsearch は元のデータをそのまま保存するのではなく、高速に検索できるようにトークン単位でインデックスを作ります。１冊の本に例えるなら本の末尾にある索引を作るイメージです。
+
+検索の際はその索引ページからクエリ条件にあったドキュメント探して結果を高速に返します。
+
+### 様々種類のスキーマに対応可能
+Elasticsearch にインデックスするドキュメント（データ）は、JSON 形式のデータを受け付けます。
+そのため、フラットな構造のデータだけでなく、ネストされたデータもインデックス可能です。
+
+``` javascript
+{
+    "employee_id": 0,
+    "firstname": "Kay",
+    "lastname": "Ward",
+    "email": "todd.nguyen@classmethod.jp",
+    "salary": 726428,
+    "age": 38,
+    "gender": "male",
+    "phone": "+1 (917) 512-3882",
+    "address": "720 Maujer Street, Graniteville, Virgin Islands, 6945",
+    "joined_date": "2014-10-24",
+    "location": {
+        "lat": 72.434989,
+        "lon": 48.395502
+    },
+    "married": false,
+    "interests": ["Auto Scaling", "Amazon Cognito"],
+    "friends": [{
+        "firstname": "Melba",
+        "lastname": "Hobbs"
+    }]
+}
+```
+
+このように JSON で表現出来るデータは Elasticsearch にそのままインデックスして検索・分析可能なため、
+考えられる種類のデータのほとんどは対応できるのではないでしょうか。
+
+### 様々な種類のデータ型に対応可能
+Elasticsearch のサポートするデータ型は他のデータベースよりも豊富です。
+
+* Core datatypes
+* Complex datatypes
+* Geo datatypes
+* Specialised datatypes
+
+#### Core datatypes
+基本的なデータタイプの一覧です。
+
+* String datatype
+  * `string`
+* Numeric datatype
+  * `long`, `integer`, `short`, `byte`, `double`, `float`
+* Date datatype
+  * `date`
+* Boolean datatype
+  * `boolean`
+* Binary datatype
+  * `binary`
+
+#### Complex datatypes
+JSON をサポートするための特殊なデータタイプの一覧です。
+
+* Array datatype
+  * Array support does not require a dedicated `type`
+* Object datatype
+  * `object` for single JSON objects
+* Nested datatype
+  * `nested` for arrays of JSON Objects
+
+#### Geo datatypes
+ロケーション検索用のデータタイプです。半径何メートル以内の情報を検索するなど、緯度・経度をベースにした検索に利用します。
+
+* Geo-point datatype
+  * `geo_point` for lat/lon points
+* Geo-Shape datatype
+  * `geo_shape` for complex shapes like polygons
+
+#### Specialised datatypes
+特殊なデータタイプの一覧です。この辺りは、Elasticsearch ならではのデータタイプです。文字列で表現される IPv4 のデータに対して、範囲検索ができたりします。
+また、`attachments` を使用することで、PDF などの内容をインデックス化し、検索できるようになります。
+
+* IPv4 datatype
+  * `ip` for IPv4 addresses
+* Completion datatype
+  * `completion` to provide auto-complete suggestions
+* Token count datatype
+  * `token_count` to count the number of tokens in a string
+* mapper-murmur3
+  * `murmur3` to compute hashes of values at index-time and store them in the index
+* Attachment datatype
+  mapper-attachments plugin which supports indexing `attachments` like Microsoft Office formats, Open Document formats, ePub, HTML, etc. into an attachment datatype.
+
+
+多分こんなに多くデータタイプをサポートしているデータベースも他にないかな？
+
+### 柔軟なデータモデル
+Elasticsearch は JSON のフォーマットをベースにスキーマレスなデータモデルをサポートしています。
+例えば、フィールドの追加なども JSON にフィールドを追加してインデックスするだけで検索可能になります。
+
+### 高度なクエリ言語
+Elasticsearch はクエリ言語として JSON ベースの Query DSL を提供しています。
+構造化された JSON フォーマットで、論理的に組み立てやすくさまざななクエリを提供しています。
+
+* [Queries](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html)
+  * データのフィルタリングやスコアリングなど５０近い Query をサポートしています。
+* [Aggregations](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations.html)
+  * データの集計・分析など５０近い Aggregation をサポートしています。
+
+``` javascript
+{
+    "query": {
+        "bool": {
+            "must": [{
+                "match": {
+                    "title": "Search"
+                }
+            }, {
+                "match": {
+                    "content": "Elasticsearch"
+                }
+            }],
+            "filter": [{
+                "term": {
+                    "status": "published"
+                }
+            }, {
+                "range": {
+                    "publish_date": {
+                        "gte": "2015-01-01"
+                    }
+                }
+            }]
+        }
+    },
+    "aggs": {
+        "group_by_category": {
+            "terms": {
+                "field": "category"
+            },
+            "aggs": {
+                "avg_views": {
+                    "avg": {
+                        "field": "views"
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+このクエリは、検索条件にマッチしたドキュメントの検索結果一覧と、その検索結果を元にカテゴリ別ベージビュの平均を返します。
+
+#### 想像しているよりもはるかに複雑なことができる
+例えば、商品情報を対象に以下のような情報を１ページ内で表示したいとしましょう。
+商品情報には基本情報の他に大・中・小カテゴリ情報／メーカ情報／価格情報／公開日付／販売数などの情報もあるとします。
+
+**１ページ内に表示したい内容**
+
+* 画面左ナビゲーション
+  * 公開済みの商品情報を対象に中カテゴリ別、メーカ別、価格別のナビゲーションを表示
+  * それぞれのナビゲーションには１０項目づつ表示しそれぞの商品数も掲載
+* パンくず
+  * 公開済みかつフリーワードにマッチした商品情報を対象に各階層ごとの大・中・小カテゴリをパンくず表示
+* カテゴリ別売れ筋ベスト３
+  * 公開済みかつフリーワードにマッチした商品情報を対象にカテゴリ別のトップ３商品情報を表示
+  * 各カテゴリの表示順は検索結果のスコアの高い商品情報を含むカテゴリを優先して表示
+* フリーワード検索結果
+  * 公開済みかつフリーワードにマッチした商品情報をスコアの高い順で一覧表示
+  * 同一スコアの場合は公開日付が新しいものを優先
+
+この情報を得るために Elasticsearch へは、最小で何回リクエストすればよいでしょうか？
+
+答えは**１回**です。衝撃的に複雑なことができます。
+
+これだけ複雑なことができれば、Elasticsearch の適用範囲も広がりそうですね。
+
+## まとめ
+いかがでしたでしょうか。Elasticsearch は RESTful な API を兼ね備えていますので、様々なデータを Elasticsearch に統合するだけで。API プラットフォームを構築可能です。是非 Elasticsearch の利用範囲を拡大して、データをもっと便利に活用しましょう。
