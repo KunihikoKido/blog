@@ -1,6 +1,6 @@
 # 第６回 Elasticsearch 入門 API の使い方をハンズオンで理解する 〜前編〜
 
-第１回〜第４回にわたって Elasticsearch の基本的なことを説明してきました。今回は実際に Elasticsearch をさわりながら具体的に API の使い方を説明したいと思います。
+第１回〜第５回にわたって Elasticsearch の基本的なことを説明してきました。今回は実際に Elasticsearch をさわりながら具体的に API の使い方を説明したいと思います。
 
 ## ハンズオンの内容
 ハンズオンの内容は、以下の Elasticsearch 公式ドキュメントを参考にしています。
@@ -17,11 +17,6 @@ Elasticsearch を動かすには、少なくとも Java 7 のバージョンが�
 java -version
 echo $JAVA_HOME
 ```
-
-その他ハンズオンで使用するツールは以下です。
-
-* Terminal アプリケーション
-* cURL コマンド
 
 ### Elasticsearch のインストール
 Elasticsearch のパッケージは、yum などの各種ディストリビューション向けのパッケージも提供していますが、今回は tar.gz 形式のパッケージをダウンロードしてきてインストールしてください。
