@@ -9,7 +9,7 @@ Cluster は 1つ以上の Node (Elasticsearch Server) で構成されます。El
 
 ![Cluster & Node](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/elasticsearch-getting-started-06.001.png)
 
-## Index は RDB の Database に使い概念
+## Index は RDB の Database に近い概念
 Elasticsearch の Index は、リレーショナル・データベースの Database に相当します。1つの Cluster に複数の Index を作成することができます。また、コンテンツの分析方法などはこの単位で個別に定義することが可能です。
 
 ![Cluster &  Index](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/elasticsearch-getting-started-06.002.png)
@@ -19,9 +19,9 @@ Elasticsearch の Type は、リレーショナル・データベースの Table
 
 ![Index & Type](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/elasticsearch-getting-started-06.003.png)
 
-ただ、このあと説明する Shard との兼ね合いもあるので、Type を分ける場合は Index レベルで分けてしまう設計の方が多いような気がします。
+ただ、このあと説明する Shard との兼ね合いもあるので、Type を分ける場合は Index レベルで分けてしまう設計の方が多いような気がします。また、フィールドマッピングのコンフリクトの問題もあり、Type が異なる場合でも、同じ Index 内のすべてのフィールドは同じ Mapping を持つというルールが採用されました。そのため、Type の代わりに Index を別々に作成するように設計することで、よりデータベースのテーブルのように扱うことができます。
 
-## Document は RDB の Row に使い概念
+## Document は RDB の Row に近い概念
 Elasticsearch の Document は、リレーショナル・データベースの Row に相当します。Document は複数の Field を持っていて、フラットな情報だけでなく、ネストされた情報も表現できます。JSON フォーマットで表現出来る情報をストアできるという理解でよいでしょう。
 
 また、Document は Type 内で一意識別可能な ID を持ちます。これは、登録する際に指定するともできますし、自動で割り振ることも可能です。
