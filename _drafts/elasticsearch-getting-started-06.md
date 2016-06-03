@@ -21,24 +21,27 @@ echo $JAVA_HOME
 ### Elasticsearch のインストール
 Elasticsearch のパッケージは、yum などの各種ディストリビューション向けのパッケージも提供していますが、今回は tar.gz 形式のパッケージをダウンロードしてきてインストールしてください。
 
-以下はそのインストール手順です。現在の最新バージョン v2.3.1 を使用します。
+以下はそのインストール手順です。現在の最新バージョン v2.3.3 を使用します。
 
 ``` bash
 # 1. Elasticsearch インストール
-curl -L -O https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/2.3.1/elasticsearch-2.3.1.tar.gz
-tar -xvf elasticsearch-2.3.1.tar.gz
+curl -L -O https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/2.3.3/elasticsearch-2.3.3.tar.gz
+tar -xvf elasticsearch-2.3.3.tar.gz
 
-# 2. Kuromoji & ICU プラグインのインストール
-cd elasticsearch-2.3.1
+cd elasticsearch-2.3.3
+
+# 2. Kuromoji & ICU プラグインのインストール と Script の有効化
+cd elasticsearch-2.3.3
 ./bin/plugin install analysis-kuromoji
 ./bin/plugin install analysis-icu
+echo "script.inline: true" >> config/elasticsearch.yml
 
 # 2. Kibana のインストール
-curl -L -O https://download.elastic.co/kibana/kibana/kibana-4.5.0-darwin-x64.tar.gz
-tar -xvf kibana-4.5.0-darwin-x64.tar.gz
+curl -L -O https://download.elastic.co/kibana/kibana/kibana-4.5.1-darwin-x64.tar.gz
+tar -xvf kibana-4.5.1-darwin-x64.tar.gz
 
 # 3. Sense プラグインのインストール
-cd kibana-4.5.0-darwin-x64
+cd kibana-4.5.1-darwin-x64
 ./bin/kibana plugin --install elastic/sense
 ```
 
@@ -65,7 +68,7 @@ Elasticsearch を起動するには以下の手順で実行します。
 
 
 ``` bash
-cd elasticsearch-2.3.1/bin
+cd elasticsearch-2.3.3/bin
 ./elasticsearch
 ```
 
@@ -76,7 +79,7 @@ cd elasticsearch-2.3.1/bin
 
 ``` bash
 ./elasticsearch
-[2016-04-20 12:33:16,186][INFO ][node                     ] [Riot Grrl] version[2.3.1], pid[2884], build[bd98092/2016-04-04T12:25:05Z]
+[2016-04-20 12:33:16,186][INFO ][node                     ] [Riot Grrl] version[2.3.3], pid[2884], build[bd98092/2016-04-04T12:25:05Z]
 [2016-04-20 12:33:16,186][INFO ][node                     ] [Riot Grrl] initializing ...
 [2016-04-20 12:33:16,622][INFO ][plugins                  ] [Riot Grrl] modules [reindex, lang-expression, lang-groovy], plugins [], sites []
 [2016-04-20 12:33:16,638][INFO ][env                      ] [Riot Grrl] using [1] data paths, mounts [[/ (/dev/disk1)]], net usable_space [177gb], net total_space [232.6gb], spins? [unknown], types [hfs]
@@ -97,7 +100,7 @@ cd elasticsearch-2.3.1/bin
 ハンズオンでは、Rest API の実行に、`Sense` を使用しますので、Kibana も起動してきましょう。
 
 ``` bash
-cd kibana-4.5.0-darwin-x64/bin
+cd kibana-4.5.1-darwin-x64/bin
 ./kibana
 ```
 
@@ -141,7 +144,7 @@ GET /
   "name" : "Riot Grrl",
   "cluster_name" : "elasticsearch",
   "version" : {
-    "number" : "2.3.1",
+    "number" : "2.3.3",
     "build_hash" : "bd980929010aef404e7cb0843e61d0665269fc39",
     "build_timestamp" : "2016-04-04T12:25:05Z",
     "build_snapshot" : false,
@@ -199,7 +202,7 @@ Index を作成してみましょう。以下の例では、`customer` という
 
 ```
 PUT /customer
-GET /_cat/indices?v
+GET /_cat/indices?v&index=customer
 ```
 
 [VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/04.json)
@@ -228,7 +231,7 @@ Shards の状態をもう少し詳しく調べてみましょう。Shards の状
 
 
 ```
-GET /_cat/shards?v
+GET /_cat/shards?v&index=customer
 ```
 
 [VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/05.json)
@@ -265,8 +268,8 @@ PUT /customer/_settings
     }
 }
 
-GET /_cat/indices?v
-GET /_cat/shards?v
+GET /_cat/indices?v&index=customer
+GET /_cat/shards?v&index=customer
 ```
 
 [VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/06.json)

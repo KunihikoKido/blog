@@ -5,5 +5,5 @@ PUT /customer/_settings
     }
 }
 
-GET /_cat/indices?v
-GET /_cat/shards?v
+GET /_cat/indices?v&index=customer
+GET /_cat/shards?v&index=customer

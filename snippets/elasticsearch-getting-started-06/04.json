@@ -1,2 +1,2 @@
 PUT /customer
-GET /_cat/indices?v
+GET /_cat/indices?v&index=customer
