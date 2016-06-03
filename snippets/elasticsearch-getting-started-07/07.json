@@ -1,4 +1,8 @@
+GET /customer/external/1
+
 PUT /customer/external/1
 {
   "name": "John Doe"
 }
+
+GET /customer/external/1

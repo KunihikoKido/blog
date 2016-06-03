@@ -367,10 +367,14 @@ GET /customer/external/1
 もう一度実行してみましょう。
 
 ```
+GET /customer/external/1
+
 PUT /customer/external/1
 {
   "name": "John Doe"
 }
+
+GET /customer/external/1
 ```
 
 [VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-07/07.json)
@@ -495,7 +499,10 @@ POST /customer/_open
 Index 全体を削除するには、以下のように API をコールします。
 
 ```
+GET /_cat/indices?v
+
 DELETE /customer
+
 GET /_cat/indices?v
 ```
 
@@ -505,14 +512,18 @@ GET /_cat/indices?v
 以下はそのレスポンスです。
 
 ```
+# GET /_cat/indices?v
+health status index    pri rep docs.count docs.deleted store.size pri.store.size
+yellow open   customer   5   1          0            0       130b           130b
+
+
 # DELETE /customer
 {
-  "acknowledged" : true
+  "acknowledged": true
 }
 
 # GET /_cat/indices?v
-health status index pri rep docs.count docs.deleted store.size pri.store.size
-
+health status index   pri rep docs.count docs.deleted store.size pri.store.size
 ```
 
 ### 練習４. バッチプロセッシング
