@@ -1,4 +1,4 @@
-# 第６回 Elasticsearch 入門 API の使い方をハンズオンで理解する 〜前編〜
+# 第７回 Elasticsearch 入門 API の使い方をハンズオンで理解する 〜前編〜
 
 第１回〜第５回にわたって Elasticsearch の基本的なことを説明してきました。
 今回、「 API の使い方をハンズオンで理解する 〜前編〜」では、Elasticsearch の起動・停止〜ドキュメントの管理（追加・登録・削除）を中心に説明します。
@@ -50,7 +50,7 @@ cd kibana-4.5.1-darwin-x64
 ## 基本コンセプト
 ハンズオンを始める前に、Elasticsearch の基本コンセプトを理解しておきましょう。
 
-* [第６回 Elasticsearch 入門 基本コンセプトを理解する](http://dev.classmethod.jp/server-side/elasticsearch-getting-started-06/)
+* [第６回 Elasticsearch 入門 基本コンセプトを理解する](http://dev.classmethod.jp/server-side/elasticsearch-getting-started-07/)
 
 ## ハンズオン
 それでは早速ハンズオンをはじめたいと思います。
@@ -133,7 +133,7 @@ Elasticsearch は各種操作のための REST API を提供しています。
 GET /
 ```
 
-[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/01.json)
+[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-07/01.json)
 
 
 正常に起動していれば、以下のように結果が表示されます。
@@ -168,7 +168,7 @@ Cluster の状態を確認するには、以下の API をコールします。
 GET /_cat/health?v
 ```
 
-[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/02.json)
+[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-07/02.json)
 
 
 以下はそのレスポンスです。`_cat` API は人が見て分かりやすいようにテキスト形式で結果表示する管理用の API です。
@@ -188,7 +188,7 @@ status が `green` になっていますが、これが正常な状態です。N
 GET /_cat/indices?v
 ```
 
-[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/03.json)
+[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-07/03.json)
 
 以下はそのレスポンスです。まだ１つも Index を作成していないため何も表示されません。
 
@@ -205,7 +205,7 @@ PUT /customer
 GET /_cat/indices?v&index=customer
 ```
 
-[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/04.json)
+[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-07/04.json)
 
 
 以下はそのレスポンスです。
@@ -234,7 +234,7 @@ Shards の状態をもう少し詳しく調べてみましょう。Shards の状
 GET /_cat/shards?v&index=customer
 ```
 
-[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/05.json)
+[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-07/05.json)
 
 
 以下はそのレスポンスです。
@@ -272,7 +272,7 @@ GET /_cat/indices?v&index=customer
 GET /_cat/shards?v&index=customer
 ```
 
-[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/06.json)
+[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-07/06.json)
 
 
 以下はそのレスポンスです。
@@ -316,7 +316,7 @@ PUT /customer/external/1
 }
 ```
 
-[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/07.json)
+[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-07/07.json)
 
 
 レスポンスは以下のようになります。created が `true` となっているのは、新規で作成されたことを意味します。
@@ -343,7 +343,7 @@ PUT /customer/external/1
 GET /customer/external/1
 ```
 
-[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/08.json)
+[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-07/08.json)
 
 
 レスポンスは以下のようになります。found が `true` となっているので指定したドキュメントが見つかったことを意味しています。
@@ -373,7 +373,7 @@ PUT /customer/external/1
 }
 ```
 
-[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/07.json)
+[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-07/07.json)
 
 すでに存在するデータに対して、`PUT` メソッドを使用してドキュメントを更新すると、後から更新したドキュメントに置き換えられます。
 そのため、更新したい部分的な情報ではなく、置き換える対象ドキュメント全体の情報が必要です。
@@ -389,7 +389,7 @@ POST /customer/external
 }
 ```
 
-[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/09.json)
+[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-07/09.json)
 
 
 #### ドキュメントの更新
@@ -403,7 +403,7 @@ POST /customer/external/1/_update
 }
 ```
 
-[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/10.json)
+[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-07/10.json)
 
 また、以下の例では `name` フィールドの更新と `age` フィールドの追加をしています。
 
@@ -415,7 +415,7 @@ POST /customer/external/1/_update
 ```
 
 ##### Script を使ったドキュメントの更新
-[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/11.json)
+[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-07/11.json)
 
 さらに `script` を使用すると、更新対象データの元の値を使用して計算した結果で更新することが可能です。
 
@@ -426,7 +426,7 @@ POST /customer/external/1/_update
 }
 ```
 
-[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/12.json)
+[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-07/12.json)
 
 #### ドキュメントの削除
 ドキュメントを削除するには、DELETE メソッドを使用します。
@@ -435,7 +435,7 @@ POST /customer/external/1/_update
 DELETE /customer/external/2
 ```
 
-[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/13.json)
+[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-07/13.json)
 
 
 #### Index の Close と Open
@@ -445,7 +445,7 @@ DELETE /customer/external/2
 POST /customer/_close
 ```
 
-[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/14.json)
+[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-07/14.json)
 
 Close されている Index は、Open Index API を使って再度検索可能な状態にできます。
 
@@ -453,7 +453,7 @@ Close されている Index は、Open Index API を使って再度検索可能�
 POST /customer/_open
 ```
 
-[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/15.json)
+[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-07/15.json)
 
 また、Index の Close & Open は、Analyzer でファイルベースで管理している辞書の更新を反映させる場合にも使用されるオペレーションです。
 
@@ -466,7 +466,7 @@ DELETE /customer
 GET /_cat/indices?v
 ```
 
-[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/16.json)
+[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-07/16.json)
 
 
 以下はそのレスポンスです。
@@ -496,7 +496,7 @@ POST /customer/external/_bulk
 {"name": "Jane Doe" }
 ```
 
-[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/17.json)
+[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-07/17.json)
 
 また、アクションの異なる内容を混在してリクエストすることも可能です。
 以下の例は、先ほどインデックスした1件目の `name` フィールドの内容を更新し、2件目にインデックスしたドキュメントを削除しています。
@@ -508,7 +508,7 @@ POST /customer/external/_bulk
 {"delete":{"_id":"2"}}
 ```
 
-[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/18.json)
+[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-07/18.json)
 
 
 ## さいごに
