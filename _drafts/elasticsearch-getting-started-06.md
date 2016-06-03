@@ -378,6 +378,7 @@ PUT /customer/external/1
 すでに存在するデータに対して、`PUT` メソッドを使用してドキュメントを更新すると、後から更新したドキュメントに置き換えられます。
 そのため、更新したい部分的な情報ではなく、置き換える対象ドキュメント全体の情報が必要です。
 
+#### id を自動的に生成してインデックスする
 
 `id` を指定せずに `POST` メソッドを使用してドキュメントをインデックスした場合には、
 id が自動で割り振られるため常に新しいドキュメントとして追加されます。
@@ -391,16 +392,36 @@ POST /customer/external
 
 [VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-07/09.json)
 
+以下はレスポンスの内容です。`AVUU85TvkezALHBDHIAe` と言う id が自動的に割り振られたことが確認できます。
+
+```
+{
+  "_index": "customer",
+  "_type": "external",
+  "_id": "AVUU85TvkezALHBDHIAe",
+  "_version": 1,
+  "_shards": {
+    "total": 1,
+    "successful": 1,
+    "failed": 0
+  },
+  "created": true
+}
+```
 
 #### ドキュメントの更新
 ドキュメントの部分更新をする場合は、以下のように `_update` エンドポイントを使用して、API をコールします。
 置き換えと異なるのは、更新したいフィールドの内容のみ指定すれば良い点です。
 
 ```
+GET /customer/external/1
+
 POST /customer/external/1/_update
 {
   "doc": {"name": "Jane Doe"}
 }
+
+GET /customer/external/1
 ```
 
 [VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-07/10.json)
@@ -408,22 +429,30 @@ POST /customer/external/1/_update
 また、以下の例では `name` フィールドの更新と `age` フィールドの追加をしています。
 
 ```
+GET /customer/external/1
+
 POST /customer/external/1/_update
 {
   "doc": {"name": "Jane Doe", "age": 20}
 }
+
+GET /customer/external/1
 ```
 
-##### Script を使ったドキュメントの更新
 [VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-07/11.json)
 
+##### Script を使ったドキュメントの更新
 さらに `script` を使用すると、更新対象データの元の値を使用して計算した結果で更新することが可能です。
 
 ```
+GET /customer/external/1
+
 POST /customer/external/1/_update
 {
   "script" : "ctx._source.age += 5"
 }
+
+GET /customer/external/1
 ```
 
 [VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-07/12.json)

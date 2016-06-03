@@ -1,4 +1,8 @@
+GET /customer/external/1
+
 POST /customer/external/1/_update
 {
   "doc": {"name": "Jane Doe", "age": 20}
 }
+
+GET /customer/external/1

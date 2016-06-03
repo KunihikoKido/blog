@@ -1,4 +1,8 @@
+GET /customer/external/1
+
 POST /customer/external/1/_update
 {
   "script" : "ctx._source.age += 5"
 }
+
+GET /customer/external/1
