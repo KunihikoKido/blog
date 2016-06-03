@@ -1,1 +1,5 @@
+GET /customer/external/2
+
 DELETE /customer/external/2
+
+GET /customer/external/2

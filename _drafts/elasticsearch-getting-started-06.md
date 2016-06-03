@@ -461,7 +461,11 @@ GET /customer/external/1
 ドキュメントを削除するには、DELETE メソッドを使用します。
 
 ```
+GET /customer/external/2
+
 DELETE /customer/external/2
+
+GET /customer/external/2
 ```
 
 [VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-07/13.json)
