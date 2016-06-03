@@ -1,2 +1,0 @@
-DELETE /customer
-GET /_cat/indices?v'

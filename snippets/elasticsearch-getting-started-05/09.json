@@ -1,4 +1,0 @@
-PUT /customer/external/2
-{
-  "name": "John Doe"
-}

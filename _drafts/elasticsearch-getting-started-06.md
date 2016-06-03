@@ -1,10 +1,10 @@
 # 第６回 Elasticsearch 入門 API の使い方をハンズオンで理解する 〜前編〜
 
-第１回〜第５回にわたって Elasticsearch の基本的なことを説明してきました。今回は実際に Elasticsearch をさわりながら具体的に API の使い方を説明したいと思います。
+第１回〜第５回にわたって Elasticsearch の基本的なことを説明してきました。
+今回、「 API の使い方をハンズオンで理解する 〜前編〜」では、Elasticsearch の起動・停止〜ドキュメントの管理（追加・登録・削除）を中心に説明します。
 
 ## ハンズオンの内容
 ハンズオンの内容は、以下の Elasticsearch 公式ドキュメントを参考にしています。
-Elasticsearch のインストールから、ステータスの確認、ドキュメントの登録〜検索まで頻繁に使用しそうな API を中心に説明していきます。
 
 * [Getting Started - Elasticsearch - The Definitive Guide](https://www.elastic.co/guide/en/elasticsearch/guide/current/getting-started.html)
 * [Getting Started - Elasticsearch Reference](https://www.elastic.co/guide/en/elasticsearch/reference/current/getting-started.html)
@@ -45,37 +45,9 @@ cd kibana-4.5.0-darwin-x64
 以上で事前準備は完了です。
 
 ## 基本コンセプト
-ハンズオンを始める前に、Elasticsearch の基本コンセプトを簡単に説明します。
-Elasticsearch は、検索のボリュームとデータ量の両方に対してスケーラブルな検索および分析エンジンです。
-リソースが足りなければ、サーバを追加してい構成するだけで様々なサイズの要件に対応できます。
-そのため、すこし用語が多いので Elasticsearch を構成する主要要素について理解しましょう。
+ハンズオンを始める前に、Elasticsearch の基本コンセプトを理解しておきましょう。
 
-### Cluster
-Cluster は１つまたは複数の Node (Server) から構成されます。
-すべてのデータはこの Cluster 配下で管理され、Cluster に所属するすべての Node を横断して検索することを可能にします。各 Node は一意な Cluster 名を識別し、その Cluster に参加します。
-デフォルトの Cluster 名は、`elasticsearch` です。
-
-### Node
-Node は１つのサーバです。Cluster の一部として構成されます。
-データをストアし、Cluster に参加してデータのインデックスや検索を提供します。
-
-### Index & Type & Document
-Index はデータを管理するための論理的な仕組みです。
-Elasticsearch の Index を説明するために、リレーショナル DB と比較してみます。
-
-```
-Relational DB  ⇒ Databases ⇒ Tables ⇒ Rows      ⇒ Columns
-Elasticsearch  ⇒ Indices   ⇒ Types  ⇒ Documents ⇒ Fields
-```
-
-１つの Elasticsearch Cluster は複数の Indices （Databases） を定義することができ、それぞれに複数の Types （Tables） を構成することができます。Types それぞれに複数の Documents （Rows） を保存でき、Document 毎に複数の Fields （Columns） を持っています。
-
-### Shards & Replicas
-Shards は、Index を物理的に管理し、Node に配置されます。書き込み可能な Primary Shards と 読み取り専用の Replica Shards から構成されます。デフォルトでは、１つの Index は５つの Primary Shards と、それと対になる Replica Shards が１つづつ作成されるように設定されています。サーバはこの Shards 数分スケールアウトすることが可能です。
-
-何となくわかりましたでしょうか？
-
-もう少し付け加えると、複数の Cluster を使用する Multi Cluster という構成も可能です。
+* [第６回 Elasticsearch 入門 基本コンセプトを理解する](http://dev.classmethod.jp/server-side/elasticsearch-getting-started-06/)
 
 ## ハンズオン
 それでは早速ハンズオンをはじめたいと思います。
@@ -84,7 +56,6 @@ Shards は、Index を物理的に管理し、Node に配置されます。書�
 * 練習２. Cluster や Node 、Index の状態を確認する
 * 練習３. ドキュメントの操作
 * 練習４. バッチプロセッシング
-* 練習５. サンプルデータを使って検索や集計
 
 ### 練習１．起動・停止とステータス確認
 Elasticsearch の起動・停止とステータスの確認方法です。
@@ -121,7 +92,15 @@ cd elasticsearch-2.3.1/bin
 [2016-04-20 12:33:21,330][INFO ][gateway                  ] [Riot Grrl] recovered [0] indices into cluster_state
 ```
 
+
 起動できましたか？
+ハンズオンでは、Rest API の実行に、`Sense` を使用しますので、Kibana も起動してきましょう。
+
+``` bash
+cd kibana-4.5.0-darwin-x64/bin
+./kibana
+```
+
 
 #### Node の名前はランダムに設定される
 今起動した Elasticsearch は 1 Cluster 内に 1 Node という構成で起動している状態です。
@@ -151,7 +130,7 @@ Elasticsearch は各種操作のための REST API を提供しています。
 GET /
 ```
 
-[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-05/01.json)
+[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/01.json)
 
 
 正常に起動していれば、以下のように結果が表示されます。
@@ -186,6 +165,9 @@ Cluster の状態を確認するには、以下の API をコールします。
 GET /_cat/health?v
 ```
 
+[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/02.json)
+
+
 以下はそのレスポンスです。`_cat` API は人が見て分かりやすいようにテキスト形式で結果表示する管理用の API です。
 
 ``` bash
@@ -203,6 +185,8 @@ status が `green` になっていますが、これが正常な状態です。N
 GET /_cat/indices?v
 ```
 
+[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/03.json)
+
 以下はそのレスポンスです。まだ１つも Index を作成していないため何も表示されません。
 
 ``` bash
@@ -213,10 +197,13 @@ health status index pri rep docs.count docs.deleted store.size pri.store.size
 Index を作成してみましょう。以下の例では、`customer` という名前のインデックスを作成しています。
 そして先ほど説明した `/_cat/indices` API を使って Index の情報を取得しています。
 
-``` bash
+```
 PUT /customer
 GET /_cat/indices?v
 ```
+
+[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/04.json)
+
 
 以下はそのレスポンスです。
 
@@ -243,6 +230,9 @@ Shards の状態をもう少し詳しく調べてみましょう。Shards の状
 ```
 GET /_cat/shards?v
 ```
+
+[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/05.json)
+
 
 以下はそのレスポンスです。
 
@@ -279,6 +269,9 @@ GET /_cat/indices?v
 GET /_cat/shards?v
 ```
 
+[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/06.json)
+
+
 以下はそのレスポンスです。
 
 ``` bash
@@ -302,7 +295,6 @@ customer    0     p      STARTED       0    159b 127.0.0.1 Riot Grrl
 ```
 
 Replica Shards の数が０と表示されていれば成功です。また、先ほどまで yellow だった health が green になっているのが確認できると思います。配置されるべきすべての Shards が正常に配置されているためです。
-
 このように Replica Shards は、Index 作成後も自由にその数を変更することができます。
 
 ※ Primary Shards は、Index 作成後はその数を変更できません。
@@ -320,6 +312,9 @@ PUT /customer/external/1
   "name": "John Doe"
 }
 ```
+
+[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/07.json)
+
 
 レスポンスは以下のようになります。created が `true` となっているのは、新規で作成されたことを意味します。
 
@@ -344,6 +339,9 @@ PUT /customer/external/1
 ```
 GET /customer/external/1
 ```
+
+[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/08.json)
+
 
 レスポンスは以下のようになります。found が `true` となっているので指定したドキュメントが見つかったことを意味しています。
 また、インデックスした元の JSON データは、`_source` フィールドに含まれます。
@@ -372,18 +370,11 @@ PUT /customer/external/1
 }
 ```
 
+[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/07.json)
+
 すでに存在するデータに対して、`PUT` メソッドを使用してドキュメントを更新すると、後から更新したドキュメントに置き換えられます。
 そのため、更新したい部分的な情報ではなく、置き換える対象ドキュメント全体の情報が必要です。
 
-
-以下のように id `2` はまだインデックスされていないため新規追加になります。
-
-```
-PUT /customer/external/2
-{
-  "name": "John Doe"
-}
-```
 
 `id` を指定せずに `POST` メソッドを使用してドキュメントをインデックスした場合には、
 id が自動で割り振られるため常に新しいドキュメントとして追加されます。
@@ -394,6 +385,9 @@ POST /customer/external
   "name": "John Doe"
 }
 ```
+
+[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/09.json)
+
 
 #### ドキュメントの更新
 ドキュメントの部分更新をする場合は、以下のように `_update` エンドポイントを使用して、API をコールします。
@@ -406,6 +400,8 @@ POST /customer/external/1/_update
 }
 ```
 
+[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/10.json)
+
 また、以下の例では `name` フィールドの更新と `age` フィールドの追加をしています。
 
 ```
@@ -414,6 +410,9 @@ POST /customer/external/1/_update
   "doc": {"name": "Jane Doe", "age": 20}
 }
 ```
+
+##### Script を使ったドキュメントの更新
+[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/11.json)
 
 さらに `script` を使用すると、更新対象データの元の値を使用して計算した結果で更新することが可能です。
 
@@ -424,20 +423,50 @@ POST /customer/external/1/_update
 }
 ```
 
+[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/12.json)
+
 #### ドキュメントの削除
+ドキュメントを削除するには、DELETE メソッドを使用します。
 
 ```
 DELETE /customer/external/2
 ```
 
+[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/13.json)
+
+
+#### Index の Close と Open
+まだ、Index は削除しないけど、Index を利用できないようにしたい場合は、Close Index API を使用します。
+
+```
+POST /customer/_close
+```
+
+[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/14.json)
+
+Close されている Index は、Open Index API を使って再度検索可能な状態にできます。
+
+```
+POST /customer/_open
+```
+
+[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/15.json)
+
+また、Index の Close & Open は、Analyzer でファイルベースで管理している辞書の更新を反映させる場合にも使用されるオペレーションです。
+
 
 #### Index の削除
+Index 全体を削除するには、以下のように API をコールします。
 
 ```
 DELETE /customer
 GET /_cat/indices?v
 ```
 
+[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/16.json)
+
+
+以下はそのレスポンスです。
 
 ```
 # DELETE /customer
@@ -451,7 +480,10 @@ health status index pri rep docs.count docs.deleted store.size pri.store.size
 ```
 
 ### 練習４. バッチプロセッシング
+ドキュメントの追加・更新・削除のオペレーションは、Bulk API を使用して、まとめて実行することも可能です。
+他の API と異なり、body にリクエストする内容は Json 形式ではなく、Jsonlines 形式になっていることに注意してください。
 
+以下の例は、2件のドキュメントを Bulk API を使用して、インデックスしています。
 
 ```
 POST /customer/external/_bulk
@@ -461,6 +493,10 @@ POST /customer/external/_bulk
 {"name": "Jane Doe" }
 ```
 
+[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/17.json)
+
+また、アクションの異なる内容を混在してリクエストすることも可能です。
+以下の例は、先ほどインデックスした1件目の `name` フィールドの内容を更新し、2件目にインデックスしたドキュメントを削除しています。
 
 ```
 POST /customer/external/_bulk
@@ -468,3 +504,12 @@ POST /customer/external/_bulk
 {"doc": {"name": "John Doe becomes Jane Doe"}}
 {"delete":{"_id":"2"}}
 ```
+
+[VIEW IN SENSE](http://localhost:5601/app/sense/?load_from=https://raw.githubusercontent.com/KunihikoKido/docs/master/snippets/elasticsearch-getting-started-06/18.json)
+
+
+## さいごに
+いかがでしたでしょうか？
+今回、「 API の使い方をハンズオンで理解する 〜前編〜」では、Elasticsearch の起動・停止〜ドキュメントの管理（追加・登録・削除）を中心に説明しました。
+
+次回、「 API の使い方をハンズオンで理解する 〜後編〜」では、サンプルデータを用意して、検索・集計について説明する予定です。
