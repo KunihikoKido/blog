@@ -57,8 +57,9 @@ green  open   classmethod   5   0       5028            0        2mb            
 
 
 ## Mapping 情報をもう少し詳し見る
-Mapping 情報とは、テーブル定義のようなものです。以下のリクエストでサンプルデータがインデックスされている
- Type の Mapping 情報が取得できます。
+Mapping 情報には、各種フィールドの型やアナライズ方法などが定義されています。Document 内の各種フィールドは、この定義の内容に従ってインデックスが作成されます。
+
+社員情報の Mapping 情報を取得するには以下のように API をリクエストしてください。
 
 ```
 GET /classmethod/_mapping/employees
@@ -213,7 +214,7 @@ GET /classmethod/employees/_search
 }
 ```
 
-レスポンスは以下のようになっているはずです。`hits.total` が Query にマッチした Document 数です。サンプルデータの社員情報は `_source` に含まれています。
+レスポンスは以下のようになっているはずです。`hits.total` が Query にマッチした Document 数です。hits.total の値が 2000 になってい流ことを確認してください。サンプルデータの社員情報は `_source` に含まれています。
 
 
 ```
@@ -572,7 +573,8 @@ GET /classmethod/employees/_search
 }
 ```
 
-## 不要な `_source` の内容を除外する
+## 検索結果の `_source` から任意のフィールドを除外
+検索結果の内容が大きくなりすぎてしまう場合は、必要なフィールドのみレスポンスに返すことができます。以下は、"joined_date" と "friends" フィールドを除外する例です。
 
 ```
 GET /classmethod/employees/_search
@@ -585,3 +587,19 @@ GET /classmethod/employees/_search
     }
 }
 ```
+
+## 検索結果をフィルタリング
+
+## 数値や日付のフィールドで範囲検索
+
+## ユーザの任意のキーワードで全文検索
+
+## 任意のフィールドで集計
+
+## 複数のフィールドを多段で集計
+
+## 検索条件のテンプート化（Search Template）
+
+## Search Template を使って検索
+
+## Search Template を削除
