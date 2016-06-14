@@ -424,6 +424,25 @@ GET /classmethod/employees/_search
 
 参考: [Term level queries](https://www.elastic.co/guide/en/elasticsearch/reference/current/term-level-queries.html)
 
+### Compound queries
+Compound クエリについて見ていきましょう。複数検索条件の組み合わせに使用するクエリです。
+代表的なのは Bool クエリです。And や Or クエリもサポートされていますが、Bool クエリを使うように推奨されています。
+
+```
+GET /classmethod/employees/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {"match": {"firstname": "Tammy"}},
+        {"match": {"lastname": "Hatfield"}}
+      ]
+    }
+  }
+}
+
+```
+
 ## 数値や日付のフィールドで範囲検索
 
 ## ユーザの任意のキーワードで全文検索
