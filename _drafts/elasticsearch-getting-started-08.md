@@ -1,5 +1,6 @@
 # 第８回 Elasticsearch 入門 API の使い方をハンズオンで理解する 〜後編〜
-前回に引き続き、今回もハンズオンです。後編ということで、今回は Classmethod 社の社員情報をサンプルデータとして用意したので、このデータを使用して検索や分析を Elasticsearch の API を使って、体験して見たいと思います。※ もちろんデータは本物ではありませんのでご安心ください。
+前回に引き続き、今回もハンズオンです。後編では、仮想 Classmethod 社の社員情報をサンプルデータとして用意しました（※ もちろんデータは本物ではありませんのでご安心ください。）。
+このサンプルデータを使用して、検索や分析方法を API を使って説明します。
 
 環境のセットアップがお済みでないかたは、前回の「[第７回 Elasticsearch 入門 API の使い方をハンズオンで理解する 〜前編〜](http://dev.classmethod.jp/server-side/elasticsearch-getting-started-07/)」の「事前準備」の章を参考にセットアップしてください。
 
@@ -65,7 +66,7 @@ Mapping 情報には、各種フィールドの型やアナライズ方法など
 GET /classmethod/_mapping/employees
 ```
 
-以下のレスポンスが、Mapping 定義そのもです。String 型のフィールドには `raw` という名前のマルチフィールドを用意しています。これらのルールはサンプルデータをインデックスするときに追加しておいた Index Template のルールに従って、データインデックス時に自動で適用されたものです。
+レスポンス例
 
 ```
 {
@@ -202,8 +203,16 @@ GET /classmethod/_mapping/employees
 }
 ```
 
-## 全てにマッチするクエリ
+例えば、`firstname` フィールドの内容は、インデックス時も検索時も `standard` Analyzer で解析されます。`standard` Analyzer は主に英語系の文章をインデックス・検索するために使用される Analyzer です。そのためこのフィールドに対する検索は主に自然文章検索で使用することができます。また、`firstname` には、`firstname.raw` と言うフィールドが定義されています。このフィールドの内容はインデックス時も検索時もアナライズされません。完全一致検索や集計、フルソートなどで使用することができます。
+
+そのほか、long 型のフィールドや date 型のフィールド、boolean 型のフィールドなどフィールド毎に様々なタイプのフィールドが定義されています。
+
+## 検索
+ここからは、いよいよサンプルデータを使ったハンズオンです。Elasticsearch 1.x 系と 2.x 系で検索条件を組み立てる Query DSL 少し書き方が違いますので注意してください。今回は 2.x 系を基準に説明します。
+
+### 全てにマッチする Query
 全ての Document にマッチする Query をリクエストしてみましょう。
+`_search` エンドポイントに、Json 形式で組み立てた検索条件を body の内容としてリクエストします。メソッドが `GET` になっていますが、間違いではありません。`POST` と `GET` がサポートされています。
 
 ```
 GET /classmethod/employees/_search
@@ -214,8 +223,7 @@ GET /classmethod/employees/_search
 }
 ```
 
-レスポンスは以下のようになっているはずです。`hits.total` が Query にマッチした Document 数です。hits.total の値が 2000 になってい流ことを確認してください。サンプルデータの社員情報は `_source` に含まれています。
-
+レスポンス例
 
 ```
 {
@@ -294,284 +302,29 @@ GET /classmethod/employees/_search
           "friends": []
         }
       },
-      {
-        "_index": "classmethod",
-        "_type": "employees",
-        "_id": "19",
-        "_score": 1,
-        "_source": {
-          "employee_id": 19,
-          "firstname": "Angelica",
-          "lastname": "Nolan",
-          "email": "buckley.herrera@classmethod.jp",
-          "salary": 436746,
-          "age": 33,
-          "gender": "male",
-          "phone": "+1 (925) 577-3934",
-          "address": "348 Seeley Street, Caroleen, Oklahoma, 2759",
-          "joined_date": "2015-07-12",
-          "location": {
-            "lat": 12.220363,
-            "lon": 139.020541
-          },
-          "married": false,
-          "interests": [
-            "Amazon GameLift",
-            "Amazon Elastic MapReduce",
-            "AWS Elastic Beanstalk",
-            "Amazon Virtual Private Cloud (VPC)"
-          ],
-          "friends": []
-        }
-      },
-      {
-        "_index": "classmethod",
-        "_type": "employees",
-        "_id": "22",
-        "_score": 1,
-        "_source": {
-          "employee_id": 22,
-          "firstname": "Opal",
-          "lastname": "Pugh",
-          "email": "petty.arnold@classmethod.jp",
-          "salary": 425483,
-          "age": 38,
-          "gender": "male",
-          "phone": "+1 (805) 430-3245",
-          "address": "635 Chestnut Street, Mathews, American Samoa, 3088",
-          "joined_date": "2014-01-30",
-          "location": {
-            "lat": -73.974216,
-            "lon": -51.789355
-          },
-          "married": false,
-          "interests": [
-            "Amazon Virtual Private Cloud (VPC)",
-            "Amazon SimpleDB",
-            "AWS Direct Connect"
-          ],
-          "friends": [
-            {
-              "firstname": "Lea",
-              "lastname": "Cox"
-            }
-          ]
-        }
-      },
-      {
-        "_index": "classmethod",
-        "_type": "employees",
-        "_id": "24",
-        "_score": 1,
-        "_source": {
-          "employee_id": 24,
-          "firstname": "Cross",
-          "lastname": "Robinson",
-          "email": "janet.mueller@classmethod.jp",
-          "salary": 512962,
-          "age": 21,
-          "gender": "female",
-          "phone": "+1 (835) 517-2051",
-          "address": "441 Wakeman Place, Coral, Nevada, 2554",
-          "joined_date": "2014-04-01",
-          "location": {
-            "lat": -27.621172,
-            "lon": -40.33974
-          },
-          "married": false,
-          "interests": [
-            "Amazon Database Migration Service",
-            "Amazon Elasticsearch Service",
-            "Amazon Simple Workflow Service (SWF)",
-            "Amazon WorkSpaces"
-          ],
-          "friends": [
-            {
-              "firstname": "Brady",
-              "lastname": "Gibson"
-            },
-            {
-              "firstname": "Jackson",
-              "lastname": "Zimmerman"
-            }
-          ]
-        }
-      },
-      {
-        "_index": "classmethod",
-        "_type": "employees",
-        "_id": "25",
-        "_score": 1,
-        "_source": {
-          "employee_id": 25,
-          "firstname": "Harmon",
-          "lastname": "Rice",
-          "email": "wolf.houston@classmethod.jp",
-          "salary": 648477,
-          "age": 36,
-          "gender": "male",
-          "phone": "+1 (961) 502-3105",
-          "address": "182 Bath Avenue, Kenvil, Michigan, 2967",
-          "joined_date": "2015-02-27",
-          "location": {
-            "lat": 79.530654,
-            "lon": -119.439587
-          },
-          "married": true,
-          "interests": [
-            "Amazon GameLift",
-            "AWS Data Pipeline",
-            "Amazon CloudSearch",
-            "Amazon Simple Email Service (SES)",
-            "Amazon Elastic Compute Cloud (EC2)"
-          ],
-          "friends": [
-            {
-              "firstname": "Ophelia",
-              "lastname": "Walters"
-            },
-            {
-              "firstname": "Castro",
-              "lastname": "Martin"
-            }
-          ]
-        }
-      },
-      {
-        "_index": "classmethod",
-        "_type": "employees",
-        "_id": "26",
-        "_score": 1,
-        "_source": {
-          "employee_id": 26,
-          "firstname": "Wilcox",
-          "lastname": "Peck",
-          "email": "dale.larson@classmethod.jp",
-          "salary": 444170,
-          "age": 31,
-          "gender": "female",
-          "phone": "+1 (946) 589-2960",
-          "address": "837 Elizabeth Place, Loma, Arizona, 7886",
-          "joined_date": "2015-06-13",
-          "location": {
-            "lat": -16.810873,
-            "lon": -46.658798
-          },
-          "married": false,
-          "interests": [
-            "Elastic Load Balancing",
-            "AWS CodePipeline"
-          ],
-          "friends": []
-        }
-      },
-      {
-        "_index": "classmethod",
-        "_type": "employees",
-        "_id": "29",
-        "_score": 1,
-        "_source": {
-          "employee_id": 29,
-          "firstname": "Diaz",
-          "lastname": "Knowles",
-          "email": "vega.kirk@classmethod.jp",
-          "salary": 565249,
-          "age": 34,
-          "gender": "male",
-          "phone": "+1 (837) 581-3310",
-          "address": "819 Wythe Avenue, Turpin, Vermont, 7145",
-          "joined_date": "2014-04-10",
-          "location": {
-            "lat": -69.616783,
-            "lon": -49.445282
-          },
-          "married": false,
-          "interests": [
-            "Amazon Elastic Compute Cloud (EC2)"
-          ],
-          "friends": [
-            {
-              "firstname": "Mayra",
-              "lastname": "Snow"
-            }
-          ]
-        }
-      },
-      {
-        "_index": "classmethod",
-        "_type": "employees",
-        "_id": "40",
-        "_score": 1,
-        "_source": {
-          "employee_id": 40,
-          "firstname": "Carroll",
-          "lastname": "Booker",
-          "email": "gray.benton@classmethod.jp",
-          "salary": 813364,
-          "age": 29,
-          "gender": "male",
-          "phone": "+1 (992) 422-2048",
-          "address": "308 Schenck Street, Chesterfield, Delaware, 9703",
-          "joined_date": "2015-04-16",
-          "location": {
-            "lat": 60.098237,
-            "lon": -108.452153
-          },
-          "married": true,
-          "interests": [
-            "Amazon Machine Learning",
-            "Amazon Mobile Analytics",
-            "AWS IoT",
-            "Amazon Machine Learning"
-          ],
-          "friends": [
-            {
-              "firstname": "Tessa",
-              "lastname": "Moran"
-            },
-            {
-              "firstname": "Cecilia",
-              "lastname": "Schroeder"
-            }
-          ]
-        }
-      },
-      {
-        "_index": "classmethod",
-        "_type": "employees",
-        "_id": "41",
-        "_score": 1,
-        "_source": {
-          "employee_id": 41,
-          "firstname": "Lindsey",
-          "lastname": "Gomez",
-          "email": "summers.joyce@classmethod.jp",
-          "salary": 374506,
-          "age": 33,
-          "gender": "male",
-          "phone": "+1 (849) 600-3841",
-          "address": "270 Hampton Avenue, Hemlock, Northern Mariana Islands, 4198",
-          "joined_date": "2015-10-05",
-          "location": {
-            "lat": -32.169831,
-            "lon": -86.412486
-          },
-          "married": false,
-          "interests": [
-            "Amazon API Gateway"
-          ],
-          "friends": [
-            {
-              "firstname": "Paulette",
-              "lastname": "Saunders"
-            }
-          ]
-        }
-      }
+      〜〜 省略 〜〜
     ]
   }
 }
 ```
+
+* `hits.total`
+    * 検索結果合計数（Document 数）
+* `hits.max_score`
+    * 最大スコア
+* `hits.hits`
+    * 検索結果一覧
+* `hits.hits._index`
+    * Index 名称
+* `hits.hits._type`
+    * Type 名称
+* `hits.hits._score`
+    * スコア
+* `hits.hits._id`
+    * Document ID
+* `hits.hits._source`
+    * ソース・データ（社員情報）
+
 
 ## 検索結果の `_source` から任意のフィールドを除外
 検索結果の内容が大きくなりすぎてしまう場合は、必要なフィールドのみレスポンスに返すことができます。以下は、"joined_date" と "friends" フィールドを除外する例です。
@@ -588,7 +341,88 @@ GET /classmethod/employees/_search
 }
 ```
 
+## ページング
+１ページ目、２ページ目などその検索結果の指定したページの一覧を取得するには `size` と `offset` パラメータを使用します。
+
+```
+GET /classmethod/employees/_search
+{
+    "query": {
+        "match_all": {}
+    },
+    "size": 10,
+    "offset": 0
+}
+```
+
+* `size`
+    * １リクエストで返却する最大 Document 数を指定します。
+* `offset`
+    * スキップする Document 数を指定します。
+
 ## 検索結果をフィルタリング
+Elasticsearch は様々な種類の Query をサポートしています。
+
+### Full text queries
+以下の例は、`match` クエリを使用して、`firstname` フィールドの内容が、`tammy` にマッチする Document を検索する例です。
+
+```
+GET /classmethod/employees/_search
+{
+  "query": {
+    "match": {
+      "firstname": "tammy"
+    }
+  }
+}
+```
+
+１件ヒットしましたか？
+それでは、`tammy` を `Tammy` や `TAMMY` に変更して検索してください。
+結果は同じように１件ヒットするはずです。
+
+`firstname` にインデックスされているデータは言語処理されるため、`tammy` `Tammy` `TAMMY` いずれのパターンの文字列も `tammy` としてインデックスされます。
+また、検索時に指定した文字列もインデックス時と同じ言語処理がされるため、`tammy` `Tammy` `TAMMY` いずれのパターンの文字列も `tammy` として検索します。そのため多少の揺らぎがあっても検索結果にヒットするというわけです。
+
+今度は、`firstname` を `firstname.raw` に変更して検索するとどうなりますか？
+`tammy` と `TAMMY` はヒットしなくなります。`firstname.raw` はインデックス・検索ともに言語処理しない設定になっているため、`Tammy` に完全に一致する場合のに検索にヒットします。
+
+参考: [Full text queries](https://www.elastic.co/guide/en/elasticsearch/reference/current/full-text-queries.html)
+
+### Term level queries
+以下の例は、`term` クエリを使用して `firstname` フィールドの内容が、`tammy` にマッチする Document を検索する例です。
+
+```
+GET /classmethod/employees/_search
+{
+  "query": {
+    "term": {
+      "firstname": "tammy"
+    }
+  }
+}
+```
+
+１件ヒットしましたか？
+次に、`tammy` を `Tammy` や `TAMMY` に変更して同じ Query をリクエストしてください。
+
+```
+GET /classmethod/employees/_search
+{
+  "query": {
+    "term": {
+      "firstname": "Tammy"
+    }
+  }
+}
+```
+
+この結果は０件になるはずです。
+
+`firstname` にインデックスされているデータは、言語処理され `tammy` としてインデックスされています。それに対して、`term` クエリで指定した `Tammy` は言語処理されず検索します。
+そのため、`Tammy` に一致する Document が見つからなかったというわけです。
+
+参考: [Term level queries](https://www.elastic.co/guide/en/elasticsearch/reference/current/term-level-queries.html)
 
 ## 数値や日付のフィールドで範囲検索
 
