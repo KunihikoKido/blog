@@ -23,24 +23,28 @@ Elasticsearch のパッケージは、yum などの各種ディストリビュ�
 
 以下はそのインストール手順です。現在の最新バージョン v2.3.3 を使用します。
 
+**Elasticsearch のインストール**
+
 ``` bash
 # 1. Elasticsearch インストール
 curl -L -O https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/2.3.3/elasticsearch-2.3.3.tar.gz
 tar -xvf elasticsearch-2.3.3.tar.gz
-
-cd elasticsearch-2.3.3
 
 # 2. Kuromoji & ICU プラグインのインストール と Script の有効化
 cd elasticsearch-2.3.3
 ./bin/plugin install analysis-kuromoji
 ./bin/plugin install analysis-icu
 echo "script.inline: true" >> config/elasticsearch.yml
+```
 
-# 2. Kibana のインストール
+**Sense (Kibana) のインストール**
+
+``` bash
+# 1. Kibana のインストール
 curl -L -O https://download.elastic.co/kibana/kibana/kibana-4.5.1-darwin-x64.tar.gz
 tar -xvf kibana-4.5.1-darwin-x64.tar.gz
 
-# 3. Sense プラグインのインストール
+# 2. Sense プラグインのインストール
 cd kibana-4.5.1-darwin-x64
 ./bin/kibana plugin --install elastic/sense
 ```
