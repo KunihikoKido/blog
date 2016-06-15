@@ -8,7 +8,7 @@
 ハンズオンを始める前に、以下の手順でサンプルデータをダウンロードしてインデックスしてください。
 employees.jsonl を含むサンプルデータは [こちら](https://github.com/KunihikoKido/docs/blob/master/data/employees.zip?raw=true) からダウンロードできます。
 
-``` sh
+```
 cd employees
 # 1. add index template.
 curl -XPUT 'localhost:9200/_template/classmethod' -d '@index-template.json'
@@ -445,7 +445,7 @@ GET /classmethod/employees/_search
 }
 ```
 
-Bool クエリには、`must` 意外に `filter` `should` `must_not` がサポートされています。
+Bool クエリには、`must` 以外に `filter` `should` `must_not` がサポートされています。
 
 ### Query と Filter の違い
 Bool クエリでサポートされている `must` と `filter` の違いについて何が違うの？と思いませんか。
@@ -535,7 +535,7 @@ GET /classmethod/employees/_search
 ### Bucket Aggregations
 Bucket Aggregations には様々な種類があります。ここでは代表的な `terms` Aggregation を紹介します。
 
-以下の例では、人気のAWSサービスごとにその平均年齢を求めてみましょう。
+以下の例では、人気の AWS サービスごとにその平均年齢を求めてみましょう。
 
 ```
 GET /classmethod/employees/_search
@@ -669,7 +669,83 @@ Aggregation の結果を使って累積した値を計算するなど、特殊�
 
 
 ## 検索条件のテンプート化（Search Template）
+Elasticsearch には、検索条件をテンプレート化して再利用することができる機能が提供されています。
+この機能を使用することで、プログラム内に検索条件をハードコーディングする必要がなくなります。
+プログラムからは、事前に登録済みのテンプレート ID と必要であれば、パラメータをリクエストして実行することができる仕組みです。
 
-## Search Template を使って検索
+参考: [Search Template](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-template.html)
 
-## Search Template を削除
+### Search Template の作成と登録
+Search Template を作成して登録してみましょう。
+
+```
+POST /_search/template/template01
+{
+    "template": {
+        "query": {
+            "match": {
+                "firstname": "{{firstname}}"
+            }
+        }
+    }
+}
+```
+
+テンプレート言語として Mustache の書式が使用できます。動的に変更したい部分を変数化して記述することで、
+実際にテンプレートを使用する際にパラメータとして値を渡すことができます。
+
+参考: [MUSTACHE](http://mustache.github.io/mustache.5.html)
+
+### Search Template を使って検索
+登録したテンプレートを使用して検索するには登録済みのテンプレート ID と必要なパラメータを以下のように設定してリクエストしてください。
+
+```
+GET /classmethod/employees/_search/template
+{
+  "id": "template01",
+  "params": {
+    "firstname": "Tammy"
+  }
+}
+```
+
+直接 Query を組み立ててリクエストした時と、同じように検索結果が返却されていれば OK です。
+
+### Search Template の展開結果を取得
+実際に検索せずに、テンプレートの展開した内容を知りたければ、以下のようにリクエストすることで、渡したパラメータが展開したクエリを確認することができます。
+
+```
+GET /_render/template
+{
+  "id": "template01",
+  "params": {
+    "firstname": "Tammy"
+  }
+}
+```
+
+レスポンス例
+
+```
+{
+  "template_output": {
+    "query": {
+      "match": {
+        "firstname": "Tammy"
+      }
+    }
+  }
+}
+```
+
+### Search Template を削除
+登録済みのテンプレートを削除する場合は以下のようにリクエストします。
+
+```
+DELETE /_search/template/template01
+```
+
+## さいごに
+今回、検索・集計と検索条件のテンプレート化について駆け足で説明しました。
+基本的な操作は網羅していると思いますが、まだまだ深いところまでは説明しきれていません。
+徐々に深い所まで、今後連載を続けていきたいと思いますのでよろしくお願いします。
