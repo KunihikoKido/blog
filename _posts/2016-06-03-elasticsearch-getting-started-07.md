@@ -1,6 +1,6 @@
 # 第７回 Elasticsearch 入門 API の使い方をハンズオンで理解する 〜前編〜
 
-第１回〜第５回にわたって Elasticsearch の基本的なことを説明してきました。
+第１回〜第６回にわたって Elasticsearch の基本的なことを説明してきました。
 今回、「 API の使い方をハンズオンで理解する 〜前編〜」では、Elasticsearch の起動・停止〜ドキュメントの管理（追加・登録・削除）を中心に説明します。
 
 ## ハンズオンの内容
@@ -54,7 +54,7 @@ cd kibana-4.5.1-darwin-x64
 ## 基本コンセプト
 ハンズオンを始める前に、Elasticsearch の基本コンセプトを理解しておきましょう。
 
-* [第６回 Elasticsearch 入門 基本コンセプトを理解する](http://dev.classmethod.jp/server-side/elasticsearch-getting-started-07/)
+* [第６回 Elasticsearch 入門 基本コンセプトを理解する](http://dev.classmethod.jp/server-side/elasticsearch-getting-started-06/)
 
 ## ハンズオン
 それでは早速ハンズオンをはじめたいと思います。
