@@ -426,7 +426,31 @@ GET /classmethod/employees/_search
 
 ### Compound queries
 Compound クエリについて見ていきましょう。複数検索条件の組み合わせに使用するクエリです。
-代表的なのは Bool クエリです。And や Or クエリもサポートされていますが、Bool クエリを使うように推奨されています。
+代表的なのは Bool クエリです。
+
+※ And や Or クエリもサポートされていますが、Bool クエリを使うように推奨されています。
+
+```
+GET /classmethod/employees/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {"match": {"firstname": "Tammy"}},
+        {"match": {"lastname": "Hatfield"}},
+        {"range": {"age": {"gte": 20, "lte": 30}}}
+      ]
+    }
+  }
+}
+```
+
+Bool クエリには、`must` 意外に `filter` `should` `must_not` がサポートされています。
+
+### Query と Filter の違い
+Bool クエリでサポートされている `must` と `filter` の違いについて何が違うの？と思いませんか。
+どちらも全ての条件にマッチした Document のみ検索にヒットします。
+先ほどのクエリを以下のように変更してみましょう。
 
 ```
 GET /classmethod/employees/_search
@@ -436,20 +460,213 @@ GET /classmethod/employees/_search
       "must": [
         {"match": {"firstname": "Tammy"}},
         {"match": {"lastname": "Hatfield"}}
+      ],
+      "filter": [
+        {"range": {"age": {"gte": 20, "lte": 30}}}      
       ]
     }
   }
 }
-
 ```
 
-## 数値や日付のフィールドで範囲検索
+検索結果にマッチする Document は変わらないはずです。ただし、`_score` の値に変化があったはずです。
+`must` で指定した検査条件はスコアの計算にも使われますが、`filter` で指定した検索条件はスコアの計算には使われません。
 
-## ユーザの任意のキーワードで全文検索
+* Query 条件
+  * 検索結果のスコアが計算される検索条件
+* Filter 条件
+  * 検査結果のスコアが計算されない検索条件
+  * よく使う Filter は自動的にキャッシュされます
 
-## 任意のフィールドで集計
+参考: [Query and filter context](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-filter-context.html)
 
-## 複数のフィールドを多段で集計
+## 集計
+Elasticsearch は検索だけでなく集計機能（Aggregations）を提供します。
+
+### Metrics Aggregations
+Metrics Aggregations は主に数値系のフィールドを対象に合計や平均値などを求めるための Aggregation です。
+以下の例では、全ての社員情報を対象に平均年齢をもとめています。
+
+※ `size: 0` を指定することで、集計結果のみレスポンスされるようにしています。
+
+```
+GET /classmethod/employees/_search
+{
+  "query": {
+    "match_all": {}
+  },
+  "aggs": {
+    "avg_age": {
+      "avg": {"field": "age"}
+    }
+  },
+  "size": 0
+}
+```
+
+レスポンス例
+
+```
+{
+  "took": 10,
+  "timed_out": false,
+  "_shards": {
+    "total": 5,
+    "successful": 5,
+    "failed": 0
+  },
+  "hits": {
+    "total": 2000,
+    "max_score": 0,
+    "hits": []
+  },
+  "aggregations": {
+    "avg_age": {
+      "value": 30.0285
+    }
+  }
+}
+```
+
+全社員の平均年齢は 30.0285 歳ということがわかりました。
+
+参考: [Metrics Aggregations](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-metrics.html)
+
+### Bucket Aggregations
+Bucket Aggregations には様々な種類があります。ここでは代表的な `terms` Aggregation を紹介します。
+
+以下の例では、人気のAWSサービスごとにその平均年齢を求めてみましょう。
+
+```
+GET /classmethod/employees/_search
+{
+  "query": {
+    "match_all": {}
+  },
+  "aggs": {
+    "interests": {
+      "terms": {
+        "field": "interests.raw",
+        "size": 10
+      },
+      "aggs": {
+        "avg_age": {
+          "avg": {"field": "age"}
+        }
+      }
+    }
+  },
+  "size": 0
+}
+```
+
+レスポンス例
+
+```
+{
+  "took": 17,
+  "timed_out": false,
+  "_shards": {
+    "total": 5,
+    "successful": 5,
+    "failed": 0
+  },
+  "hits": {
+    "total": 2000,
+    "max_score": 0,
+    "hits": []
+  },
+  "aggregations": {
+    "interests": {
+      "doc_count_error_upper_bound": 77,
+      "sum_other_doc_count": 4600,
+      "buckets": [
+        {
+          "key": "Amazon Simple Queue Service (SQS)",
+          "doc_count": 135,
+          "avg_age": {
+            "value": 29.94814814814815
+          }
+        },
+        {
+          "key": "Amazon SimpleDB",
+          "doc_count": 134,
+          "avg_age": {
+            "value": 29.5
+          }
+        },
+        {
+          "key": "Amazon EC2 Container Service (ECS)",
+          "doc_count": 123,
+          "avg_age": {
+            "value": 29.650406504065042
+          }
+        },
+        {
+          "key": "Amazon Cognito",
+          "doc_count": 122,
+          "avg_age": {
+            "value": 29.237704918032787
+          }
+        },
+        {
+          "key": "Amazon AppStream",
+          "doc_count": 119,
+          "avg_age": {
+            "value": 30.10924369747899
+          }
+        },
+        {
+          "key": "Auto Scaling",
+          "doc_count": 119,
+          "avg_age": {
+            "value": 29.77310924369748
+          }
+        },
+        {
+          "key": "AWS Certificate Manager",
+          "doc_count": 117,
+          "avg_age": {
+            "value": 28.914529914529915
+          }
+        },
+        {
+          "key": "AWS CodeCommit",
+          "doc_count": 116,
+          "avg_age": {
+            "value": 29
+          }
+        },
+        {
+          "key": "AWS Direct Connect",
+          "doc_count": 115,
+          "avg_age": {
+            "value": 30.756521739130434
+          }
+        },
+        {
+          "key": "Amazon API Gateway",
+          "doc_count": 115,
+          "avg_age": {
+            "value": 29.652173913043477
+          }
+        }
+      ]
+    }
+  }
+}
+```
+
+この結果から、一番人気のある Amazon Simple Queue Service (SQS) は、135 人が興味がり、その平均年齢は 29.94814814814815 ということがわかります。（サンプルデータですので実際の人気とは関係ありません）
+
+参考: [Bucket Aggregations](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket.html)
+
+### Pipeline Aggregations
+Pipeline Aggregations は Elasticsearch 2.x から提供されている Aggregation です。
+Aggregation の結果を使って累積した値を計算するなど、特殊な機能を提供します。今回は説明のみとさせていただきますので、興味のある人は以下のリンク先を参照してください。
+
+参考: [Pipeline Aggregations](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-pipeline.html)
+
 
 ## 検索条件のテンプート化（Search Template）
 
