@@ -342,7 +342,7 @@ GET /classmethod/employees/_search
 ```
 
 ## ページング
-１ページ目、２ページ目などその検索結果の指定したページの一覧を取得するには `size` と `offset` パラメータを使用します。
+１ページ目、２ページ目などその検索結果の指定したページの一覧を取得するには `size` と `from` パラメータを使用します。
 
 ```
 GET /classmethod/employees/_search
@@ -351,13 +351,13 @@ GET /classmethod/employees/_search
         "match_all": {}
     },
     "size": 10,
-    "offset": 0
+    "from": 0
 }
 ```
 
 * `size`
     * １リクエストで返却する最大 Document 数を指定します。
-* `offset`
+* `from`
     * スキップする Document 数を指定します。
 
 ## 検索結果をフィルタリング
