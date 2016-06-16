@@ -27,7 +27,7 @@ green  open   classmethod   5   0       5028            0        2mb            
 ```
 
 ## サンプルデータの説明
-サンプルデータの内容は以下のようになっています。社員の名前（`firstname`、`lastname`）や性別（`gender`）、興味のある AWS サービス（`interests`）などの属性を持つ社員データです。
+サンプルデータは、社員の名前（`firstname`、`lastname`）や性別（`gender`）、興味のある AWS サービス（`interests`）などの属性を持つ社員データです。
 
 このサンプルデータは、[www.json-generator.com/](http://www.json-generator.com/) を使って作成しました。
 
@@ -203,12 +203,12 @@ GET /classmethod/_mapping/employees
 }
 ```
 
-例えば、`firstname` フィールドの内容は、インデックス時も検索時も `standard` Analyzer で解析されます。`standard` Analyzer は主に英語系の文章をインデックス・検索するために使用される Analyzer です。そのためこのフィールドに対する検索は主に自然文章検索で使用することができます。また、`firstname` には、`firstname.raw` と言うフィールドが定義されています。このフィールドの内容はインデックス時も検索時もアナライズされません。完全一致検索や集計、フルソートなどで使用することができます。
+例えば、`firstname` フィールドの内容は、インデックス時も検索時も `standard` Analyzer で解析されます。`standard` Analyzer は主に英語系の文章をインデックス・検索するために使用される Analyzer です。そのためこのフィールドは、自然文章検索で使用することができます。また、`firstname` には、`firstname.raw` と言うフィールドが定義されています。このフィールドの内容はインデックス時も検索時もアナライズされません。完全一致検索や集計、フルソートなどで使用することができます。
 
 そのほか、long 型のフィールドや date 型のフィールド、boolean 型のフィールドなどフィールド毎に様々なタイプのフィールドが定義されています。
 
 ## 検索
-ここからは、いよいよサンプルデータを使ったハンズオンです。Elasticsearch 1.x 系と 2.x 系で検索条件を組み立てる Query DSL 少し書き方が違いますので注意してください。今回は 2.x 系を基準に説明します。
+ここからは、いよいよサンプルデータを使ったハンズオンです。Elasticsearch 1.x 系と 2.x 系で検索条件を組み立てる Query DSL は少し書き方が違いますので注意してください。今回は 2.x 系を基準に説明します。
 
 ### 全てにマッチする Query
 全ての Document にマッチする Query をリクエストしてみましょう。
@@ -327,7 +327,7 @@ GET /classmethod/employees/_search
 
 
 ## 検索結果の `_source` から任意のフィールドを除外
-検索結果の内容が大きくなりすぎてしまう場合は、必要なフィールドのみレスポンスに返すことができます。以下は、"joined_date" と "friends" フィールドを除外する例です。
+_source の内容をそのまま返してしまうと検索結果の内容が大きくなりすぎてしまう場合があります。その場合は、include や exclude を使って _source の内容を制御することができます。以下の例は、exclude を使って "joined_date" と "friends" フィールドを除外する例です。
 
 ```
 GET /classmethod/employees/_search
@@ -342,7 +342,7 @@ GET /classmethod/employees/_search
 ```
 
 ## ページング
-１ページ目、２ページ目などその検索結果の指定したページの一覧を取得するには `size` と `from` パラメータを使用します。
+１ページ目、２ページ目など、検索結果に対して指定したページの一覧を取得するには `size` と `from` パラメータを使用します。
 
 ```
 GET /classmethod/employees/_search
