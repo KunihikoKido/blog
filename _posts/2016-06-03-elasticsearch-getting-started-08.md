@@ -482,7 +482,7 @@ GET /classmethod/employees/_search
 参考: [Query and filter context](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-filter-context.html)
 
 ## 集計
-Elasticsearch は集計機能（Aggregations）も提供します。Aggredation もいくつかしゃ
+Elasticsearch は集計機能（Aggregations）も提供します。
 
 ### Metrics Aggregations
 Metrics Aggregations は主に数値系のフィールドを対象に合計や平均値などを求めるための Aggregation です。
