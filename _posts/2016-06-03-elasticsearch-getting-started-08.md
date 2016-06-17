@@ -2,7 +2,7 @@
 前回に引き続き、今回もハンズオンです。後編では、仮想 Classmethod 社の社員情報をサンプルデータとして用意しました（※ もちろんデータは本物ではありませんのでご安心ください。）。
 このサンプルデータを使用して、検索や分析方法を API を使って説明します。
 
-環境のセットアップがお済みでないかたは、前回の「[第７回 Elasticsearch 入門 API の使い方をハンズオンで理解する 〜前編〜](http://dev.classmethod.jp/server-side/elasticsearch-getting-started-07/)」の「事前準備」の章を参考にセットアップしてください。
+環境のセットアップがお済みでない方は、前回の「[第７回 Elasticsearch 入門 API の使い方をハンズオンで理解する 〜前編〜](http://dev.classmethod.jp/server-side/elasticsearch-getting-started-07/)」の「事前準備」の章を参考にセットアップしてください。
 
 ## サンプルデータのインデックス
 ハンズオンを始める前に、以下の手順でサンプルデータをダウンロードしてインデックスしてください。
@@ -382,7 +382,7 @@ GET /classmethod/employees/_search
 結果は同じように１件ヒットするはずです。
 
 `firstname` にインデックスされているデータは言語処理されるため、`tammy` `Tammy` `TAMMY` いずれのパターンの文字列も `tammy` としてインデックスされます。
-また、検索時に指定した文字列もインデックス時と同じ言語処理がされるため、`tammy` `Tammy` `TAMMY` いずれのパターンの文字列も `tammy` として検索します。そのため多少の揺らぎがあっても検索結果にヒットするというわけです。
+また、検索時に指定した文字列もインデックス時と同じ言語処理がされるため、`tammy` `Tammy` `TAMMY` いずれのパターンの文字列も `tammy` として検索します。そのため入力文字列に揺らぎがあっても検索結果にヒットするというわけです。
 
 今度は、`firstname` を `firstname.raw` に変更して検索するとどうなりますか？
 `tammy` と `TAMMY` はヒットしなくなります。`firstname.raw` はインデックス・検索ともに言語処理しない設定になっているため、`Tammy` に完全に一致する場合のに検索にヒットします。
@@ -475,13 +475,13 @@ GET /classmethod/employees/_search
 * Query 条件
   * 検索結果のスコアが計算される検索条件
 * Filter 条件
-  * 検査結果のスコアが計算されない検索条件
+  * 検索結果のスコアが計算されない検索条件
   * よく使う Filter は自動的にキャッシュされます
 
 参考: [Query and filter context](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-filter-context.html)
 
 ## 集計
-Elasticsearch は検索だけでなく集計機能（Aggregations）を提供します。
+Elasticsearch は集計機能（Aggregations）も提供します。Aggredation もいくつかしゃ
 
 ### Metrics Aggregations
 Metrics Aggregations は主に数値系のフィールドを対象に合計や平均値などを求めるための Aggregation です。
@@ -535,7 +535,7 @@ GET /classmethod/employees/_search
 ### Bucket Aggregations
 Bucket Aggregations には様々な種類があります。ここでは代表的な `terms` Aggregation を紹介します。
 
-以下の例では、人気の AWS サービスごとにその平均年齢を求めてみましょう。
+以下の例では、人気の AWS サービスごとにその平均年齢を求めています。
 
 ```
 GET /classmethod/employees/_search
@@ -671,7 +671,7 @@ Aggregation の結果を使って累積した値を計算するなど、特殊�
 ## 検索条件のテンプート化（Search Template）
 Elasticsearch には、検索条件をテンプレート化して再利用することができる機能が提供されています。
 この機能を使用することで、プログラム内に検索条件をハードコーディングする必要がなくなります。
-プログラムからは、事前に登録済みのテンプレート ID と必要であれば、パラメータをリクエストして実行することができる仕組みです。
+プログラムからは、事前に登録済みのテンプレート ID と必要であれば、パラメータをリクエストして実行することができます。
 
 参考: [Search Template](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-template.html)
 
@@ -691,8 +691,7 @@ POST /_search/template/template01
 }
 ```
 
-テンプレート言語として Mustache の書式が使用できます。動的に変更したい部分を変数化して記述することで、
-実際にテンプレートを使用する際にパラメータとして値を渡すことができます。
+テンプレート言語として Mustache の書式が使用できます。動的に変更したい部分を変数化して記述することができます。
 
 参考: [MUSTACHE](http://mustache.github.io/mustache.5.html)
 
@@ -712,7 +711,8 @@ GET /classmethod/employees/_search/template
 直接 Query を組み立ててリクエストした時と、同じように検索結果が返却されていれば OK です。
 
 ### Search Template の展開結果を取得
-実際に検索せずに、テンプレートの展開した内容を知りたければ、以下のようにリクエストすることで、渡したパラメータが展開したクエリを確認することができます。
+テンプレートにパラメータを適用して展開されたクエリを確認したい場合は、以下のようにリクエストしてください。
+
 
 ```
 GET /_render/template
@@ -749,3 +749,4 @@ DELETE /_search/template/template01
 今回、検索・集計と検索条件のテンプレート化について駆け足で説明しました。
 基本的な操作は網羅していると思いますが、まだまだ深いところまでは説明しきれていません。
 徐々に深い所まで、今後連載を続けていきたいと思いますのでよろしくお願いします。
+いくつかしゃ
