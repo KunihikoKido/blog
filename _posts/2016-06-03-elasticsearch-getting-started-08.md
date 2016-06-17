@@ -212,7 +212,8 @@ GET /classmethod/_mapping/employees
 
 ### 全てにマッチする Query
 全ての Document にマッチする Query をリクエストしてみましょう。
-`_search` エンドポイントに、Json 形式で組み立てた検索条件を body の内容としてリクエストします。メソッドが `GET` になっていますが、間違いではありません。`POST` と `GET` がサポートされています。
+`_search` エンドポイントに、Json 形式で組み立てた検索条件を body の内容としてリクエストします。
+このエンドポイントは `POST` と `GET` の両方がサポートされています。
 
 ```
 GET /classmethod/employees/_search
@@ -327,7 +328,7 @@ GET /classmethod/employees/_search
 
 
 ## 検索結果の `_source` から任意のフィールドを除外
-_source の内容をそのまま返してしまうと検索結果の内容が大きくなりすぎてしまう場合があります。その場合は、include や exclude を使って _source の内容を制御することができます。以下の例は、exclude を使って "joined_date" と "friends" フィールドを除外する例です。
+`_source` の内容をそのまま返してしまうと検索結果の内容が大きくなりすぎてしまう場合があります。その場合は、include や exclude を使って `_source` の内容を制御することができます。以下の例は、exclude を使って "joined_date" と "friends" フィールドを除外する例です。
 
 ```
 GET /classmethod/employees/_search
