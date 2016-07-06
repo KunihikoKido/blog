@@ -1,21 +1,38 @@
-# Git Rebase for Atom 覚書
+# Git rebase for Atom 覚書
 新しく製品開発のプロジェクトがスタートし、開発体制や開発規約などチーム全体で標準化を進めています。
-その中で、GitHub へプルリクエストする時は、Rebase するルールがあります。
-今までの開発で Rebase は使ったことがなかったので、何が良いのか？また、その手順などまとめたいと思います。
+その中で、GitHub へプルリクエストする時は、rebase するルールがあります。
+今までの開発で rebase は使ったことがなかったので、何が良いのか？また、その手順などまとめたいと思います。
 
 Terminal は好きですが、今回は Atom エディタでその手順を紹介します。
 
-## Rebase って？
+**チームの運用方針**
+
+* トピックブランチに統合ブランチの最新のコードを取り込むには rebase を使う
+* 統合ブランチにトピックブランチを取り込むには、rebase してから non fast-forward で marge
+
+## rebase せずにマージすると履歴が複雑になる
+GitHub を使って開発を進めると、本流（以下 master）のブランチからバグフィックスや機能追加などのブランチを作成します。そのブランチを使って開発を進めていると、他のブランチのマージによって master の履歴が更新されていきます。そうすると、以下の図のように現在開発中のブランチは master の最新の更新内容が適用されていない状況になります。
 
 ![branch](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/git-rebase.001.png)
 
-![rebase](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/git-rebase.002.png)
+通常これを master にマージすると、最新の履歴も反映しつつ新しくマージされます。
 
-![non fast-forward marge](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/git-rebase.003.png)
+![marge](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/git-rebase.002.png)
 
+履歴をグラフィカルに表すと以下の図のように複雑になってしまいます。
 
-![fast-forward marge](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/git-rebase.004.png)
+![non rebase marge log history](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/git-rebase.003.png)
 
-![rebase log history](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/git-rebase.005.png)
+## rebase してマージすると履歴が単純になる
+topic ブランチを 最新の master ブランチに rebase すると、以下の図のようになります。
+（最新の master をベースに topic ブランチを作成してコードを更新した状態）
 
-![non rebase log history](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/git-rebase.006.png)
+![rebase](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/git-rebase.004.png)
+
+rebase した topic ブランチを master ブランチに marge すると、
+
+![non fast-forward marge ](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/git-rebase.005.png)
+
+![rebase & non fast-forward log history](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/git-rebase.006.png)
+
+![fast-forward marge](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/git-rebase.007.png)
