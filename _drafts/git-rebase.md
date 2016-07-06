@@ -38,7 +38,7 @@ git コマンドを使って、rebase する手順は色々なサイトで解説
 
 ``Git Plus`` は、cmd+shift+H でコマンドパレットを表示して、git の操作を選択して実行する機能を提供してくれるシンプルなプラグインです。
 
-![Git Plus](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/git-rebase.008.png)
+![Git Plus](https://i.github-camo.com/78e2bafa5f9b3afdf47d7e02e3f949fea4801fc0/68747470733a2f2f7261772e67697468756275736572636f6e74656e742e636f6d2f616b6f6e77692f6769742d706c75732f6d61737465722f636f6d6d69742e676966)
 
 terminal に移動しないで操作できるので助かります。
 
