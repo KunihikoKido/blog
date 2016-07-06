@@ -3,8 +3,6 @@
 その中で、GitHub へプルリクエストする時は、rebase するルールがあります。
 今までの開発で rebase は使ったことがなかったので、何が良いのか？また、その手順などまとめたいと思います。
 
-Terminal は好きですが、今回は Atom エディタでその手順を紹介します。
-
 **チームの運用方針**
 
 * トピックブランチに統合ブランチの最新のコードを取り込むには rebase を使う
@@ -33,3 +31,28 @@ rebase & 統合ブランチへの marge を運用していくことで、履歴�
 
 ちなみに、fast-forward marge すると履歴は一本化されます。チームの運用方針は non fast-forward なので、上の図の履歴になります。（GitHub の Web 画面からプルリクエストを marge すると、non fast-forward marge になるそうです。）
 ![fast-forward marge](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/git-rebase.007.png)
+
+
+## Atom エディタで rebase してみる
+git コマンドを使って、rebase する手順は色々なサイトで解説されているので、Atom エディタの ``Git Plus`` プラグインを使って Rebase する手順を紹介します。
+
+``Git Plus`` は、cmd+shift+H でコマンドパレットを表示して、git の操作を選択して実行する機能を提供してくれるシンプルなプラグインです。
+
+![Git Plus](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/git-rebase.008.png)
+
+terminal に移動しないで操作できるので助かります。
+
+Git Plus のコマンドパレットに用意されていない、Git のコマンドは、コマンドパレットにある `Run` コマンドを実行すると、任意の Git コマンドを実行できます。（あまり、terminal の説明と変わらないかも）
+
+1. Git Plus: Pull Using Rebase 実行
+2. コンフリクト衝突がある場合
+  1. エディタでコンフリクトを修正
+  2. Git Plus: Add 実行
+  3. Git Plus: Run (rebase --continue) 実行
+  4. (コンフリクトがなくなるまで繰り返す)
+  5. (もし、途中で中止したい場合は Git Plus: Run (rebase --abort))
+3. Git Plus: Run (push -f) 実行
+
+## まとめ
+今回チームの運用方針で、rebase を初めて使いました。
+少し手順は増えますが、master にマージされる履歴は重なりがなく、単純になり気持ちが良いです。
