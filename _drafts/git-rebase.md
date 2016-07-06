@@ -31,5 +31,5 @@ rebase した topic ブランチを master ブランチに marge (non fast-forwa
 rebase & 統合ブランチへの marge を運用していくことで、履歴は以下の図のように単純化されます。
 ![rebase & non fast-forward log history](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/git-rebase.006.png)
 
-ちなみに、fast-forward marge すると履歴は一本化されます。
+ちなみに、fast-forward marge すると履歴は一本化されます。チームの運用方針は non fast-forward なので、上の図の履歴になります。（GitHub の Web 画面からプルリクエストを marge すると、non fast-forward marge になるそうです。）
 ![fast-forward marge](https://raw.githubusercontent.com/KunihikoKido/docs/master/images/git-rebase.007.png)
