@@ -45,7 +45,7 @@ terminal に移動しないで操作できるので助かります。
 Git Plus のコマンドパレットに用意されていない、Git のコマンドは、コマンドパレットにある `Run` コマンドを実行すると、任意の Git コマンドを実行できます。
 
 1. Git Plus: Pull Using Rebase 実行
-2. コンフリクト衝突がある場合
+2. コンフリクトがある場合
   1. エディタでコンフリクトを修正
   2. Git Plus: Add 実行
   3. Git Plus: Run (rebase --continue) 実行
