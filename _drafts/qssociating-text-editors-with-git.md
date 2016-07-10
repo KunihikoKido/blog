@@ -30,8 +30,9 @@ git config --global core.editor "subl -n -w"
 git config --global core.editor "mate -w"
 
 
-## Cot
+## CotEditor を使う場合
 
 git config --global core.editor "cot -w"
+
 
 
