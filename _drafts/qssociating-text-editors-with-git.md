@@ -32,7 +32,7 @@ git config --global core.editor "mate -w"
 
 ## CotEditor を使う場合
 
-git config --global core.editor "cot -w"
+git config --global core.editor "cot -W"
 
 
 
