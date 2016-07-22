@@ -37,3 +37,6 @@ git config --global core.editor "cot -W"
 ```
 
 ## まとめ
+いかがでしたでしょうか？
+皆さんは何のエディタを使ってますか？
+私は Atom を使っています。新し物好きなので、TextMate > Sublime Text > Atom とエディタを乗り換えてきました。Atom は GitHub との相性も良く、TextMate や Sublime Text にない少しグラフィカルなプラグインもあり気に入っています。プラグインがなければ、javascript / coffee で比較的簡単に自作することも可能です。是非使ってみてください。
