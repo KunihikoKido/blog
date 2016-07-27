@@ -1,5 +1,9 @@
 # JSON Generator Atom Package
-Elasticsearch 検証するのにサンプルデータ作成するの地味に大変じゃありませんか？ということで、JSON Generator Atom Package 作りました！そして公開しました！（久しぶりに便利なもの作った気がする）
+Elasticsearch の検証をするとき、サンプルデータを作成するのは地味に大変じゃありませんか？
+
+AWS の S3 に JSON Lines 形式のファイルを保存して Lambda で何か処理をするときのサンプルデータを作るのは大変ですよね？
+
+ということで、JSON Generator Atom Package 作りました！そして公開しました！（久しぶりに便利なもの作った気がする）
 
 https://atom.io/packages/json-generator
 
@@ -47,11 +51,9 @@ elasticsearch の bulk api フォーマットで出力するには、パッケ�
 
 **Example**
 
-## まとめ
-いかがでしたでしょうか？これを使えば簡単にサンプルデータが作れるので Elasticsearch を検証しまくりですね。
+## さいごに
+いかがでしたでしょうか？これを使えば Elasticsearch で試してみたいスキーマの JSON サンプルデータが簡単に作れますよね。
 
-また、AWS 関連では S3 に JSON Lines 形式のデータを保存して、Lambda で何か処理をするようなプログラムを作ることも多いかと思います。このツールを使えば、そのようなサンプルデータも作成できますね。
-
-プルリクお待ちしています。
+ソースコードは GitHub で公開していますので、追加機能などプルリクお待ちしています。
 https://github.com/KunihikoKido/atom-json-generator
 
