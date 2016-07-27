@@ -3,7 +3,7 @@ Elasticsearch 検証するのにサンプルデータ作成するの地味に大
 
 https://atom.io/packages/json-generator
 
-[overview](https://raw.githubusercontent.com/KunihikoKido/atom-json-generator/master/screenshots/overview.gif)
+![overview](https://raw.githubusercontent.com/KunihikoKido/atom-json-generator/master/screenshots/overview.gif)
 
 ## インストール
 ※ このパッケージは、Atom エディタのプラグインとして動作します。Atom をまだインストールしていない場合は、[ここ](https://atom.io)からダウンロードしてインストールしてください。
