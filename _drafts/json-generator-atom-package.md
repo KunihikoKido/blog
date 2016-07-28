@@ -141,14 +141,13 @@ elasticsearch の bulk api フォーマットで出力するには、パッケ�
 デフォルトのダミーデータは、パッケージの設定で変更できます。
 (Settings/Preferences ➔ Packages ➔ Search for json-generator)
 
-例えば、テンプレートの `{{firstName}}` `{{lastName}}` で置き換えられる値を日本語にしたければ、
-パッケージの設定画面で、以下の設定項目に日本語の名前を登録してから再度サンプルデータを作成してください。
+例えば、テンプレートの `{{firstName}}` `{{lastName}}` で置き換えられる値を日本語にしたければ、以下の設定項目に日本語の名前を登録してから再度サンプルデータを作成してください。
 
 * Mock Data: firstName
 * Mock Data: lastName
 
 ## さいごに
-いかがでしたでしょうか？これを使えば Elasticsearch で試してみたいスキーマの JSON サンプルデータが簡単に作れますよね。
+いかがでしたでしょうか？これを使えば Elasticsearch で試してみたいスキーマの JSON サンプルデータが簡単に作れますよね。ガンガン Elasticsearch を使っていきましょう。
 
 ソースコードは GitHub で公開していますので、追加機能などプルリクお待ちしています。
 https://github.com/KunihikoKido/atom-json-generator
