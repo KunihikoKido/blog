@@ -6,7 +6,7 @@ AWS の S3 に JSON Lines 形式のファイルを保存して Lambda で何か�
 
 ということで、JSON Generator Atom Package 作りました！そして公開しました！（久しぶりに便利なもの作った気がする）
 
-https://atom.io/packages/json-generator
+[JSON Generator Atom Package](https://atom.io/packages/json-generator)
 
 ![overview](https://raw.githubusercontent.com/KunihikoKido/atom-json-generator/master/screenshots/overview.gif)
 
@@ -15,7 +15,9 @@ https://atom.io/packages/json-generator
 
 json-generator は以下の手順でインストール出来ます。
 
+```
 apm install json-generator
+```
 
 または
 
@@ -23,7 +25,7 @@ Settings/Preferences ➔ Install ➔ Search for json-generator
 
 ## 使い方
 ### 1. テンプートの作成
-Atom のコマンドパレットを表示して Json Generator: New Template を実行してください。新規のテンプートが表示されます。このまま実行しても良いのですが、これを以下のように変更してください。
+Atom のコマンドパレットを表示して `Json Generator: New Template` を実行してください。新規のテンプートが表示されます。このまま実行しても良いのですが、これを以下のように変更してください。
 
 **Example**
 
@@ -58,7 +60,7 @@ Atom のコマンドパレットを表示して Json Generator: New Template を
 ※ このテンプレートを保存する場合は、拡張子を \*.hbs にして保存しましょう。
 
 ### 2. サンプルデータの作成
-作成したテンプレートをアクティブにした状態で、Atom のコマンドパレットを表示して、Json Generator: Generate を実行してください。以下のようなランダムなデータでサンプルデータが作成されます。
+作成したテンプレートをアクティブにした状態で、Atom のコマンドパレットを表示して、`Json Generator: Generate` を実行してください。以下のようなランダムなデータでサンプルデータが作成されます。
 
 **Example**
 
@@ -111,14 +113,14 @@ Atom のコマンドパレットを表示して Json Generator: New Template を
 
 基本的な使い方は以上です。
 
-### 3. フォーマットを変更してサンプルデータを作成
+### 出力フォーマットを変更してサンプルデータを作成
 デフォルトの出力フォーマットは json です。
 
 サンプルデータのフォーマットは以下の３つを用意してます。
 
-* json: pretty json format
-* jsonlins: newline-separated json formar
-* elasticsearch: elasticsearch bulk api format
+* `json`: pretty json format
+* `jsonlins`: newline-separated json formar
+* `elasticsearch`: elasticsearch bulk api format
 
 パッケージの設定から出力フォーマットを選択できます。
 (Settings/Preferences ➔ Packages ➔ Search for json-generator)
@@ -137,17 +139,17 @@ elasticsearch の bulk api フォーマットで出力するには、パッケ�
 〜〜〜 省略 〜〜〜
 ```
 
-## デフォルトのダミーデータを上書きしてサンプルデータを作成する。
+### デフォルトのダミーデータを上書きしてサンプルデータを作成する。
 デフォルトのダミーデータは、パッケージの設定で変更できます。
 (Settings/Preferences ➔ Packages ➔ Search for json-generator)
 
 例えば、テンプレートの `{{firstName}}` `{{lastName}}` で置き換えられる値を日本語にしたければ、以下の設定項目に日本語の名前を登録してから再度サンプルデータを作成してください。
 
-* Mock Data: firstName
-* Mock Data: lastName
+* `Mock Data: firstName`
+* `Mock Data: lastName`
 
 ## さいごに
 いかがでしたでしょうか？これを使えば Elasticsearch で試してみたいスキーマの JSON サンプルデータが簡単に作れますよね。ガンガン Elasticsearch を使っていきましょう。
 
 ソースコードは GitHub で公開していますので、追加機能などプルリクお待ちしています。
-https://github.com/KunihikoKido/atom-json-generator
+[https://github.com/KunihikoKido/atom-json-generator](https://github.com/KunihikoKido/atom-json-generator)
