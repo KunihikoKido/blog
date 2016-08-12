@@ -1,4 +1,4 @@
-# json refs atom package
+# JSON Refs Atom Package
 現在進行中のプロジェクトで、 Swagger を使って REST API 仕様書を作成しています。
 実際のプロジェクトで作成する Swagger はとても巨大で、１ファイルで管理するのは難しいです。
 そこで考えるのがファイルの分割。以下の記事でも紹介していますが、swagger.json のファイルを分割して
