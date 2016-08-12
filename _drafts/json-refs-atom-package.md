@@ -2,9 +2,9 @@
 現在進行中のプロジェクトで、 Swagger を使って REST API 仕様書を作成しています。
 実際のプロジェクトで作成する Swagger はとても巨大で、１ファイルで管理するのは難しいです。
 そこで考えるのがファイルの分割。以下の記事でも紹介していますが、swagger.json のファイルを分割して
-作成・管理することができます。実際に使用するときは、外部参照の定義を解決して swagger.json を作成流れです。
+作成・管理することができます。実際に使用するときは、外部参照の定義を解決して swagger.json を作成します。
 
-[Swagger 定義ファイルを分割する](http://dev.classmethod.jp/etc/split-swagger/)
+http://dev.classmethod.jp/etc/split-swagger/
 
 JSON 内で ```$ref``` を使用して、他で定義されている JSON を参照する [JSON Reference](https://tools.ietf.org/id/draft-pbryan-zyp-json-ref-03.html) という規格があったので、調べがてら Atom の Package にして公開しました。(正直役に立つかどうかわかりません。。)
 
@@ -93,7 +93,6 @@ Atom のコマンドパレットを表示して、`Json Refs: Resolve` を実行
 
 ```
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
   "definitions": {
     "address": {
       "type": "object",
