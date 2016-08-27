@@ -23,3 +23,36 @@
 
 
 # 2. Organization にユーザを招待して管理する方法
+一時的にではなく、プロジェクトの一員として社外のメンバーを管理するには、組織のメンバーと同様に Organization に招待して、チームのアクセス権限で管理すれば良いでしょう。
+
+この選択肢を採用する場合は以下のことをチェックしてください。
+
+* リポジトリ作成権限
+* デフォルトのリポジトリ操作権限
+
+## リポジトリの作成はできないように設定する
+リポジトリを作成できる設定になっていると、メンバーであれば誰でも Private reository も作成できてしまいます。
+
+## デフォルトのリポジトリ操作権限は None を設定する
+メンバーのデフォルト権限には、以下の4つが用意されています。
+
+* Admin
+* Write
+* Read
+* None
+
+この権限設定は、Organization 全体の設定のため、Read 権限が設定されていれば全てのリポジトリに対して参照（clone や pull）ができることになります。
+
+必要なリポジトリ以外、その他は存在すら知らせたくない場合が多いと思いますので、None を設定しましょう。
+
+> Choose the default permission level for organization members.
+
+> Admin
+Members will be able to clone, pull, push, and add new collaborators to all repositories.
+> Write
+Members will be able to clone, pull, and push all repositories.
+ Read
+Members will be able to clone and pull all repositories.
+ None
+Members will only be able to clone and pull public repositories. To give a member additional access, you’ll need to add them to teams or make them collaborators on individual repositories.
+
