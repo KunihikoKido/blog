@@ -68,6 +68,7 @@ $ fab es.create:blog es.cat.indecies:v=1
 ```
 
 ### Index and Query a Document
+
 curl command:
 
 ```
@@ -91,6 +92,7 @@ $ fab es.get:1
 ### Batch Processing
 
 curl command:
+
 ```
 $ curl -XPOST 'http://127.0.0.1:9200/blog/posts/_bulk' -d '
 {"index":{"_id":"1"}}
@@ -100,10 +102,44 @@ $ curl -XPOST 'http://127.0.0.1:9200/blog/posts/_bulk' -d '
 '
 ```
 
-escli:
+es cli:
+
 ```
 $ cat posts.jsol | fab es.bulk:blod,posts
 ```
+
+### Simple Search
+
+curl command:
+
+```
+$ curl -XGET 'http://127.0.0.1/blog/_sesrch?q=hello
+```
+
+es cli:
+
+```
+$ fab es.search:hello
+```
+
+### Request body Search
+
+curl command:
+
+```
+$ curl -XGET 'http://127.0.0.1:9200/blog/_search' -d '{
+  "query": {
+    "match": {"title": "hello"}
+  }
+}'
+```
+
+es cli:
+
+```
+$ cat query.json | fab es.search:blog
+```
+
 
 
 
