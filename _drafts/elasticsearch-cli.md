@@ -1,4 +1,4 @@
-# Elasticsearch CLI
+# Elasticsearch Command Line Interface (ES CLI)
 久しぶりのブログエントリ…。今回は Elasticsearch の API をコマンドラインで、パチパチ操作するためのいわゆる CLI を作ったのでその紹介です。
 
 開発で Elasticsearch を使っていると、開発環境、ステージング環境、本番環境、などなど色々な環境が存在しますよね。Amazon ES の v4 認証や、Shield （Elastic）の認証も越える必要もあります。そもそも API が多いので覚えられません。よく使うオペレーションは簡単に実行したい。と色々悩みが多いです。
