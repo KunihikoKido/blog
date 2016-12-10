@@ -61,7 +61,6 @@ $ fab es.cat.indecies:v=1
 
 ```
 $ curl -XPUT 'http://127.0.0.1:9200/blog' -d '{}'
-
 $ curl -XGET 'http://127.0.0.1:9200/_cat/indecies?v=1' -d '{}'
 
 ```
@@ -71,7 +70,8 @@ VS
 **es cli:**
 
 ```
-$ fab es.create:blog es.cat.indecies:v=1
+$ fab es.create:blog
+$ fab es.cat.indecies:v=1
 ```
 
 ### Index and Query a Document
