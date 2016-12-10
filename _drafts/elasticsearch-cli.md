@@ -115,7 +115,7 @@ VS
 **es cli:**
 
 ```
-$ cat posts.jsol | fab es.bulk:blod,posts
+$ cat posts.jsonl | fab es.bulk:blod,posts
 ```
 
 ### Simple Search
@@ -123,7 +123,7 @@ $ cat posts.jsol | fab es.bulk:blod,posts
 **curl command:**
 
 ```
-$ curl -XGET 'http://127.0.0.1/blog/_sesrch?q=hello
+$ curl -XGET 'http://127.0.0.1/blog/_sesrch?q=title:hello
 ```
 
 VS
@@ -131,7 +131,7 @@ VS
 **es cli:**
 
 ```
-$ fab es.search:hello
+$ fab es.search:q=title:hello
 ```
 
 ### Request body Search
