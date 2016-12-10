@@ -17,19 +17,22 @@
 [elasticsearch-fabric](https://github.com/KunihikoKido/elasticsearch-fabric)
 
 
-感の良い人はわかってしまったかもしれませんが、python の fabric のタスクとして提供してます。（elasticsearch-py + fabric で省エネ開発）
+感の良い人はわかってしまったかもしれませんが、python の fabric のタスクとして提供してます。（elasticsearch-py + fabric で省エネ開発w）
 
 ## どんなことができるの？
 インストールやセットアップ方法は [elasticsearch-fabric](https://github.com/KunihikoKido/elasticsearch-fabric) を参照してください。ここでは、curl との比較を交えてコマンドの使い方をを紹介します。
 
 ### Cluster Health
-curl command:
+
+**curl command:**
 
 ```
 $ curl -XGET 'http://127.0.0.1:9200/_cat/health?v=1' -d '{}'
 ```
 
-es cli:
+VS
+
+**es cli:**
 
 ```
 $ fab es.cat.health:v=1
@@ -38,13 +41,15 @@ $ fab es.cat.health:v=1
 
 ### List All Indecies
 
-curl command:
+**curl command:**
 
 ```
 $ curl -XGET 'http://127.0.0.1:9200/_cat/indecies?v=1' -d '{}'
 ```
 
-es cli:
+VS
+
+**es cli:**
 
 ```
 $ fab es.cat.indecies:v=1
@@ -52,7 +57,7 @@ $ fab es.cat.indecies:v=1
 
 ### Create an Index
 
-curl command:
+**curl command:**
 
 ```
 $ curl -XPUT 'http://127.0.0.1:9200/blog' -d '{}'
@@ -61,7 +66,9 @@ $ curl -XGET 'http://127.0.0.1:9200/_cat/indecies?v=1' -d '{}'
 
 ```
 
-es cli:
+VS
+
+**es cli:**
 
 ```
 $ fab es.create:blog es.cat.indecies:v=1
@@ -69,29 +76,29 @@ $ fab es.create:blog es.cat.indecies:v=1
 
 ### Index and Query a Document
 
-curl command:
+**curl command:**
 
 ```
 $ curl -XPUT 'http://127.0.0.1:9200/blog/posts/1' -d '{
   "title": "Hello Elasticsearch!"
 }'
-
 $ curl -XGET 'http://127.0.0.1:9200/blog/posts/1' -d '{}'
 
 ```
 
-es cli:
+VS
+
+**es cli:**
 
 ```
 $ cat post.json | fab es.index:blog,posts,1
-
 $ fab es.get:1
 
 ```
 
 ### Batch Processing
 
-curl command:
+**curl command:**
 
 ```
 $ curl -XPOST 'http://127.0.0.1:9200/blog/posts/_bulk' -d '
@@ -102,7 +109,9 @@ $ curl -XPOST 'http://127.0.0.1:9200/blog/posts/_bulk' -d '
 '
 ```
 
-es cli:
+VS
+
+**es cli:**
 
 ```
 $ cat posts.jsol | fab es.bulk:blod,posts
@@ -110,13 +119,15 @@ $ cat posts.jsol | fab es.bulk:blod,posts
 
 ### Simple Search
 
-curl command:
+**curl command:**
 
 ```
 $ curl -XGET 'http://127.0.0.1/blog/_sesrch?q=hello
 ```
 
-es cli:
+VS
+
+**es cli:**
 
 ```
 $ fab es.search:hello
@@ -124,7 +135,7 @@ $ fab es.search:hello
 
 ### Request body Search
 
-curl command:
+**curl command:**
 
 ```
 $ curl -XGET 'http://127.0.0.1:9200/blog/_search' -d '{
@@ -134,12 +145,21 @@ $ curl -XGET 'http://127.0.0.1:9200/blog/_search' -d '{
 }'
 ```
 
-es cli:
+VS
+
+**es cli:**
 
 ```
 $ cat query.json | fab es.search:blog
 ```
 
+## まとめ
+いかがでしたでしょうか？
+これで、あなたも Elasticsearch API マスター！？
+
+他にも色々できますが、それはまたの機会に紹介したいと思います。
+
+改善・要望は是非プルリクお願いします！（README 英語がメチャメチャなで誰か改善してほしい＆もう少し詳しいマニュアル作ってほしい。）
 
 
 
