@@ -18,7 +18,7 @@ Index が作成された時にそのテンプレートを元に自動で構成�
 
 以下の例では、名前が `blog` から始まる Index が作成された場合に、`_all` フィールドを無効に設定する Index Template の登録例です。
 
-``` sh
+```bash
 # Add Index Template for blog index.
 PUT _template/blog
 {
@@ -35,7 +35,7 @@ PUT _template/blog
 
 Index Template を登録しておくことで、以下の例のように Index 作成時に自動でそのルールが適用されます。
 
-``` sh
+```bash
 # Create blog index
 PUT blog
 
@@ -59,7 +59,7 @@ Index Template は各プロジェクト/プロダクト毎に GitHub などの�
 以下は、JSON ファイルとして Index Template を管理している例です。
 拡張子を覗いたいファイル名が Index Template 名と言うルールで管理しています。
 
-``` sh
+```bash
 # GitHub Repository
 elasticsearch/config/templates
 ├── event-aliases-order.json
@@ -84,7 +84,7 @@ elasticsearch/config/templates
 Elasticsearch を準備して、Index を作成する前に、これらの Index Template をデプロイ（登録）します。
 必ず現在のバージョンすべての Index Template をデプロイします。
 
-``` sh
+```bash
 # Deploy Index Templates.
 $ curl -XPUT 'localhost:9200/_template/event-aliases-order' -d @event-aliases-order.json
 $ curl -XPUT 'localhost:9200/_template/event-index-settings' -d @event-index-settings.json
@@ -112,7 +112,7 @@ Elasticsearch の API をコールして、そのバージョンが確認でき�
 ### バージョニング用 Index Template の追加
 以下の例のように バージョニング用の Index Template を追加して、Elasticsearch にデプロイしてください。
 
-``` sh
+```bash
 # GitHub Repository
 elasticsearch/config/templates
 ├── event-aliases-order.json
@@ -135,7 +135,7 @@ elasticsearch/config/templates
 └── product.json                # バージョニング用の Index Template を追加管理
 ```
 
-``` sh
+```bash
 ...
 $ curl -XPUT 'localhost:9200/_template/product' -d @product.json
 ```
@@ -145,14 +145,14 @@ product.json は、バージョニング用の Index Template 例です。`_meta
 
 **product.json の内容例**
 
-``` sh
+```bash
 {
   "template": "*",
   "mappings": {
     "_default_": {
       "_meta": {
-        "product": "Product A",
-        "version": "1.0.1"
+        "product": "Product A",   # プロダクト名
+        "version": "1.0.1"        # リリースタグ（Git）のバージョン情報
       }
     }
   }
@@ -170,7 +170,7 @@ product.json は、バージョニング用の Index Template 例です。`_meta
 ## デプロイバージョンの確認
 デプロイされている Index Template のバージョンを確認するには、Template API を使用し、バージョニング用の Index Template 名を指定して以下のようにリクエストします。
 
-``` sh
+```bash
 # Request
 $ curl -XGET 'localhost:9200/_template/product' | jq '.[].mappings._default_._meta'
 
@@ -190,7 +190,7 @@ Index 作成後、Elasticsearch の API を使用して、対象の Index に適
 
 以下は、`blog` Index に提供されている Index Template のバージョン確認例です。
 
-``` sh
+```bash
 # Request
 $ curl -XGET 'localhost:9200/blog/_mapping' | jq '.[].mappings._default_._meta'
 
