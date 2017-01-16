@@ -162,8 +162,8 @@ product.json は、バージョニング用の Index Template 例です。`_meta
 `_meta` は任意の属性を登録できるので、プロダクト名なども含めておいても良いでしょう。
 
 
-> **Elasticsearch 5.x**
-> ES 5.x 系では、version と言うメタ情報が追加されていますので、このメタ情報を使用して管理しても良いでしょう。
+> **情報：**
+> Elasticsearch 5.x 系では、version と言うメタ情報が追加されていますので、このメタ情報を使用して管理しても良いでしょう。
 > [Template Versioning](https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-templates.html#versioning-templates)
 
 
@@ -204,6 +204,8 @@ $ curl -XGET 'localhost:9200/blog/_mapping' | jq '.[].mappings._default_._meta'
 
 ## まとめ
 いかがでしたでしょうか？
+
 Elasticsearch 2.x 系では、Index Template のバージョニングをするための機能は提供されていませんが、
 メタ情報をうまく活用することで、可能になります。
+
 これで、本番環境運用が開始しても安心して保守できますね。
