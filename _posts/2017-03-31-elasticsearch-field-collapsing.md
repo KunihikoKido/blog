@@ -1,0 +1,35 @@
+# Elasticsearch Field Collapsing
+Elasticsearch 5.3 がリリースされましたね。今回はその New feature の中で、**[Field Collapsing](https://www.elastic.co/guide/en/elasticsearch/reference/5.3/search-request-collapse.html)** について紹介したいと思います。
+
+Field collapsing と言えば、Top hits aggregation が思い浮かぶ方も多いかと思いますが、今回リリースされた New Field collapsing の機能は Aggregation ではなく、検索結果を折りたたむことができます。
+
+検索系の機能名称では、Collapse Search / Field collapsing / Result grouping と言ったりしますが、一般的に日本語では何って呼ばれてるのだろう？折りたたみ検索？
+知っている方がいたら教えてください。
+
+## ユースケース例
+例えば、EC サイトの商品検索で、カラーやサイズなどの単品単位で検索結果を表示することもあれば、
+カラー・サイズは違っても同じ素材・スタイルは同一商品として品目単位で検索結果を表示したいと言うニーズは多々あります。
+
+単品単位で検索結果を表示していれば、１ページ内に同じ商品が並ぶ可能性が高くなります。
+他の品目を見たい場合は、ページングして２ページ目、３ページ目を表示することになります。
+このようなユースケースでは、旧来のオフセットベースのページングはあまり使いやすいとは言えません。
+
+ユースケースに合わせて単品単位で表示したり、品目単位で表示したりできれば便利ですよね？
+新しいスタイルのページングとして Field Collapsing はこのようなユースケースに対応することができます。
+
+
+## Field Collapsing
+機能を見ていきましょう。
+
+```js
+GET /item/items/_search
+{
+  "query": {
+    "match": {"title": "メンズ"}
+  },
+  "collapse": {
+    "field": "item_group_id"
+  },
+  "sort": ["likes"]
+}
+```
