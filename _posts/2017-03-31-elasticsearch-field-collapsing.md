@@ -1,10 +1,16 @@
 # Elasticsearch Field Collapsing
 Elasticsearch 5.3 がリリースされましたね。今回はその New feature の中で、**[Field Collapsing](https://www.elastic.co/guide/en/elasticsearch/reference/5.3/search-request-collapse.html)** について紹介したいと思います。
 
+と、その前に、
+
+実は今日出社最終日です。このブログもクラスメソッド社員としては最後の記事になります。1年2ヶ月と短い期間でしたが、振り返ればなかなか密度の濃い1年でした。また、チームメンバーはじめ、他の部署、お客様など、いろいろな方にお世話になり、大変感謝しております。
+クラスメソッド卒業後も、ここで得た知識や経験を生かして、頑張りたいと思いますので、どこかでまたお会いした際はよろしくお願い致します。
+
+はい、話しを戻します。
+
 Field collapsing と言えば、Top hits aggregation が思い浮かぶ方も多いかと思いますが、今回リリースされた New Field collapsing の機能は Aggregation ではなく、検索結果を折りたたむことができます。
 
-検索系の機能名称では、Collapse Search / Field collapsing / Result grouping と言ったりしますが、一般的に日本語では何って呼ばれてるのだろう？折りたたみ検索？
-知っている方がいたら教えてください。
+検索系の機能名称では、Collapse Search / Field collapsing / Result grouping と言ったりしますが、一般的に日本語では何って呼ばれてるのだろう？折りたたみ検索？知っている方がいたら教えてください。
 
 ## ユースケース例
 例えば、EC サイトの商品検索で、カラーやサイズなどの単品単位で検索結果を表示することもあれば、
