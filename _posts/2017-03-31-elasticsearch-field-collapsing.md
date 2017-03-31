@@ -1,9 +1,10 @@
-# Elasticsearch Field Collapsing で新しいページングスタイルを取り入れてみは？
+# Elasticsearch Field Collapsing 新しいページングスタイル？
 Elasticsearch 5.3 がリリースされましたね。今回はその New feature の中で、**[Field Collapsing](https://www.elastic.co/guide/en/elasticsearch/reference/5.3/search-request-collapse.html)** について紹介したいと思います。
 
 Field collapsing と言えば、Top hits aggregation が思い浮かぶ方も多いかと思いますが、今回リリースされた New Field collapsing の機能は Aggregation ではなく、検索結果そのものを折りたたむことができます。
 
-検索系の機能名称では、Collapse Search / Field collapsing / Result grouping と言ったりしますが、一般的に日本語では何って呼ばれてるのだろう？折りたたみ検索？知っている方がいたら教えてください。
+検索系の機能名称では、Collapse Search / Field collapsing / Result grouping と言ったりしますが、一般的に日本語では何って呼ばれてるのだろう？折りたたみ検索？
+指定されたフィールドの値を使って、検索結果の重複を排除するよくある機能ですね。
 
 ## ユースケース例
 例えば、EC サイトの商品検索で、カラーやサイズなどの単品単位で検索結果を表示することもあれば、
