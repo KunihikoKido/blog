@@ -1,4 +1,4 @@
-# Elasticsearch Field Collapsing 新しいページングスタイルを取り入れてみは？
+# Elasticsearch Field Collapsing で新しいページングスタイルを取り入れてみは？
 Elasticsearch 5.3 がリリースされましたね。今回はその New feature の中で、**[Field Collapsing](https://www.elastic.co/guide/en/elasticsearch/reference/5.3/search-request-collapse.html)** について紹介したいと思います。
 
 Field collapsing と言えば、Top hits aggregation が思い浮かぶ方も多いかと思いますが、今回リリースされた New Field collapsing の機能は Aggregation ではなく、検索結果そのものを折りたたむことができます。
